@@ -44,8 +44,8 @@ public class View {
 		cardsPanel.add(simulationPanel, "simulationPanel");
 		cardsPanel.add(resultsPanel, "resultsPanel");
 		
-		// initial panel to appear is menu panel
-		cards.show(cardsPanel, "menuPanel");
+		// initial panel to appear is input table panel
+		cards.show(cardsPanel, "inputTablePanel");
 	}
 	
 	
