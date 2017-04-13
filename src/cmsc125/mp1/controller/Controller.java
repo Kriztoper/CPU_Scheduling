@@ -8,10 +8,11 @@ public class Controller {
 	
 	public Controller(View view) {
 		this.view = view;
-		
 	}
 	
 	public void start() {
-		
+		view.show();
 	}
+	
+	
 }
