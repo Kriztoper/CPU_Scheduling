@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import cmsc125.mp1.view.View;
+import cmsc125.mp1.view.panels.InputTablePanel;
 
 public class Controller {
 
@@ -26,6 +27,37 @@ public class Controller {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				view.setCurrentPanel("inputTablePanel");
+			}
+		});
+		
+		view.getInputTablePanel().getRandNumProcessesButton().
+			addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				InputTablePanel inputTablePanel =
+						view.getInputTablePanel();
+				inputTablePanel.randNumProcesses();
+				inputTablePanel.setResourcesTableRowSize(
+						inputTablePanel.getProcessesCount());
+			}
+		});
+		
+		view.getInputTablePanel().getRandNumResourcesButton().
+			addActionListener(new ActionListener() {
+		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				view.getInputTablePanel().randNumResources();
+			}
+		});
+		
+		view.getInputTablePanel().getRandCPUSchedAlgosButton().
+			addActionListener(new ActionListener() {
+		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				view.getInputTablePanel().randCPUSchedAlgos();
 			}
 		});
 	}
