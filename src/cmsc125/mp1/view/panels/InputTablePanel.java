@@ -167,6 +167,64 @@ public class InputTablePanel extends JPanel {
 		setProcessesCount(randomIndex + 1);
 	}
 	
+	public void setResourcesTableColumnSize(int numColumns) {
+		ResourcesTableModel currentModel = 
+				((ResourcesTableModel) resourcesTable.
+				getModel());
+		Object[][] currentTableData = 
+				currentModel.getData();
+		Object[][] newTableData = 
+				new Object[currentTableData.length][numColumns];
+		
+		for (int i = 0; i < currentTableData.length; i++) {
+			for (int j = 0; j < 
+					currentTableData[i].length; j++) {
+				if (currentTableData[i][j] != null &&
+						j < numColumns) {
+					newTableData[i][j] = currentTableData[i][j];
+				}
+			}
+		}
+
+		for (int i = 0; i < newTableData.length; i++) {
+			for (int j = 0; j < 
+					newTableData[i].length; j++) {
+				if (newTableData[i][j] == null) {
+					newTableData[i][j] = "0";
+				}
+			}
+		}
+		
+		
+		String[] currentColumns = ((ResourcesTableModel) 
+				resourcesTable.getModel()).getColumnNames();
+		String[] newColumns = new String[numColumns];
+		
+		for (int i = 0; i < currentColumns.length; i++) {
+			if (currentColumns[i] != null && i < numColumns) {
+				newColumns[i] = currentColumns[i]; 
+			}
+		}
+		
+		for (int i = 0; i < newColumns.length; i++) {
+			if (newColumns[i] == null) {
+				newColumns[i] = "0";
+			}
+		}
+		
+		((ResourcesTableModel) resourcesTable.getModel()).
+				setColumnNames(newColumns);
+		
+		
+		
+		resourcesTable.setModel(
+				new ResourcesTableModel(
+						currentModel.getColumnNames(), 
+						newTableData));
+		
+		
+	}
+	
 	public void setResourcesTableRowSize(int numRows) {
 		ResourcesTableModel currentModel = 
 				((ResourcesTableModel) resourcesTable.

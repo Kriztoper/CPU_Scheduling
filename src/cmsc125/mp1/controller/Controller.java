@@ -48,7 +48,11 @@ public class Controller {
 		
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				view.getInputTablePanel().randNumResources();
+				InputTablePanel inputTablePanel =
+						view.getInputTablePanel();
+				inputTablePanel.randNumResources();
+				inputTablePanel.setResourcesTableColumnSize(
+						inputTablePanel.getResourcesCount());
 			}
 		});
 		
