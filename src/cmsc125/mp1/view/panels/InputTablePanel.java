@@ -7,11 +7,13 @@ import javax.swing.JPanel;
 public class InputTablePanel extends JPanel {
 
 	public InputTablePanel() {
-		
+		initPanel();
 	}
 	
 	public void initPanel() {
 		setLayout(null);
 		setBackground(Color.orange);
 	}
+	
+	
 }
