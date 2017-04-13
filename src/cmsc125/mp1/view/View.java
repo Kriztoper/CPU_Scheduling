@@ -22,6 +22,7 @@ public class View {
 	public View() {
 		frame = new Frame();
 		initCardsPanel();
+		frame.setContentPane(cardsPanel);
 	}
 
 	public void show() {
@@ -44,8 +45,8 @@ public class View {
 		cardsPanel.add(simulationPanel, "simulationPanel");
 		cardsPanel.add(resultsPanel, "resultsPanel");
 		
-		// initial panel to appear is input table panel
-		cards.show(cardsPanel, "inputTablePanel");
+		// initial panel to appear is menu panel
+		cards.show(cardsPanel, "menuPanel");
 	}
 	
 	
