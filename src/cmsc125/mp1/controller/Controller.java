@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import cmsc125.mp1.view.View;
 import cmsc125.mp1.view.panels.InputTablePanel;
+import cmsc125.mp1.view.panels.MenuPanel;
 
 public class Controller {
 
@@ -20,8 +21,10 @@ public class Controller {
 	}
 	
 	public void addButtonListeners() {
+		MenuPanel menuPanel = view.getMenuPanel();
+		InputTablePanel inputTablePanel = view.getInputTablePanel();
 		
-		view.getMenuPanel().getInputDataButton().
+		menuPanel.getInputDataButton().
 			addActionListener(new ActionListener() {
 			
 			@Override
@@ -30,38 +33,78 @@ public class Controller {
 			}
 		});
 		
-		view.getInputTablePanel().getRandNumProcessesButton().
+		inputTablePanel.getRandNumProcessesButton().
 			addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				InputTablePanel inputTablePanel =
-						view.getInputTablePanel();
 				inputTablePanel.randNumProcesses();
 				inputTablePanel.setResourcesTableRowSize(
 						inputTablePanel.getProcessesCount());
 			}
 		});
 		
-		view.getInputTablePanel().getRandNumResourcesButton().
+		inputTablePanel.getRandNumResourcesButton().
 			addActionListener(new ActionListener() {
 		
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				InputTablePanel inputTablePanel =
-						view.getInputTablePanel();
 				inputTablePanel.randNumResources();
 				inputTablePanel.setResourcesTableColumnSize(
 						inputTablePanel.getResourcesCount());
 			}
 		});
 		
-		view.getInputTablePanel().getRandCPUSchedAlgosButton().
+		inputTablePanel.getRandCPUSchedAlgosButton().
 			addActionListener(new ActionListener() {
 		
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				view.getInputTablePanel().randCPUSchedAlgos();
+				inputTablePanel.randCPUSchedAlgos();
+			}
+		});
+		
+		inputTablePanel.getStartSimulationButton().
+			addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				view.setCurrentPanel("simulationPanel");
+			}
+		});
+		
+		inputTablePanel.getNumProcesses().
+			addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				inputTablePanel.
+					setResourcesTableRowSize(
+						Integer.parseInt((String) inputTablePanel.
+							getNumProcesses().getSelectedItem()));
+				
+			}
+		});
+		
+		inputTablePanel.getNumResources().
+			addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				inputTablePanel.
+					setResourcesTableColumnSize(
+						Integer.parseInt((String) inputTablePanel.
+							getNumResources().getSelectedItem()));
+				
+			}
+		});
+		
+		inputTablePanel.getRandResourcesTableButton().
+			addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				inputTablePanel.randResourcesTable();
 			}
 		});
 	}
