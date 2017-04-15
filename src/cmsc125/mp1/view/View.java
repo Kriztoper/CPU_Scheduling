@@ -25,6 +25,10 @@ public class View {
 		frame.setContentPane(cardsPanel);
 	}
 
+	public void setCurrentPanel(String panelName) {
+		cards.show(cardsPanel, panelName);
+	}
+
 	public void show() {
 		frame.setVisible(true);
 	}
@@ -35,18 +39,50 @@ public class View {
 		cardsPanel.setLayout(cards);
 		
 		// init panels to be switched as cards
-		menuPanel = new MenuPanel();
-		inputTablePanel = new InputTablePanel();
-		simulationPanel = new SimulationPanel();
-		resultsPanel = new ResultsPanel();
+		setMenuPanel(new MenuPanel());
+		setInputTablePanel(new InputTablePanel());
+		setSimulationPanel(new SimulationPanel());
+		setResultsPanel(new ResultsPanel());
 		
-		cardsPanel.add(menuPanel, "menuPanel");
-		cardsPanel.add(inputTablePanel, "inputTablePanel");
-		cardsPanel.add(simulationPanel, "simulationPanel");
-		cardsPanel.add(resultsPanel, "resultsPanel");
+		cardsPanel.add(getMenuPanel(), "menuPanel");
+		cardsPanel.add(getInputTablePanel(), "inputTablePanel");
+		cardsPanel.add(getSimulationPanel(), "simulationPanel");
+		cardsPanel.add(getResultsPanel(), "resultsPanel");
 		
 		// initial panel to appear is menu panel
 		cards.show(cardsPanel, "menuPanel");
+	}
+
+	public MenuPanel getMenuPanel() {
+		return menuPanel;
+	}
+
+	public void setMenuPanel(MenuPanel menuPanel) {
+		this.menuPanel = menuPanel;
+	}
+
+	public InputTablePanel getInputTablePanel() {
+		return inputTablePanel;
+	}
+
+	public void setInputTablePanel(InputTablePanel inputTablePanel) {
+		this.inputTablePanel = inputTablePanel;
+	}
+
+	public SimulationPanel getSimulationPanel() {
+		return simulationPanel;
+	}
+
+	public void setSimulationPanel(SimulationPanel simulationPanel) {
+		this.simulationPanel = simulationPanel;
+	}
+
+	public ResultsPanel getResultsPanel() {
+		return resultsPanel;
+	}
+
+	public void setResultsPanel(ResultsPanel resultsPanel) {
+		this.resultsPanel = resultsPanel;
 	}
 	
 	
