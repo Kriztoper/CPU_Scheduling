@@ -80,6 +80,7 @@ public class Controller {
 						inputTablePanel.getSelectedAlgosFromCheckbox(),
 						inputTablePanel.getResourcesTable(),
 						inputTablePanel.getTimeTable());
+				//view.setCurrentPanel("menuPanel");
 			}
 		});
 		
