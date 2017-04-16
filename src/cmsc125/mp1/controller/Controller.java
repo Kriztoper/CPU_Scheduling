@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import cmsc125.mp1.view.View;
 import cmsc125.mp1.view.panels.InputTablePanel;
 import cmsc125.mp1.view.panels.MenuPanel;
+import cmsc125.mp1.view.panels.SimulationPanel;
 
 public class Controller {
 
@@ -23,6 +24,7 @@ public class Controller {
 	public void addButtonListeners() {
 		MenuPanel menuPanel = view.getMenuPanel();
 		InputTablePanel inputTablePanel = view.getInputTablePanel();
+		SimulationPanel simulationPanel = view.getSimulationPanel();
 		
 		menuPanel.getInputDataButton().
 			addActionListener(new ActionListener() {
@@ -40,7 +42,9 @@ public class Controller {
 			public void actionPerformed(ActionEvent e) {
 				inputTablePanel.randNumProcesses();
 				inputTablePanel.setResourcesTableRowSize(
-						inputTablePanel.getProcessesCount());
+						inputTablePanel.
+						getNumProcesses().
+						getSelectedIndex() + 1);
 			}
 		});
 		
@@ -51,7 +55,9 @@ public class Controller {
 			public void actionPerformed(ActionEvent e) {
 				inputTablePanel.randNumResources();
 				inputTablePanel.setResourcesTableColumnSize(
-						inputTablePanel.getResourcesCount());
+						inputTablePanel.
+						getNumResources().
+						getSelectedIndex() + 1);
 			}
 		});
 		
@@ -70,6 +76,10 @@ public class Controller {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				view.setCurrentPanel("simulationPanel");
+				simulationPanel.startSimulation(
+						inputTablePanel.getSelectedAlgosFromCheckbox(),
+						inputTablePanel.getResourcesTable(),
+						inputTablePanel.getTimeTable());
 			}
 		});
 		

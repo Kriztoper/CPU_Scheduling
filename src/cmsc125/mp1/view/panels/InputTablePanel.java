@@ -12,7 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
+
+import cmsc125.mp1.controller.utils.ResourcesTableModel;
 
 public class InputTablePanel extends JPanel {
 
@@ -32,9 +33,6 @@ public class InputTablePanel extends JPanel {
 	private JButton startSimulationButton;
 	private JTable timeTable;
 	
-	private int processesCount;
-	private int resourcesCount;
-	
 	public InputTablePanel() {
 		initPanel();
 		initComponents();
@@ -43,7 +41,7 @@ public class InputTablePanel extends JPanel {
 	
 	public void initPanel() {
 		setLayout(null);
-		setBackground(Color.orange);
+		setBackground(Color.ORANGE);
 	}
 	
 	public void initComponents() {
@@ -57,7 +55,7 @@ public class InputTablePanel extends JPanel {
 		}
 		setNumProcesses(new JComboBox<String>(oneToTwenty));
 		getNumProcesses().setSelectedIndex(19);
-		setProcessesCount(20);
+		//setProcessesCount(20);
 		getNumProcesses().setVisible(true);
 		
 		// Randomize button for num processes
@@ -73,7 +71,7 @@ public class InputTablePanel extends JPanel {
 		}
 		setNumResources(new JComboBox<String>(oneToTen));
 		getNumResources().setSelectedIndex(9);
-		setResourcesCount(10);
+		//setResourcesCount(10);
 		getNumResources().setVisible(true);
 		
 		// Randomize button for num resources
@@ -113,7 +111,7 @@ public class InputTablePanel extends JPanel {
 				"R1","R2","R3","R4","R5",
 				"R6","R7","R8","R9","R10"
 		};
-		Object[][] objects = new Object[20][10];
+		String[][] objects = new String[20][10];
 		for (int i = 0; i < 20; i++) {
 			for (int j = 0; j < 10; j++) {
 				objects[i][j] = "0";
@@ -123,10 +121,11 @@ public class InputTablePanel extends JPanel {
 				new ResourcesTableModel(columnResources,
 						objects));
 		// resourcesTable.setSize(400, 400);
-		//resourcesTable.setGridColor(Color.BLACK);
+		//gresourcesTable.setGridColor(Color.BLACK);
 		resourcesTable.setBackground(Color.WHITE);
-		resourcesTable.setCellSelectionEnabled(true);
+		resourcesTable.setRowSelectionAllowed(true);
 		resourcesTable.setColumnSelectionAllowed(true);
+		resourcesTable.setCellSelectionEnabled(true);
 		/*DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment( JLabel.CENTER);
 		resourcesTable.setDefaultRenderer(String.class, 
@@ -143,7 +142,7 @@ public class InputTablePanel extends JPanel {
         String[] columnTime = {
 				"Arrival Time","Priority"
 		};
-		Object[][] objectsTime = new Object[20][2];
+		String[][] objectsTime = new String[20][2];
 		for (int i = 0; i < 20; i++) {
 			for (int j = 0; j < 2; j++) {
 				objectsTime[i][j] = "0";
@@ -155,8 +154,9 @@ public class InputTablePanel extends JPanel {
 		//resourcesTable.setSize(400, 400);
 		//timeTable.setGridColor(Color.BLACK);
 		timeTable.setBackground(Color.WHITE);
-		timeTable.setCellSelectionEnabled(true);
+		timeTable.setRowSelectionAllowed(true);
 		timeTable.setColumnSelectionAllowed(true);
+		timeTable.setCellSelectionEnabled(true);
 		
 		
 	}
@@ -240,17 +240,16 @@ public class InputTablePanel extends JPanel {
 		Random random = new Random();
 		int randomIndex = random.nextInt(20);
 		getNumProcesses().setSelectedIndex(randomIndex);
-		setProcessesCount(randomIndex + 1);
 	}
 	
 	public void setResourcesTableColumnSize(int numColumns) {
 		ResourcesTableModel currentModel = 
 				((ResourcesTableModel) resourcesTable.
 				getModel());
-		Object[][] currentTableData = 
+		String[][] currentTableData = 
 				currentModel.getData();
-		Object[][] newTableData = 
-				new Object[currentTableData.length][numColumns];
+		String[][] newTableData = 
+				new String[currentTableData.length][numColumns];
 		
 		for (int i = 0; i < currentTableData.length; i++) {
 			for (int j = 0; j < 
@@ -289,10 +288,10 @@ public class InputTablePanel extends JPanel {
 		ResourcesTableModel currentModel = 
 				((ResourcesTableModel) resourcesTable.
 				getModel());
-		Object[][] currentTableData = 
+		String[][] currentTableData = 
 				currentModel.getData();
-		Object[][] newTableData = 
-				new Object[numRows][currentTableData[0].length];
+		String[][] newTableData = 
+				new String[numRows][currentTableData[0].length];
 		
 		for (int i = 0; i < currentTableData.length; i++) {
 			for (int j = 0; j < 
@@ -325,30 +324,29 @@ public class InputTablePanel extends JPanel {
 		ResourcesTableModel timeTableModel = 
 				((ResourcesTableModel) timeTable.
 				getModel());
-		Object[][] objects = timeTableModel.getData();
-		Object[][] newObjects = new Object[numRows][2];
+		String[][] objects = timeTableModel.getData();
+		String[][] newStrings = new String[numRows][2];
 		
 		for (int i = 0; i < numRows; i++) {
 			for (int j = 0; j < 2; j++) {
 				if (i < objects.length && 
 						objects[i][j] != null) {
-					newObjects[i][j] = objects[i][j];
+					newStrings[i][j] = objects[i][j];
 				} else {
-					newObjects[i][j] = "0";
+					newStrings[i][j] = "0";
 				}
 			}
 		}
 		
 		timeTable.setModel(new ResourcesTableModel(
 				timeTableModel.getColumnNames(), 
-				newObjects));
+				newStrings));
 	}
 	
 	public void randNumResources() {
 		Random random = new Random();
 		int randomIndex = random.nextInt(10);
 		getNumResources().setSelectedIndex(randomIndex);
-		setResourcesCount(randomIndex + 1);
 	}
 	
 	public void randCPUSchedAlgos() {
@@ -360,13 +358,13 @@ public class InputTablePanel extends JPanel {
 		}
 	}
 	
-	public ArrayList<Checkbox> getSelectedAlgosFromCheckbox() {
-		ArrayList<Checkbox> selectedCheckboxes = 
-				new ArrayList<Checkbox>();
+	public ArrayList<String> getSelectedAlgosFromCheckbox() {
+		ArrayList<String> selectedCheckboxes = 
+				new ArrayList<String>();
 		for (int i = 0; i < checkBoxAlgosList.size(); i++) {
 			Checkbox currentCheckbox = checkBoxAlgosList.get(i);
 			if (currentCheckbox.getState()) {
-				selectedCheckboxes.add(currentCheckbox);
+				selectedCheckboxes.add(currentCheckbox.getLabel());
 			}
 		}
 		
@@ -397,22 +395,6 @@ public class InputTablePanel extends JPanel {
 		this.randCPUSchedAlgosButton = randCPUSchedAlgosButton;
 	}
 	
-	public int getProcessesCount() {
-		return processesCount;
-	}
-
-	public void setProcessesCount(int processesCount) {
-		this.processesCount = processesCount;
-	}
-
-	public int getResourcesCount() {
-		return resourcesCount;
-	}
-
-	public void setResourcesCount(int resourcesCount) {
-		this.resourcesCount = resourcesCount;
-	}
-
 	public JButton getStartSimulationButton() {
 		return startSimulationButton;
 	}
@@ -445,66 +427,11 @@ public class InputTablePanel extends JPanel {
 		this.randResourcesTableButton = randResourcesTableButton;
 	}
 
-	class ResourcesTableModel extends AbstractTableModel {
-
-		private String[] columnNames;
-		private Object[][] data;
-		
-		public ResourcesTableModel(
-				String[] columnNames, Object[][] data) {
-			this.setColumnNames(columnNames);
-			this.setData(data);
-		}
-		
-		public ResourcesTableModel() {
-			
-		}
-
-		@Override
-		public String getColumnName(int column) {
-			return columnNames[column];
-		}
-		
-		@Override
-		public int getColumnCount() {
-			return getColumnNames().length;
-		}
-
-		@Override
-		public int getRowCount() {
-			return getData().length;
-		}
-
-		@Override
-		public Object getValueAt(int row, int column) {
-			return getData()[row][column];
-		}
-
-		public Object[][] getData() {
-			return data;
-		}
-
-		public void setData(Object[][] data) {
-			this.data = data;
-		}
-
-		public String[] getColumnNames() {
-			return columnNames;
-		}
-
-		public void setColumnNames(String[] columnNames) {
-			this.columnNames = columnNames;
-		}
-				
-		@Override
-		public boolean isCellEditable(int row, int col) {
-			return true;
-        }
-
-        @Override
-		public void setValueAt(Object value, int row, int col) {
-            data[row][col] = value;
-            fireTableCellUpdated(row, col);
-        }
+	public JTable getResourcesTable() {
+		return resourcesTable;
+	}
+	
+	public JTable getTimeTable() {
+		return timeTable;
 	}
 }
