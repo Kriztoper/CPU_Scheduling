@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javax.swing.JTable;
 
 import cmsc125.mp1.view.SimulationPanel;
-
+import cmsc125.mp1.algorithms.SJFManager; 
 public class AlgoSimulator {
 
 	/*private SimulationPanel simulationPanel;
@@ -30,6 +30,12 @@ public class AlgoSimulator {
 					timeTable);
 			
 			fcfsManager.startSimulation();
-		}
+		} else if (algos.contains("SJF")) { 
+			SJFManager sjfManager = new SJFManager( 
+			          simulationPanel, resourcesTable,  
+			          timeTable); 
+			       
+			sjfManager.startSimulation(); 
+		} 
 	}
 }
