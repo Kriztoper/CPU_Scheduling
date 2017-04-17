@@ -78,7 +78,7 @@ public class FCFSManager extends Thread {
 				//TODO: Implement this special case...
 			} else if (currentProcess != null && 
 					currentBurstTime < 
-					currentProcess.getResources()[0]) {
+					currentProcess.getBurstTime()) {
 				currentBurstTime++;
 				
 				addProcessLabel(processLabels);
@@ -91,7 +91,7 @@ public class FCFSManager extends Thread {
 
 			if (null != currentProcess &&
 					currentBurstTime == 
-					currentProcess.getResources()[0]) {
+					currentProcess.getBurstTime()) {
 				currentProcess = null;
 				currentBurstTime = 0;
 			}
@@ -113,7 +113,7 @@ public class FCFSManager extends Thread {
 		processLabels[processIndex] = new JLabel(
 				processesVector.get(processIndex).getName());
 		processLabels[processIndex].setBackground(
-				colorConstants.getColors()[processIndex]);
+				processesVector.get(processIndex).getColor());
 		processLabels[processIndex].setBorder(
 				new LineBorder(Color.BLACK));
 		processLabels[processIndex].setOpaque(true);
@@ -128,7 +128,6 @@ public class FCFSManager extends Thread {
 		sortProcessesVector();
 		
 		JLabel[] processLabels = new JLabel[processesVector.size()];
-		ColorConstants colorConstants = new ColorConstants();
 		int x = 5;
 		int y = 80;
 		jobQueue = new ProcessesQueue();
@@ -138,7 +137,7 @@ public class FCFSManager extends Thread {
 			processLabels[i].setBorder(
 					new LineBorder(Color.BLACK));
 			processLabels[i].setBackground(
-					colorConstants.getColors()[i]);
+					ColorConstants.getColor(i));
 			processLabels[i].setOpaque(true);
 			processLabels[i].setSize(30, 50);
 			processLabels[i].setLocation(x, y);
@@ -176,7 +175,7 @@ public class FCFSManager extends Thread {
 			processesVector.add(new Process(
 					Integer.parseInt(timeData[i][0]),
 					convertToIntArray(resourcesData[i]),
-					("P" + (i + 1))));
+					("P" + (i + 1)), ColorConstants.getColor(i)));
 		}
 		
 		/*for (Process process: processesVector) {

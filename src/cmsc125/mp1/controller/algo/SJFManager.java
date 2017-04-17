@@ -37,17 +37,16 @@ public class SJFManager extends Thread {
 
 	public void startSimulation() {
 		initProcessesInVector();
-		sortProcessesToReadyQueue();
+		sortProcessesToJobQueue();
 		setListOfArrivalTimes();
 		
 		start();
 	}
 	
-	public void sortProcessesToReadyQueue() {
+	public void sortProcessesToJobQueue() {
 		sortProcessesVector();
 		
 		JLabel[] processLabels = new JLabel[processesVector.size()];
-		ColorConstants colorConstants = new ColorConstants();
 		int x = 5;
 		int y = 80;
 		jobQueue = new ProcessesQueue();
@@ -57,7 +56,7 @@ public class SJFManager extends Thread {
 			processLabels[i].setBorder(
 					new LineBorder(Color.BLACK));
 			processLabels[i].setBackground(
-					colorConstants.getColors()[i]);
+					processesVector.get(i).getColor());
 			processLabels[i].setOpaque(true);
 			processLabels[i].setSize(30, 50);
 			processLabels[i].setLocation(x, y);
@@ -79,6 +78,10 @@ public class SJFManager extends Thread {
 					processesVector.set(j, 
 							processesVector.get(j + 1));
 					processesVector.set(j + 1, temp);
+					temp = origProcessesVector.get(j);
+					origProcessesVector.set(j, 
+							origProcessesVector.get(j + 1));
+					origProcessesVector.set(j + 1, temp);
 				}
 			}
 		}
@@ -105,7 +108,8 @@ public class SJFManager extends Thread {
 			processesVector.add(new Process(
 					Integer.parseInt(timeData[i][0]),
 					convertToIntArray(resourcesData[i]),
-					("P" + (i + 1))));
+					("P" + (i + 1)),
+					ColorConstants.getColor(i)));
 			origProcessesVector.add(processesVector.
 					get(processesVector.size() - 1));
 		}
@@ -151,17 +155,17 @@ public class SJFManager extends Thread {
 				processIndex = processNum;
 				processNum++;
 				
-				addProcessLabel(processLabels);
+				addProcessLabel(processLabels, currentProcess);
 				
 				System.out.println(
 						currentProcess.getName() +
 						"[" + currentBurstTime + "]");
 			} else if (currentProcess != null && 
 					currentBurstTime < 
-					currentProcess.getResources()[0]) {
+					currentProcess.getBurstTime()) {
 				currentBurstTime++;
 				
-				addProcessLabel(processLabels);
+				addProcessLabel(processLabels, currentProcess);
 				
 				System.out.println(
 						currentProcess.getName() +
@@ -170,7 +174,7 @@ public class SJFManager extends Thread {
 			
 			if (null != currentProcess &&
 					currentBurstTime == 
-					currentProcess.getResources()[0]) {
+					currentProcess.getBurstTime()) {
 				currentProcess = null;
 				currentBurstTime = 0;
 			}
@@ -191,9 +195,9 @@ public class SJFManager extends Thread {
 		for (int i = 0; i < (size - 1); i++) {
 			for (int j = 0; j < size - i - 1; j++) {
 				if (readyQueue.get(j).
-						getArrivalTime() > 
+						getBurstTime() > 
 					readyQueue.get(j + 1).
-						getArrivalTime()) {
+						getBurstTime()) {
 					Process temp = readyQueue.get(j);
 					readyQueue.set(j, 
 							readyQueue.get(j + 1));
@@ -223,13 +227,12 @@ public class SJFManager extends Thread {
 		}
 	}
 	
-	public void addProcessLabel(JLabel[] processLabels) {
-		ColorConstants colorConstants = new ColorConstants();
-		
+	public void addProcessLabel(JLabel[] processLabels, 
+			Process process) {
 		processLabels[processIndex] = new JLabel(
-				origProcessesVector.get(processIndex).getName());
+				process.getName());
 		processLabels[processIndex].setBackground(
-				colorConstants.getColors()[processIndex]);
+				process.getColor());
 		processLabels[processIndex].setBorder(
 				new LineBorder(Color.BLACK));
 		processLabels[processIndex].setOpaque(true);
