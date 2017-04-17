@@ -19,7 +19,7 @@ public class FCFSManager extends Thread {
 	private JTable resourcesTable;
 	private JTable timeTable;
 	private Vector<Process> processesVector;
-	private ProcessesQueue processesQueue;
+	private ProcessesQueue jobQueue;
 	private int xProcess;
 	private int yProcess;
 	private int processIndex;
@@ -45,7 +45,7 @@ public class FCFSManager extends Thread {
 		int currentBurstTime = 0;
 		int t = 0;
 		int processNum = 0;
-		int queueSize = processesQueue.getSize();
+		int queueSize = jobQueue.getSize();
 
 		JLabel[] processLabels = new JLabel[processesVector.size()];
 		xProcess = 5;
@@ -54,16 +54,16 @@ public class FCFSManager extends Thread {
 		
 		while (processNum <= queueSize) {
 			System.out.println("At time " + t);
-			if (processesQueue.isEmpty() &&
+			if (jobQueue.isEmpty() &&
 					currentProcess == null) {
 				break;
 			} else if (currentProcess == null &&
-					processesQueue.peek().
+					jobQueue.peek().
 					getArrivalTime() <= t) {
-				currentProcess = processesQueue.dequeue();
+				currentProcess = jobQueue.dequeue();
 				currentBurstTime++;
+				processIndex = processNum;
 				processNum++;
-				processIndex = processNum - 1;
 				//System.out.println("processNum increased to "
 				//		+processNum);
 
@@ -73,7 +73,7 @@ public class FCFSManager extends Thread {
 						currentProcess.getName() +
 						"[" + currentBurstTime + "]");
 			} else if (currentProcess == null &&
-					processesQueue.peek().
+					jobQueue.peek().
 					getArrivalTime() > t) {
 				//TODO: Implement this special case...
 			} else if (currentProcess != null && 
@@ -131,7 +131,7 @@ public class FCFSManager extends Thread {
 		ColorConstants colorConstants = new ColorConstants();
 		int x = 5;
 		int y = 80;
-		processesQueue = new ProcessesQueue();
+		jobQueue = new ProcessesQueue();
 		for (int i = 0; i < processesVector.size(); i++) {
 			processLabels[i] = new JLabel(
 					processesVector.get(i).getName());
@@ -144,7 +144,7 @@ public class FCFSManager extends Thread {
 			processLabels[i].setLocation(x, y);
 			x += processLabels[i].getWidth() + 1;
 			simulationPanel.add(processLabels[i]);
-			processesQueue.enqueue(processesVector.get(i));
+			jobQueue.enqueue(processesVector.get(i));
 		}
 	}
 	
