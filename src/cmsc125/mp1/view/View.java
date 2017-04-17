@@ -27,6 +27,7 @@ public class View {
 
 	public void setCurrentPanel(String panelName) {
 		cards.show(cardsPanel, panelName);
+		frame.getContentPane().repaint();
 	}
 
 	public void show() {
