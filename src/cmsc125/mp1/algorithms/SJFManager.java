@@ -1,5 +1,5 @@
-package cmsc125.mp1.controller.algo;
-
+package cmsc125.mp1.algorithms; 
+ 
 import java.awt.Color;
 import java.util.Vector;
 
@@ -7,11 +7,11 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 
-import cmsc125.mp1.controller.datastructures.ProcessesQueue;
-import cmsc125.mp1.controller.utils.ColorConstants;
-import cmsc125.mp1.controller.utils.ResourcesTableModel;
+import cmsc125.mp1.constants.ColorConstants;
 import cmsc125.mp1.model.Process;
-import cmsc125.mp1.view.panels.SimulationPanel;
+import cmsc125.mp1.model.ProcessesQueue;
+import cmsc125.mp1.model.ResourcesTableModel;
+import cmsc125.mp1.view.SimulationPanel;
 
 public class SJFManager extends Thread {
 
@@ -243,3 +243,4 @@ public class SJFManager extends Thread {
 		simulationPanel.repaint();
 	}
 }
+ 

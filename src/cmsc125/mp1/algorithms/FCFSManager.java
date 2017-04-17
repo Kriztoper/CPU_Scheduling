@@ -1,4 +1,4 @@
-package cmsc125.mp1.controller.algo;
+package cmsc125.mp1.algorithms;
 
 import java.awt.Color;
 import java.util.Vector;
@@ -7,11 +7,11 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 
-import cmsc125.mp1.controller.datastructures.ProcessesQueue;
-import cmsc125.mp1.controller.utils.ColorConstants;
-import cmsc125.mp1.controller.utils.ResourcesTableModel;
+import cmsc125.mp1.constants.ColorConstants;
 import cmsc125.mp1.model.Process;
-import cmsc125.mp1.view.panels.SimulationPanel;
+import cmsc125.mp1.model.ProcessesQueue;
+import cmsc125.mp1.model.ResourcesTableModel;
+import cmsc125.mp1.view.SimulationPanel;
 
 public class FCFSManager extends Thread {
 
@@ -40,7 +40,7 @@ public class FCFSManager extends Thread {
 
 	@Override
 	public void run() {
-		long increment = 2000;
+		long increment = 200;//0;
 		Process currentProcess = null;
 		int currentBurstTime = 0;
 		int t = 0;
@@ -108,8 +108,6 @@ public class FCFSManager extends Thread {
 	}
 	
 	public void addProcessLabel(JLabel[] processLabels) {
-		ColorConstants colorConstants = new ColorConstants();
-		
 		processLabels[processIndex] = new JLabel(
 				processesVector.get(processIndex).getName());
 		processLabels[processIndex].setBackground(
@@ -137,7 +135,7 @@ public class FCFSManager extends Thread {
 			processLabels[i].setBorder(
 					new LineBorder(Color.BLACK));
 			processLabels[i].setBackground(
-					ColorConstants.getColor(i));
+					processesVector.get(i).getColor());
 			processLabels[i].setOpaque(true);
 			processLabels[i].setSize(30, 50);
 			processLabels[i].setLocation(x, y);

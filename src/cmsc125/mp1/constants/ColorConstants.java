@@ -1,4 +1,4 @@
-package cmsc125.mp1.controller.utils;
+package cmsc125.mp1.constants;
 
 import java.awt.Color;
 
