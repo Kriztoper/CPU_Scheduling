@@ -3,105 +3,94 @@ package cmsc125.mp1.controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import cmsc125.mp1.view.View;
-import cmsc125.mp1.view.panels.InputTablePanel;
-import cmsc125.mp1.view.panels.MenuPanel;
+import cmsc125.mp1.view.InputTablePanel;
+import cmsc125.mp1.view.MenuPanel;
+import cmsc125.mp1.view.ResultsPanel;
+import cmsc125.mp1.view.SimulationPanel;
+import cmsc125.mp1.view.ViewFrame;
 
 public class Controller {
 
-	private View view;
-	
-	public Controller(View view) {
+	private ViewFrame view;
+
+	public Controller(ViewFrame view) {
 		this.view = view;
 		addButtonListeners();
+		view.setCurrentPanel("menuPanel");
 	}
-	
-	public void start() {
-		view.show();
-	}
-	
+
 	public void addButtonListeners() {
-		MenuPanel menuPanel = view.getMenuPanel();
-		InputTablePanel inputTablePanel = view.getInputTablePanel();
-		
-		menuPanel.getInputDataButton().
-			addActionListener(new ActionListener() {
-			
+		MenuPanel menuPanel = new MenuPanel();
+		InputTablePanel inputTablePanel = new InputTablePanel();
+		SimulationPanel simulationPanel = new SimulationPanel();
+		ResultsPanel resultsPanel = new ResultsPanel();
+
+		view.add(menuPanel, "menuPanel");
+		view.add(inputTablePanel, "inputTablePanel");
+		view.add(simulationPanel, "simulationPanel");
+		view.add(resultsPanel, "resultsPanel");
+
+		menuPanel.getInputDataButton().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				view.setCurrentPanel("inputTablePanel");
 			}
 		});
-		
-		inputTablePanel.getRandNumProcessesButton().
-			addActionListener(new ActionListener() {
-			
+
+		inputTablePanel.getRandNumProcessesButton().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				inputTablePanel.randNumProcesses();
-				inputTablePanel.setResourcesTableRowSize(
-						inputTablePanel.getProcessesCount());
+				inputTablePanel.setResourcesTableRowSize(inputTablePanel.getNumProcesses().getSelectedIndex() + 1);
 			}
 		});
-		
-		inputTablePanel.getRandNumResourcesButton().
-			addActionListener(new ActionListener() {
-		
+
+		inputTablePanel.getRandNumResourcesButton().addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				inputTablePanel.randNumResources();
-				inputTablePanel.setResourcesTableColumnSize(
-						inputTablePanel.getResourcesCount());
+				inputTablePanel.setResourcesTableColumnSize(inputTablePanel.getNumResources().getSelectedIndex() + 1);
 			}
 		});
-		
-		inputTablePanel.getRandCPUSchedAlgosButton().
-			addActionListener(new ActionListener() {
-		
+
+		inputTablePanel.getRandCPUSchedAlgosButton().addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				inputTablePanel.randCPUSchedAlgos();
 			}
 		});
-		
-		inputTablePanel.getStartSimulationButton().
-			addActionListener(new ActionListener() {
-			
+
+		inputTablePanel.getStartSimulationButton().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				view.setCurrentPanel("simulationPanel");
+				simulationPanel.startSimulation(inputTablePanel.getSelectedAlgosFromCheckbox(),
+						inputTablePanel.getResourcesTable(), inputTablePanel.getTimeTable());
+				// view.setCurrentPanel("menuPanel");
 			}
 		});
-		
-		inputTablePanel.getNumProcesses().
-			addActionListener(new ActionListener() {
-			
+
+		inputTablePanel.getNumProcesses().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				inputTablePanel.
-					setResourcesTableRowSize(
-						Integer.parseInt((String) inputTablePanel.
-							getNumProcesses().getSelectedItem()));
-				
+				inputTablePanel.setResourcesTableRowSize(
+						Integer.parseInt((String) inputTablePanel.getNumProcesses().getSelectedItem()));
+
 			}
 		});
-		
-		inputTablePanel.getNumResources().
-			addActionListener(new ActionListener() {
-			
+
+		inputTablePanel.getNumResources().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				inputTablePanel.
-					setResourcesTableColumnSize(
-						Integer.parseInt((String) inputTablePanel.
-							getNumResources().getSelectedItem()));
-				
+				inputTablePanel.setResourcesTableColumnSize(
+						Integer.parseInt((String) inputTablePanel.getNumResources().getSelectedItem()));
+
 			}
 		});
-		
-		inputTablePanel.getRandResourcesTableButton().
-			addActionListener(new ActionListener() {
-			
+
+		inputTablePanel.getRandResourcesTableButton().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				inputTablePanel.randResourcesTable();
