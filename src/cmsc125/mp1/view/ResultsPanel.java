@@ -1,4 +1,4 @@
-package cmsc125.mp1.view.panels;
+package cmsc125.mp1.view;
 
 import java.awt.Color;
 
