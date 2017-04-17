@@ -1,11 +1,10 @@
-package cmsc125.mp1.controller;
+package cmsc125.mp1.algorithms;
 
 import java.util.ArrayList;
 
 import javax.swing.JTable;
 
-import cmsc125.mp1.controller.algo.FCFSManager;
-import cmsc125.mp1.view.panels.SimulationPanel;
+import cmsc125.mp1.view.SimulationPanel;
 
 public class AlgoSimulator {
 

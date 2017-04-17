@@ -1,4 +1,4 @@
-package cmsc125.mp1.controller.utils;
+package cmsc125.mp1.constants;
 
 import java.awt.Color;
 
@@ -6,14 +6,14 @@ public class ColorConstants {
 
 	private Color[] colors;
 	private static final int MAX_SIZE = 20;
-	
+
 	public ColorConstants() {
 		defineColors();
 	}
-	
+
 	public void defineColors() {
 		setColors(new Color[MAX_SIZE]);
-		
+
 		getColors()[0] = new Color(132, 112, 255);
 		getColors()[1] = new Color(255, 228, 196);
 		getColors()[2] = new Color(100, 149, 237);

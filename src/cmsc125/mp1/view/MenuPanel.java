@@ -1,4 +1,4 @@
-package cmsc125.mp1.view.panels;
+package cmsc125.mp1.view;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -11,7 +11,7 @@ public class MenuPanel extends JPanel {
 	private JButton inputDataButton;
 	private JButton aboutButton;
 	private JButton creditsButton;
-	
+
 	public MenuPanel() {
 		initPanel();
 		initComponents();
@@ -22,21 +22,21 @@ public class MenuPanel extends JPanel {
 		setLayout(new FlowLayout());
 		setBackground(Color.CYAN);
 	}
-	
+
 	public void initComponents() {
 		inputDataButton = new JButton("Input Data and Simulate");
-		
+
 		aboutButton = new JButton("About");
-		
+
 		creditsButton = new JButton("Credits");
 	}
-	
+
 	public void addComponents() {
 		add(inputDataButton);
 		add(aboutButton);
 		add(creditsButton);
 	}
-	
+
 	public JButton getInputDataButton() {
 		return inputDataButton;
 	}
