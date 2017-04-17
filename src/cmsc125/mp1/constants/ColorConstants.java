@@ -23,7 +23,8 @@ public class ColorConstants {
 			new Color(233, 150, 122),
 			new Color(238, 172, 170),
 			new Color(153, 205, 50),
-			new Color(176, 196, 222)
+			new Color(176, 196, 222),
+			new Color(224, 224, 224)
 	};
 	
 	public static Color getColor(int index) {

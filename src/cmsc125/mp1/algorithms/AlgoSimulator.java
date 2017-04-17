@@ -36,6 +36,12 @@ public class AlgoSimulator {
 			          timeTable); 
 			       
 			sjfManager.startSimulation(); 
-		} 
+		} else if (algos.contains("NP PRIO")) { 
+			NPPRIOManager npprioManager = new NPPRIOManager( 
+			          simulationPanel, resourcesTable,  
+			          timeTable); 
+			       
+			npprioManager.startSimulation(); 
+		}
 	}
 }
