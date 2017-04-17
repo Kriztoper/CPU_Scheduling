@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javax.swing.JTable;
 
 import cmsc125.mp1.view.SimulationPanel;
-import cmsc125.mp1.algorithms.SJFManager; 
+
 public class AlgoSimulator {
 
 	/*private SimulationPanel simulationPanel;

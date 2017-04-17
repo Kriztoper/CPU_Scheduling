@@ -110,7 +110,11 @@ public class InputTablePanel extends JPanel {
 		String[][] objects = new String[20][10];
 		for (int i = 0; i < 20; i++) {
 			for (int j = 0; j < 10; j++) {
-				objects[i][j] = "0";
+				if (j == 0) {
+					objects[i][j] = "1";
+				} else {
+					objects[i][j] = "0";
+				}
 			}
 		}
 		resourcesTable = new JTable(new ResourcesTableModel(columnResources, objects));
@@ -215,7 +219,11 @@ public class InputTablePanel extends JPanel {
 		Random random = new Random();
 		for (int i = 0; i < rowCount; i++) {
 			for (int j = 0; j < colCount; j++) {
-				resourcesTable.getModel().setValueAt(Integer.toString(random.nextInt(10)), i, j);
+				if (j == 0) {
+					resourcesTable.getModel().setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
+				} else {
+					resourcesTable.getModel().setValueAt(Integer.toString(random.nextInt(10)), i, j);
+				}
 			}
 		}
 	}
