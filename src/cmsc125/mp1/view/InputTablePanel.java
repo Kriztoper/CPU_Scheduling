@@ -157,7 +157,7 @@ public class InputTablePanel extends JPanel {
 		timeTable.setCellSelectionEnabled(true);
 
 		// quantum label and text field
-		quantumLabel = new JLabel("Quatum: ");
+		quantumLabel = new JLabel("Quantum: ");
 		setQuantumField(new JTextField(5));
 
 		
@@ -221,7 +221,7 @@ public class InputTablePanel extends JPanel {
 		add(startSimulationButton);
 		
 		// quantum
-		quantumLabel.setSize(70, 20);
+		quantumLabel.setSize(80, 20);
 		quantumLabel.setLocation(850, 5);
 		add(quantumLabel);
 		getQuantumField().setSize(70, 20);

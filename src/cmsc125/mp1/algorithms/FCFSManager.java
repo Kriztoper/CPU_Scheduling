@@ -22,7 +22,6 @@ public class FCFSManager extends Thread {
 	private ProcessesQueue jobQueue;
 	private int xProcess;
 	private int yProcess;
-	private int processIndex;
 	
 	public FCFSManager(SimulationPanel simulationPanel, 
 			JTable resourcesTable, JTable timeTable) {
@@ -44,15 +43,10 @@ public class FCFSManager extends Thread {
 		Process currentProcess = null;
 		int currentBurstTime = 0;
 		int t = 0;
-		int processNum = 0;
-		int queueSize = jobQueue.getSize();
-
-		JLabel[] processLabels = new JLabel[processesVector.size()];
 		xProcess = 5;
 		yProcess = 200;
-		processIndex = 0;
 		
-		while (processNum <= queueSize) {
+		while (true) {
 			System.out.println("At time " + t);
 			if (jobQueue.isEmpty() &&
 					currentProcess == null) {
@@ -62,26 +56,20 @@ public class FCFSManager extends Thread {
 					getArrivalTime() <= t) {
 				currentProcess = jobQueue.dequeue();
 				currentBurstTime++;
-				processIndex = processNum;
-				processNum++;
 				//System.out.println("processNum increased to "
 				//		+processNum);
 
-				addProcessLabel(processLabels);
+				addProcessLabel(currentProcess);
 				
 				System.out.println(
 						currentProcess.getName() +
 						"[" + currentBurstTime + "]");
-			} else if (currentProcess == null &&
-					jobQueue.peek().
-					getArrivalTime() > t) {
-				//TODO: Implement this special case...
 			} else if (currentProcess != null && 
 					currentBurstTime < 
 					currentProcess.getBurstTime()) {
 				currentBurstTime++;
 				
-				addProcessLabel(processLabels);
+				addProcessLabel(currentProcess);
 				
 				System.out.println(
 						currentProcess.getName() +
@@ -107,18 +95,15 @@ public class FCFSManager extends Thread {
 		System.out.println("Done executing FCFS!");
 	}
 	
-	public void addProcessLabel(JLabel[] processLabels) {
-		processLabels[processIndex] = new JLabel(
-				processesVector.get(processIndex).getName());
-		processLabels[processIndex].setBackground(
-				processesVector.get(processIndex).getColor());
-		processLabels[processIndex].setBorder(
-				new LineBorder(Color.BLACK));
-		processLabels[processIndex].setOpaque(true);
-		processLabels[processIndex].setSize(30, 50);
-		processLabels[processIndex].setLocation(xProcess, yProcess);
-		xProcess += processLabels[processIndex].getWidth() + 1;
-		simulationPanel.add(processLabels[processIndex]);
+	public void addProcessLabel(Process currentProcess) {
+		JLabel processLabel = new JLabel(currentProcess.getName());
+		processLabel.setBackground(currentProcess.getColor());
+		processLabel.setBorder(new LineBorder(Color.BLACK));
+		processLabel.setOpaque(true);
+		processLabel.setSize(30, 50);
+		processLabel.setLocation(xProcess, yProcess);
+		xProcess += processLabel.getWidth() + 1;
+		simulationPanel.add(processLabel);
 		simulationPanel.repaint();
 	}
 	
@@ -172,6 +157,7 @@ public class FCFSManager extends Thread {
 		for (int i = 0; i < timeData.length; i++) {
 			processesVector.add(new Process(
 					Integer.parseInt(timeData[i][0]),
+					Integer.parseInt(timeData[i][1]),
 					convertToIntArray(resourcesData[i]),
 					("P" + (i + 1)), ColorConstants.getColor(i)));
 		}

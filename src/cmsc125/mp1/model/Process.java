@@ -6,12 +6,14 @@ public class Process {
 
 	private String name;
 	private int arrivalTime;
+	private int priorityNum;
 	private int[] resources;
 	private Color color;
 	
-	public Process(int arrivalTime, int[] resources,
+	public Process(int arrivalTime, int priorityNum, int[] resources,
 			String name, Color color) {
 		setArrivalTime(arrivalTime);
+		setPriorityNum(priorityNum);
 		setResources(resources);
 		setName(name);
 		setColor(color);
@@ -60,5 +62,13 @@ public class Process {
 
 	public void setColor(Color color) {
 		this.color = color;
+	}
+
+	public int getPriorityNum() {
+		return priorityNum;
+	}
+
+	public void setPriorityNum(int priorityNum) {
+		this.priorityNum = priorityNum;
 	}
 }

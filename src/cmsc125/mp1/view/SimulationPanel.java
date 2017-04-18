@@ -31,17 +31,31 @@ public class SimulationPanel extends JPanel {
 		String string = "";
 		String[][] data = ((ResourcesTableModel) resourcesTable.getModel()).getData();
 		String[][] timeData = ((ResourcesTableModel) timeTable.getModel()).getData();
+		
 		string += "Resources = [";
 		String resString = "";
 		for (int i = 0; i < data.length; i++) {
 			resString += data[i][0] + ", ";
 		}
 		string += resString.substring(0, resString.length() - 2) + "]\nArrival time = [";
+		
+		// arrival
 		String arrivalString = "";
 		for (int i = 0; i < timeData.length; i++) {
 			arrivalString += timeData[i][0] + ", ";
 		}
-		string += arrivalString.substring(0, arrivalString.length() - 2) + "]\n";
+		string += arrivalString.substring(0, arrivalString.length() - 2) + "]\nPriority = [";
+		
+		// priority
+		String priorityString = "";
+		for (int i = 0; i < timeData.length; i++) {
+			priorityString += timeData[i][1] + ", ";
+		}
+		string += priorityString.substring(0, priorityString.length() - 2) + "]\nQuantum = ";
+		
+		// quantum
+		string += quantumField.getText();
+		
 		JLabel label = new JLabel("<html><div style='text-align: center;'>" + string + "</div></html>");
 		label.setFont(new Font("Verdana", 1, 20));
 		label.setSize(1000, 50);

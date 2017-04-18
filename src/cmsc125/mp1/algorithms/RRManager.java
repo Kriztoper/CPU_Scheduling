@@ -30,7 +30,9 @@ public class RRManager extends Thread {
 		this.simulationPanel = simulationPanel;
 		this.resourcesTable = resourcesTable;
 		this.timeTable = timeTable;
-		quantum = Integer.parseInt(quantumField.getText());
+		String quantumString = quantumField.getText();
+		quantum = ((quantumString.isEmpty()) ? (0) : 
+			(Integer.parseInt(quantumString)));
 	}
 
 	public void startSimulation() {
@@ -46,8 +48,6 @@ public class RRManager extends Thread {
 		Process currentProcess = null;
 		int currentBurstTime = 0;
 		int t = 0;
-
-		JLabel[] processLabels = new JLabel[processesVector.size()];
 		xProcess = 5;
 		yProcess = 200;
 		
@@ -63,7 +63,7 @@ public class RRManager extends Thread {
 				currentProcess.decBurstTime();
 				currentBurstTime++;
 
-				addProcessLabel(processLabels, currentProcess);
+				addProcessLabel(currentProcess);
 				
 				System.out.println(
 						currentProcess.getName() +
@@ -72,7 +72,7 @@ public class RRManager extends Thread {
 				currentProcess.decBurstTime();//currentBurstTime++;
 				currentBurstTime++;
 				
-				addProcessLabel(processLabels, currentProcess);
+				addProcessLabel(currentProcess);
 				
 				System.out.println(
 						currentProcess.getName() +
@@ -100,10 +100,10 @@ public class RRManager extends Thread {
 			
 			t++;
 		}
-		System.out.println("Done executing FCFS!");
+		System.out.println("Done executing RR!");
 	}
 	
-	public void addProcessLabel(JLabel[] processLabels, Process currentProcess) {
+	public void addProcessLabel(Process currentProcess) {
 		JLabel processLabel = new JLabel(currentProcess.getName());
 		processLabel.setBackground(currentProcess.getColor());
 		processLabel.setBorder(new LineBorder(Color.BLACK));
@@ -165,6 +165,7 @@ public class RRManager extends Thread {
 		for (int i = 0; i < timeData.length; i++) {
 			processesVector.add(new Process(
 					Integer.parseInt(timeData[i][0]),
+					Integer.parseInt(timeData[i][1]),
 					convertToIntArray(resourcesData[i]),
 					("P" + (i + 1)), ColorConstants.getColor(i)));
 		}

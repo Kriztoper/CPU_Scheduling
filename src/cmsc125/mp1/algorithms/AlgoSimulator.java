@@ -43,6 +43,12 @@ public class AlgoSimulator {
 			          timeTable, quantumField); 
 			       
 			rrManager.startSimulation(); 
+		} else if (algos.contains("NP PRIO")) { 
+			NP_PRIOManager np_prioManager = new NP_PRIOManager( 
+			          simulationPanel, resourcesTable,  
+			          timeTable); 
+			       
+			np_prioManager.startSimulation(); 
 		}
 	}
 }
