@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 import cmsc125.mp1.algorithms.AlgoSimulator;
@@ -23,7 +24,7 @@ public class SimulationPanel extends JPanel {
 		// setBackground(Color.YELLOW);
 	}
 
-	public void startSimulation(ArrayList<String> algos, JTable resourcesTable, JTable timeTable) {
+	public void startSimulation(ArrayList<String> algos, JTable resourcesTable, JTable timeTable, JTextField quantumField) {
 
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		// block to print the resources and arrival time
@@ -56,7 +57,7 @@ public class SimulationPanel extends JPanel {
 		add(getPanel());
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-		algoSimulator.startSimulation(this, algos, resourcesTable, timeTable);
+		algoSimulator.startSimulation(this, algos, resourcesTable, timeTable, quantumField);
 	}
 
 	public JPanel getPanel() {

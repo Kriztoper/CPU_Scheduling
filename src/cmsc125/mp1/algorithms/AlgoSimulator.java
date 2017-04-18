@@ -3,6 +3,7 @@ package cmsc125.mp1.algorithms;
 import java.util.ArrayList;
 
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
 import cmsc125.mp1.view.SimulationPanel;
 
@@ -19,7 +20,7 @@ public class AlgoSimulator {
 	public void startSimulation(
 			SimulationPanel simulationPanel, 
 			ArrayList<String> algos, 
-			JTable resourcesTable, JTable timeTable) {
+			JTable resourcesTable, JTable timeTable, JTextField quantumField) {
 		/*this.simulationPanel = simulationPanel;
 		this.resourcesTable = resourcesTable;
 		this.timeTable = timeTable;*/
@@ -39,7 +40,7 @@ public class AlgoSimulator {
 		} else if (algos.contains("NP PRIO")) { 
 			NPPRIOManager npprioManager = new NPPRIOManager( 
 			          simulationPanel, resourcesTable,  
-			          timeTable); 
+			          timeTable, quantumField); 
 			       
 			npprioManager.startSimulation(); 
 		}

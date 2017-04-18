@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 import cmsc125.mp1.constants.ColorConstants;
@@ -19,16 +20,17 @@ public class NPPRIOManager extends Thread {
 	private JTable resourcesTable;
 	private JTable timeTable;
 	private Vector<Process> processesVector;
-	private ProcessesQueue jobQueue;
+	private ProcessesQueue readyQueue;
 	private int xProcess;
 	private int yProcess;
-	private int processIndex;
+	private int quantum;
 	
 	public NPPRIOManager(SimulationPanel simulationPanel, 
-			JTable resourcesTable, JTable timeTable) {
+			JTable resourcesTable, JTable timeTable, JTextField quantumField) {
 		this.simulationPanel = simulationPanel;
 		this.resourcesTable = resourcesTable;
 		this.timeTable = timeTable;
+		quantum = Integer.parseInt(quantumField.getText());
 	}
 
 	public void startSimulation() {
@@ -44,56 +46,50 @@ public class NPPRIOManager extends Thread {
 		Process currentProcess = null;
 		int currentBurstTime = 0;
 		int t = 0;
-		int processNum = 0;
-		int queueSize = jobQueue.getSize();
 
 		JLabel[] processLabels = new JLabel[processesVector.size()];
 		xProcess = 5;
 		yProcess = 200;
-		processIndex = 0;
 		
-		while (processNum <= queueSize) {
+		while (true) {
 			System.out.println("At time " + t);
-			if (jobQueue.isEmpty() &&
+			if (readyQueue.isEmpty() &&
 					currentProcess == null) {
 				break;
 			} else if (currentProcess == null &&
-					jobQueue.peek().
+					readyQueue.peek().
 					getArrivalTime() <= t) {
-				currentProcess = jobQueue.dequeue();
+				currentProcess = readyQueue.dequeue();
+				currentProcess.decBurstTime();
 				currentBurstTime++;
-				processIndex = processNum;
-				processNum++;
-				//System.out.println("processNum increased to "
-				//		+processNum);
 
-				addProcessLabel(processLabels);
+				addProcessLabel(processLabels, currentProcess);
 				
 				System.out.println(
 						currentProcess.getName() +
-						"[" + currentBurstTime + "]");
-			} else if (currentProcess == null &&
-					jobQueue.peek().
-					getArrivalTime() > t) {
-				//TODO: Implement this special case...
-			} else if (currentProcess != null && 
-					currentBurstTime < 
-					currentProcess.getBurstTime()) {
+						"[" + currentProcess.getBurstTime() + "]");
+			} else if (currentProcess != null) {
+				currentProcess.decBurstTime();//currentBurstTime++;
 				currentBurstTime++;
 				
-				addProcessLabel(processLabels);
+				addProcessLabel(processLabels, currentProcess);
 				
 				System.out.println(
 						currentProcess.getName() +
-						"[" + currentBurstTime + "]");
+						"[" + currentProcess.getBurstTime() + "]");
 			}
 			
 
 			if (null != currentProcess &&
-					currentBurstTime == 
-					currentProcess.getBurstTime()) {
+					currentBurstTime == quantum && 
+					currentProcess.getBurstTime() != 0) {
+				readyQueue.enqueue(currentProcess);
 				currentProcess = null;
 				currentBurstTime = 0;
+			} else if (null != currentProcess &&
+					currentProcess.getBurstTime() == 0) {
+				currentBurstTime = 0;
+				currentProcess = null;
 			}
 			
 			try {
@@ -107,18 +103,15 @@ public class NPPRIOManager extends Thread {
 		System.out.println("Done executing FCFS!");
 	}
 	
-	public void addProcessLabel(JLabel[] processLabels) {
-		processLabels[processIndex] = new JLabel(
-				processesVector.get(processIndex).getName());
-		processLabels[processIndex].setBackground(
-				processesVector.get(processIndex).getColor());
-		processLabels[processIndex].setBorder(
-				new LineBorder(Color.BLACK));
-		processLabels[processIndex].setOpaque(true);
-		processLabels[processIndex].setSize(30, 50);
-		processLabels[processIndex].setLocation(xProcess, yProcess);
-		xProcess += processLabels[processIndex].getWidth() + 1;
-		simulationPanel.add(processLabels[processIndex]);
+	public void addProcessLabel(JLabel[] processLabels, Process currentProcess) {
+		JLabel processLabel = new JLabel(currentProcess.getName());
+		processLabel.setBackground(currentProcess.getColor());
+		processLabel.setBorder(new LineBorder(Color.BLACK));
+		processLabel.setOpaque(true);
+		processLabel.setSize(30, 50);
+		processLabel.setLocation(xProcess, yProcess);
+		xProcess += processLabel.getWidth() + 1;
+		simulationPanel.add(processLabel);
 		simulationPanel.repaint();
 	}
 	
@@ -128,7 +121,7 @@ public class NPPRIOManager extends Thread {
 		JLabel[] processLabels = new JLabel[processesVector.size()];
 		int x = 5;
 		int y = 80;
-		jobQueue = new ProcessesQueue();
+		readyQueue = new ProcessesQueue();
 		for (int i = 0; i < processesVector.size(); i++) {
 			processLabels[i] = new JLabel(
 					processesVector.get(i).getName());
@@ -141,7 +134,7 @@ public class NPPRIOManager extends Thread {
 			processLabels[i].setLocation(x, y);
 			x += processLabels[i].getWidth() + 1;
 			simulationPanel.add(processLabels[i]);
-			jobQueue.enqueue(processesVector.get(i));
+			readyQueue.enqueue(processesVector.get(i));
 		}
 	}
 	
@@ -175,10 +168,6 @@ public class NPPRIOManager extends Thread {
 					convertToIntArray(resourcesData[i]),
 					("P" + (i + 1)), ColorConstants.getColor(i)));
 		}
-		
-		/*for (Process process: processesVector) {
-			System.out.println(process);
-		}*/
 	}
 	
 	public int[] convertToIntArray(String[] resourcesData) {

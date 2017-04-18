@@ -26,6 +26,10 @@ public class Process {
 		return resources[0];
 	}
 	
+	public void decBurstTime() {
+		resources[0] = resources[0] - 1;
+	}
+	
 	public int getArrivalTime() {
 		return arrivalTime;
 	}

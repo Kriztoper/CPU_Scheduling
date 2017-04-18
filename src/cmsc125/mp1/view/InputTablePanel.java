@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
 import cmsc125.mp1.model.ResourcesTableModel;
 
@@ -32,7 +33,9 @@ public class InputTablePanel extends JPanel {
 	private JButton randResourcesTableButton;
 	private JButton startSimulationButton;
 	private JTable timeTable;
-
+	private JLabel quantumLabel;
+	private JTextField quantumField;
+	
 	public InputTablePanel() {
 		initPanel();
 		initComponents();
@@ -153,6 +156,11 @@ public class InputTablePanel extends JPanel {
 		timeTable.setColumnSelectionAllowed(true);
 		timeTable.setCellSelectionEnabled(true);
 
+		// quantum label and text field
+		quantumLabel = new JLabel("Quatum: ");
+		setQuantumField(new JTextField(5));
+
+		
 	}
 
 	public void addComponents() {
@@ -211,6 +219,14 @@ public class InputTablePanel extends JPanel {
 		startSimulationButton.setSize(150, 20);
 		startSimulationButton.setLocation(450, 450);
 		add(startSimulationButton);
+		
+		// quantum
+		quantumLabel.setSize(70, 20);
+		quantumLabel.setLocation(850, 5);
+		add(quantumLabel);
+		getQuantumField().setSize(70, 20);
+		getQuantumField().setLocation(925, 5);
+		add(getQuantumField());
 	}
 
 	public void randResourcesTable() {
@@ -398,5 +414,13 @@ public class InputTablePanel extends JPanel {
 
 	public JTable getTimeTable() {
 		return timeTable;
+	}
+
+	public JTextField getQuantumField() {
+		return quantumField;
+	}
+
+	public void setQuantumField(JTextField quantumField) {
+		this.quantumField = quantumField;
 	}
 }
