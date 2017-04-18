@@ -1,5 +1,5 @@
-package cmsc125.mp1.algorithms; 
- 
+package cmsc125.mp1.algorithms;
+
 import java.awt.Color;
 import java.util.Vector;
 
@@ -13,7 +13,7 @@ import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.model.ResourcesTableModel;
 import cmsc125.mp1.view.SimulationPanel;
 
-public class SJFManager extends Thread {
+public class NP_PRIOManager extends Thread {
 
 	private SimulationPanel simulationPanel;
 	private JTable resourcesTable;
@@ -26,7 +26,7 @@ public class SJFManager extends Thread {
 	private int xProcess;
 	private int yProcess;
 	
-	public SJFManager(SimulationPanel simulationPanel, 
+	public NP_PRIOManager(SimulationPanel simulationPanel, 
 			JTable resourcesTable, JTable timeTable) {
 		this.simulationPanel = simulationPanel;
 		this.resourcesTable = resourcesTable;
@@ -138,8 +138,7 @@ public class SJFManager extends Thread {
 			System.out.println("At time " + t);
 			fillReadyQueue(t);
 			sortReadyQueue();
-			if (processesVector.isEmpty() && 
-					readyQueue.isEmpty() &&
+			if (readyQueue.isEmpty() &&
 					currentProcess == null) {
 				break;
 			} else if (currentProcess == null && 
@@ -180,7 +179,7 @@ public class SJFManager extends Thread {
 			
 			t++;
 		}
-		System.out.println("Done executing SJF!");
+		System.out.println("Done executing NP PRIO!");
 	}
 	
 	public void sortReadyQueue() {
@@ -188,9 +187,9 @@ public class SJFManager extends Thread {
 		for (int i = 0; i < (size - 1); i++) {
 			for (int j = 0; j < size - i - 1; j++) {
 				if (readyQueue.get(j).
-						getBurstTime() > 
+						getPriorityNum() > 
 					readyQueue.get(j + 1).
-						getBurstTime()) {
+						getPriorityNum()) {
 					Process temp = readyQueue.get(j);
 					readyQueue.set(j, 
 							readyQueue.get(j + 1));

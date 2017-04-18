@@ -3,9 +3,10 @@ package cmsc125.mp1.algorithms;
 import java.util.ArrayList;
 
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
 import cmsc125.mp1.view.SimulationPanel;
-import cmsc125.mp1.algorithms.SJFManager; 
+
 public class AlgoSimulator {
 
 	/*private SimulationPanel simulationPanel;
@@ -19,7 +20,7 @@ public class AlgoSimulator {
 	public void startSimulation(
 			SimulationPanel simulationPanel, 
 			ArrayList<String> algos, 
-			JTable resourcesTable, JTable timeTable) {
+			JTable resourcesTable, JTable timeTable, JTextField quantumField) {
 		/*this.simulationPanel = simulationPanel;
 		this.resourcesTable = resourcesTable;
 		this.timeTable = timeTable;*/
@@ -36,6 +37,18 @@ public class AlgoSimulator {
 			          timeTable); 
 			       
 			sjfManager.startSimulation(); 
-		} 
+		} else if (algos.contains("RR")) { 
+			RRManager rrManager = new RRManager( 
+			          simulationPanel, resourcesTable,  
+			          timeTable, quantumField); 
+			       
+			rrManager.startSimulation(); 
+		} else if (algos.contains("NP PRIO")) { 
+			NP_PRIOManager np_prioManager = new NP_PRIOManager( 
+			          simulationPanel, resourcesTable,  
+			          timeTable); 
+			       
+			np_prioManager.startSimulation(); 
+		}
 	}
 }

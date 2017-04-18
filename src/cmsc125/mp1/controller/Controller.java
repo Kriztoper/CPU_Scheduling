@@ -64,10 +64,11 @@ public class Controller {
 
 		inputTablePanel.getStartSimulationButton().addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				view.setCurrentPanel("simulationPanel");
 				simulationPanel.startSimulation(inputTablePanel.getSelectedAlgosFromCheckbox(),
-						inputTablePanel.getResourcesTable(), inputTablePanel.getTimeTable());
+						inputTablePanel.getResourcesTable(), inputTablePanel.getTimeTable(),
+						inputTablePanel.getQuantumField());
 				// view.setCurrentPanel("menuPanel");
 			}
 		});
@@ -92,7 +93,7 @@ public class Controller {
 
 		inputTablePanel.getRandResourcesTableButton().addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				inputTablePanel.randResourcesTable();
 			}
 		});

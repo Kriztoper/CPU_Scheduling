@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 import cmsc125.mp1.constants.ColorConstants;
@@ -13,21 +14,25 @@ import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.model.ResourcesTableModel;
 import cmsc125.mp1.view.SimulationPanel;
 
-public class FCFSManager extends Thread {
+public class RRManager extends Thread {
 
 	private SimulationPanel simulationPanel;
 	private JTable resourcesTable;
 	private JTable timeTable;
 	private Vector<Process> processesVector;
-	private ProcessesQueue jobQueue;
+	private ProcessesQueue readyQueue;
 	private int xProcess;
 	private int yProcess;
+	private int quantum;
 	
-	public FCFSManager(SimulationPanel simulationPanel, 
-			JTable resourcesTable, JTable timeTable) {
+	public RRManager(SimulationPanel simulationPanel, 
+			JTable resourcesTable, JTable timeTable, JTextField quantumField) {
 		this.simulationPanel = simulationPanel;
 		this.resourcesTable = resourcesTable;
 		this.timeTable = timeTable;
+		String quantumString = quantumField.getText();
+		quantum = ((quantumString.isEmpty()) ? (0) : 
+			(Integer.parseInt(quantumString)));
 	}
 
 	public void startSimulation() {
@@ -48,40 +53,43 @@ public class FCFSManager extends Thread {
 		
 		while (true) {
 			System.out.println("At time " + t);
-			if (jobQueue.isEmpty() &&
+			if (readyQueue.isEmpty() &&
 					currentProcess == null) {
 				break;
 			} else if (currentProcess == null &&
-					jobQueue.peek().
+					readyQueue.peek().
 					getArrivalTime() <= t) {
-				currentProcess = jobQueue.dequeue();
+				currentProcess = readyQueue.dequeue();
+				currentProcess.decBurstTime();
 				currentBurstTime++;
-				//System.out.println("processNum increased to "
-				//		+processNum);
 
 				addProcessLabel(currentProcess);
 				
 				System.out.println(
 						currentProcess.getName() +
-						"[" + currentBurstTime + "]");
-			} else if (currentProcess != null && 
-					currentBurstTime < 
-					currentProcess.getBurstTime()) {
+						"[" + currentProcess.getBurstTime() + "]");
+			} else if (currentProcess != null) {
+				currentProcess.decBurstTime();//currentBurstTime++;
 				currentBurstTime++;
 				
 				addProcessLabel(currentProcess);
 				
 				System.out.println(
 						currentProcess.getName() +
-						"[" + currentBurstTime + "]");
+						"[" + currentProcess.getBurstTime() + "]");
 			}
 			
 
 			if (null != currentProcess &&
-					currentBurstTime == 
-					currentProcess.getBurstTime()) {
+					currentBurstTime == quantum && 
+					currentProcess.getBurstTime() != 0) {
+				readyQueue.enqueue(currentProcess);
 				currentProcess = null;
 				currentBurstTime = 0;
+			} else if (null != currentProcess &&
+					currentProcess.getBurstTime() == 0) {
+				currentBurstTime = 0;
+				currentProcess = null;
 			}
 			
 			try {
@@ -92,7 +100,7 @@ public class FCFSManager extends Thread {
 			
 			t++;
 		}
-		System.out.println("Done executing FCFS!");
+		System.out.println("Done executing RR!");
 	}
 	
 	public void addProcessLabel(Process currentProcess) {
@@ -113,7 +121,7 @@ public class FCFSManager extends Thread {
 		JLabel[] processLabels = new JLabel[processesVector.size()];
 		int x = 5;
 		int y = 80;
-		jobQueue = new ProcessesQueue();
+		readyQueue = new ProcessesQueue();
 		for (int i = 0; i < processesVector.size(); i++) {
 			processLabels[i] = new JLabel(
 					processesVector.get(i).getName());
@@ -126,7 +134,7 @@ public class FCFSManager extends Thread {
 			processLabels[i].setLocation(x, y);
 			x += processLabels[i].getWidth() + 1;
 			simulationPanel.add(processLabels[i]);
-			jobQueue.enqueue(processesVector.get(i));
+			readyQueue.enqueue(processesVector.get(i));
 		}
 	}
 	
@@ -161,10 +169,6 @@ public class FCFSManager extends Thread {
 					convertToIntArray(resourcesData[i]),
 					("P" + (i + 1)), ColorConstants.getColor(i)));
 		}
-		
-		/*for (Process process: processesVector) {
-			System.out.println(process);
-		}*/
 	}
 	
 	public int[] convertToIntArray(String[] resourcesData) {
