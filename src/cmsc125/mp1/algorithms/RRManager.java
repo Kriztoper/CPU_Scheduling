@@ -14,7 +14,7 @@ import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.model.ResourcesTableModel;
 import cmsc125.mp1.view.SimulationPanel;
 
-public class NPPRIOManager extends Thread {
+public class RRManager extends Thread {
 
 	private SimulationPanel simulationPanel;
 	private JTable resourcesTable;
@@ -25,7 +25,7 @@ public class NPPRIOManager extends Thread {
 	private int yProcess;
 	private int quantum;
 	
-	public NPPRIOManager(SimulationPanel simulationPanel, 
+	public RRManager(SimulationPanel simulationPanel, 
 			JTable resourcesTable, JTable timeTable, JTextField quantumField) {
 		this.simulationPanel = simulationPanel;
 		this.resourcesTable = resourcesTable;

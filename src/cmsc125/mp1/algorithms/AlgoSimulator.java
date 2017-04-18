@@ -37,12 +37,12 @@ public class AlgoSimulator {
 			          timeTable); 
 			       
 			sjfManager.startSimulation(); 
-		} else if (algos.contains("NP PRIO")) { 
-			NPPRIOManager npprioManager = new NPPRIOManager( 
+		} else if (algos.contains("RR")) { 
+			RRManager rrManager = new RRManager( 
 			          simulationPanel, resourcesTable,  
 			          timeTable, quantumField); 
 			       
-			npprioManager.startSimulation(); 
+			rrManager.startSimulation(); 
 		}
 	}
 }
