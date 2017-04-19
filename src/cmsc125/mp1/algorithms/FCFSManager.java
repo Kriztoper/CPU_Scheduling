@@ -16,7 +16,9 @@ import cmsc125.mp1.view.SimulationPanel;
 public class FCFSManager extends Thread {
 
 	private SimulationPanel simulationPanel;
-	private JTable resourcesTable;
+	private JTable allocatedTable;
+	private JTable maximumTable;
+	private JTable availableTable;
 	private JTable timeTable;
 	private Vector<Process> processesVector;
 	private ProcessesQueue jobQueue;
@@ -25,9 +27,14 @@ public class FCFSManager extends Thread {
 	private Bankers bankers;
 	
 	public FCFSManager(SimulationPanel simulationPanel, 
-			JTable resourcesTable, JTable timeTable) {
+			JTable allocatedTable, 
+			JTable maximumTable,
+			JTable availableTable,
+			JTable timeTable) {
 		this.simulationPanel = simulationPanel;
-		this.resourcesTable = resourcesTable;
+		this.allocatedTable = allocatedTable;
+		this.maximumTable = maximumTable;
+		this.availableTable = availableTable;
 		this.timeTable = timeTable;
 	}
 
@@ -38,9 +45,21 @@ public class FCFSManager extends Thread {
 		start();
 	}
 
+	public int[] getArrivalTimes() {
+		String[][] timeData = ((ResourcesTableModel) 
+				timeTable.getModel()).getData();
+		int[] arrivalTimes = new int[timeData.length];
+		for (int i = 0; i < timeData.length; i++) {
+			arrivalTimes[i] = Integer.parseInt(timeData[i][0]);
+		}
+		
+		return arrivalTimes;
+	}
+	
 	@Override
 	public void run() {
-		bankers = new Bankers(resourcesTable);
+		bankers = new Bankers(allocatedTable, maximumTable, 
+				availableTable, getArrivalTimes());
 		long increment = 200;//0;
 		Process currentProcess = null;
 		int currentBurstTime = 0;
@@ -152,7 +171,7 @@ public class FCFSManager extends Thread {
 	public void initProcessesInVector() {
 		processesVector = new Vector<Process>();
 		String[][] resourcesData = ((ResourcesTableModel) 
-				resourcesTable.getModel()).getData();
+				allocatedTable.getModel()).getData();
 		String[][] timeData = ((ResourcesTableModel) 
 				timeTable.getModel()).getData();
 		

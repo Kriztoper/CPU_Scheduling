@@ -24,18 +24,25 @@ public class SimulationPanel extends JPanel {
 		// setBackground(Color.YELLOW);
 	}
 
-	public void startSimulation(ArrayList<String> algos, JTable resourcesTable, JTable timeTable, JTextField quantumField) {
+	public void startSimulation(ArrayList<String> algos, 
+			JTable allocatedTable, 
+			JTable maximumTable,
+			JTable availableTable,
+			JTable timeTable, 
+			JTextField quantumField) {
 
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		// block to print the resources and arrival time
 		String string = "";
-		String[][] data = ((ResourcesTableModel) resourcesTable.getModel()).getData();
+		String[][] allocatedData = ((ResourcesTableModel) allocatedTable.getModel()).getData();
+		String[][] maximumData = ((ResourcesTableModel) maximumTable.getModel()).getData();
+		String[][] availableData = ((ResourcesTableModel) availableTable.getModel()).getData();
 		String[][] timeData = ((ResourcesTableModel) timeTable.getModel()).getData();
 		
 		string += "Resources = [";
 		String resString = "";
-		for (int i = 0; i < data.length; i++) {
-			resString += data[i][0] + ", ";
+		for (int i = 0; i < allocatedData.length; i++) {
+			resString += allocatedData[i][0] + ", ";
 		}
 		string += resString.substring(0, resString.length() - 2) + "]\nArrival time = [";
 		
@@ -71,7 +78,12 @@ public class SimulationPanel extends JPanel {
 		add(getPanel());
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-		algoSimulator.startSimulation(this, algos, resourcesTable, timeTable, quantumField);
+		algoSimulator.startSimulation(this, algos, 
+				allocatedTable, 
+				maximumTable,
+				availableTable,
+				timeTable, 
+				quantumField);
 	}
 
 	public JPanel getPanel() {

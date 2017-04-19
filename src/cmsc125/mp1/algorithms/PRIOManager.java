@@ -16,7 +16,9 @@ import cmsc125.mp1.view.SimulationPanel;
 public class PRIOManager extends Thread {
 
 	private SimulationPanel simulationPanel;
-	private JTable resourcesTable;
+	private JTable allocatedTable;
+	private JTable maximumTable;
+	private JTable availableTable;
 	private JTable timeTable;
 	private ProcessesQueue jobQueue;
 	private Vector<Process> readyQueue;
@@ -25,11 +27,17 @@ public class PRIOManager extends Thread {
 	private int[] arrivalTimes;
 	private int xProcess;
 	private int yProcess;
+	private Bankers bankers;
 	
 	public PRIOManager(SimulationPanel simulationPanel, 
-			JTable resourcesTable, JTable timeTable) {
+			JTable allocatedTable, 
+			JTable maximumTable,
+			JTable availableTable,
+			JTable timeTable) {
 		this.simulationPanel = simulationPanel;
-		this.resourcesTable = resourcesTable;
+		this.allocatedTable = allocatedTable;
+		this.maximumTable = maximumTable;
+		this.availableTable = availableTable;
 		this.timeTable = timeTable;
 		readyQueue = new Vector<Process>();
 	}
@@ -99,7 +107,7 @@ public class PRIOManager extends Thread {
 		processesVector = new Vector<Process>();
 		origProcessesVector = new Vector<Process>();
 		String[][] resourcesData = ((ResourcesTableModel) 
-				resourcesTable.getModel()).getData();
+				allocatedTable.getModel()).getData();
 		String[][] timeData = ((ResourcesTableModel) 
 				timeTable.getModel()).getData();
 		
@@ -125,8 +133,21 @@ public class PRIOManager extends Thread {
 		return intData;
 	}
 	
+	public int[] getArrivalTimes() {
+		String[][] timeData = ((ResourcesTableModel) 
+				timeTable.getModel()).getData();
+		int[] arrivalTimes = new int[timeData.length];
+		for (int i = 0; i < timeData.length; i++) {
+			arrivalTimes[i] = Integer.parseInt(timeData[i][0]);
+		}
+		
+		return arrivalTimes;
+	}
+	
 	@Override
 	public void run() {
+		bankers = new Bankers(allocatedTable, maximumTable, 
+				availableTable, getArrivalTimes());
 		long increment = 200;//0;
 		int t = 0;
 		Process currentProcess = null;

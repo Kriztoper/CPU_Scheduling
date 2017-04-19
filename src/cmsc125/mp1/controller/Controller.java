@@ -67,7 +67,10 @@ public class Controller {
 			public void actionPerformed(ActionEvent e) {
 				view.setCurrentPanel("simulationPanel");
 				simulationPanel.startSimulation(inputTablePanel.getSelectedAlgosFromCheckbox(),
-						inputTablePanel.getResourcesTable(), inputTablePanel.getTimeTable(),
+						inputTablePanel.getAllocatedTable(), 
+						inputTablePanel.getMaximumTable(), 
+						inputTablePanel.getAvailableTable(), 
+						inputTablePanel.getTimeTable(),
 						inputTablePanel.getQuantumField());
 				// view.setCurrentPanel("menuPanel");
 			}
