@@ -12,6 +12,8 @@ import cmsc125.mp1.model.Process;
 import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.model.ResourcesTableModel;
 import cmsc125.mp1.view.SimulationPanel;
+import javafx.application.Platform;
+import javafx.scene.chart.XYChart;
 
 public class FCFSManager extends Thread {
 
@@ -105,6 +107,8 @@ public class FCFSManager extends Thread {
 		xProcess += processLabel.getWidth() + 1;
 		simulationPanel.add(processLabel);
 		simulationPanel.repaint();
+		
+		System.out.println(currentProcess.getName());
 	}
 	
 	public void sortProcessesToReadyQueue() {
