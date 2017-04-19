@@ -29,4 +29,21 @@ public class ProcessesQueue {
 	public boolean isEmpty() {
 		return processes.isEmpty();
 	}
+	
+	public void sort() {
+		int size = processes.size();
+		for (int i = 0; i < (size - 1); i++) {
+			for (int j = 0; j < size - i - 1; j++) {
+				if (processes.get(j).
+						getArrivalTime() > 
+						processes.get(j + 1).
+						getArrivalTime()) {
+					Process temp = processes.get(j);
+					processes.set(j, 
+							processes.get(j + 1));
+					processes.set(j + 1, temp);
+				}
+			}
+		}
+	}
 }

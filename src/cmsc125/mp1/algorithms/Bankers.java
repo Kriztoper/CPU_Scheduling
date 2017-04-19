@@ -2,6 +2,7 @@ package cmsc125.mp1.algorithms;
 
 import javax.swing.JTable;
 
+import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.model.ResourcesTableModel;
 
 public class Bankers {
@@ -10,11 +11,13 @@ public class Bankers {
 	private int[][] maximumTableData;
 	private int[][] availableTableData;
 	private int[] arrivalTimes;
+	private ProcessesQueue readyQueue;
 	
 	public Bankers(JTable allocatedTable, JTable maximumTable,
 			JTable availableTable, int[] arrivalTimes) {
 		initTableData(allocatedTable, maximumTable, availableTable);
 		this.arrivalTimes = arrivalTimes;
+		readyQueue = new ProcessesQueue();
 	}
 
 	public void initTableData(JTable allocatedTable,
