@@ -9,21 +9,10 @@ import cmsc125.mp1.view.SimulationPanel;
 
 public class AlgoSimulator {
 
-	/*private SimulationPanel simulationPanel;
-	private JTable resourcesTable;
-	private JTable timeTable;*/
-	
-	public AlgoSimulator() {
-		
-	}
-	
 	public void startSimulation(
 			SimulationPanel simulationPanel, 
 			ArrayList<String> algos, 
 			JTable resourcesTable, JTable timeTable, JTextField quantumField) {
-		/*this.simulationPanel = simulationPanel;
-		this.resourcesTable = resourcesTable;
-		this.timeTable = timeTable;*/
 
 		if (algos.contains("FCFS")) {
 			FCFSManager fcfsManager = new FCFSManager(

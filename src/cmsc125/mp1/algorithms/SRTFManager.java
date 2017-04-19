@@ -108,7 +108,7 @@ public class SRTFManager extends Thread {
 					Integer.parseInt(timeData[i][0]),
 					Integer.parseInt(timeData[i][1]),
 					convertToIntArray(resourcesData[i]),
-					("P" + (i + 1)),
+					("P" + i),
 					ColorConstants.getColor(i)));
 			origProcessesVector.add(processesVector.
 					get(processesVector.size() - 1));

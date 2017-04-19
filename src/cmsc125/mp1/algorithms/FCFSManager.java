@@ -22,6 +22,7 @@ public class FCFSManager extends Thread {
 	private ProcessesQueue jobQueue;
 	private int xProcess;
 	private int yProcess;
+	private Bankers bankers;
 	
 	public FCFSManager(SimulationPanel simulationPanel, 
 			JTable resourcesTable, JTable timeTable) {
@@ -39,6 +40,7 @@ public class FCFSManager extends Thread {
 
 	@Override
 	public void run() {
+		bankers = new Bankers(resourcesTable);
 		long increment = 200;//0;
 		Process currentProcess = null;
 		int currentBurstTime = 0;
@@ -159,12 +161,8 @@ public class FCFSManager extends Thread {
 					Integer.parseInt(timeData[i][0]),
 					Integer.parseInt(timeData[i][1]),
 					convertToIntArray(resourcesData[i]),
-					("P" + (i + 1)), ColorConstants.getColor(i)));
+					("P" + i), ColorConstants.getColor(i)));
 		}
-		
-		/*for (Process process: processesVector) {
-			System.out.println(process);
-		}*/
 	}
 	
 	public int[] convertToIntArray(String[] resourcesData) {

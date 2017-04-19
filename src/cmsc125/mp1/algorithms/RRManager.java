@@ -167,7 +167,7 @@ public class RRManager extends Thread {
 					Integer.parseInt(timeData[i][0]),
 					Integer.parseInt(timeData[i][1]),
 					convertToIntArray(resourcesData[i]),
-					("P" + (i + 1)), ColorConstants.getColor(i)));
+					("P" + i), ColorConstants.getColor(i)));
 		}
 	}
 	

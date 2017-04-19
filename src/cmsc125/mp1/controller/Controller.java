@@ -53,7 +53,7 @@ public class Controller {
 				inputTablePanel.setResourcesTableColumnSize(inputTablePanel.getNumResources().getSelectedIndex() + 1);
 			}
 		});
-
+		
 		inputTablePanel.getRandCPUSchedAlgosButton().addActionListener(new ActionListener() {
 
 			@Override
@@ -91,10 +91,24 @@ public class Controller {
 			}
 		});
 
-		inputTablePanel.getRandResourcesTableButton().addActionListener(new ActionListener() {
+		inputTablePanel.getRandAllocatedTableButton().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				inputTablePanel.randResourcesTable();
+				inputTablePanel.randAllocatedTable();
+			}
+		});
+		
+		inputTablePanel.getRandMaximumTableButton().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				inputTablePanel.randMaximumTable();
+			}
+		});
+		
+		inputTablePanel.getRandAvailableTableButton().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				inputTablePanel.randAvailableTable();
 			}
 		});
 	}

@@ -28,9 +28,15 @@ public class InputTablePanel extends JPanel {
 	private JPanel checkBoxAlgosPanel;
 	private ArrayList<Checkbox> checkBoxAlgosList;
 	private JButton randCPUSchedAlgosButton;
-	private JLabel resourcesTableLabel;
-	private JTable resourcesTable;
-	private JButton randResourcesTableButton;
+	private JLabel allocatedTableLabel;
+	private JTable allocatedTable;
+	private JButton randAllocatedTableButton;
+	private JLabel maximumTableLabel;
+	private JTable maximumTable;
+	private JButton randMaximumTableButton;
+	private JLabel availableTableLabel;
+	private JTable availableTable;
+	private JButton randAvailableTableButton;
 	private JButton startSimulationButton;
 	private JTable timeTable;
 	private JLabel quantumLabel;
@@ -106,8 +112,10 @@ public class InputTablePanel extends JPanel {
 		randCPUSchedAlgosButton = new JButton("Rand");
 
 		// Resources table label
-		resourcesTableLabel = new JLabel("Resources Table:");
-
+		allocatedTableLabel = new JLabel("Allocated:");
+		maximumTableLabel = new JLabel("Maximum: ");
+		availableTableLabel = new JLabel("Available: ");
+		
 		// Resources table
 		String[] columnResources = { "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10" };
 		String[][] objects = new String[20][10];
@@ -120,13 +128,29 @@ public class InputTablePanel extends JPanel {
 				}
 			}
 		}
-		resourcesTable = new JTable(new ResourcesTableModel(columnResources, objects));
+		allocatedTable = new JTable(new ResourcesTableModel(columnResources, objects));
 		// resourcesTable.setSize(400, 400);
 		// gresourcesTable.setGridColor(Color.BLACK);
-		resourcesTable.setBackground(Color.WHITE);
-		resourcesTable.setRowSelectionAllowed(true);
-		resourcesTable.setColumnSelectionAllowed(true);
-		resourcesTable.setCellSelectionEnabled(true);
+		allocatedTable.setBackground(Color.WHITE);
+		allocatedTable.setRowSelectionAllowed(true);
+		allocatedTable.setColumnSelectionAllowed(true);
+		allocatedTable.setCellSelectionEnabled(true);
+		
+		maximumTable = new JTable(new ResourcesTableModel(columnResources, objects));
+		// resourcesTable.setSize(400, 400);
+		// gresourcesTable.setGridColor(Color.BLACK);
+		maximumTable.setBackground(Color.WHITE);
+		maximumTable.setRowSelectionAllowed(true);
+		maximumTable.setColumnSelectionAllowed(true);
+		maximumTable.setCellSelectionEnabled(true);
+		
+		availableTable = new JTable(new ResourcesTableModel(columnResources, objects));
+		// resourcesTable.setSize(400, 400);
+		// gresourcesTable.setGridColor(Color.BLACK);
+		availableTable.setBackground(Color.WHITE);
+		availableTable.setRowSelectionAllowed(true);
+		availableTable.setColumnSelectionAllowed(true);
+		availableTable.setCellSelectionEnabled(true);
 		/*
 		 * DefaultTableCellRenderer centerRenderer = new
 		 * DefaultTableCellRenderer(); centerRenderer.setHorizontalAlignment(
@@ -135,13 +159,15 @@ public class InputTablePanel extends JPanel {
 		 */
 
 		// resources table randomize button
-		randResourcesTableButton = new JButton("Rand");
-
+		randAllocatedTableButton = new JButton("Rand");
+		randMaximumTableButton = new JButton("Rand");
+		randAvailableTableButton = new JButton("Rand");
+		
 		// start simulation button
 		startSimulationButton = new JButton("Start Simulation");
 
 		// Table for arrival time, priority
-		String[] columnTime = { "Arrival Time", "Priority" };
+		String[] columnTime = { "AT", "Priority" };
 		String[][] objectsTime = new String[20][2];
 		for (int i = 0; i < 20; i++) {
 			for (int j = 0; j < 2; j++) {
@@ -158,7 +184,7 @@ public class InputTablePanel extends JPanel {
 
 		// quantum label and text field
 		quantumLabel = new JLabel("Quantum: ");
-		setQuantumField(new JTextField(5));
+		setQuantumField(new JTextField("1"));
 
 		
 	}
@@ -198,21 +224,49 @@ public class InputTablePanel extends JPanel {
 		add(randCPUSchedAlgosButton);
 
 		// resources table
-		resourcesTableLabel.setSize(125, 20);
-		resourcesTableLabel.setLocation(5, 70);
-		add(resourcesTableLabel);
-		JScrollPane resourcesTablePane = new JScrollPane(resourcesTable);
-		resourcesTablePane.setSize(400, 342);
-		resourcesTablePane.setLocation(5, 95);
-		add(resourcesTablePane);
-		getRandResourcesTableButton().setSize(70, 20);
-		getRandResourcesTableButton().setLocation(135, 70);
-		add(getRandResourcesTableButton());
+		allocatedTableLabel.setSize(80, 20);
+		allocatedTableLabel.setLocation(5, 70);
+		add(allocatedTableLabel);
+		JScrollPane allocatedTablePane = new JScrollPane(allocatedTable);
+		allocatedTablePane.setSize(300, 342);
+		allocatedTablePane.setLocation(5, 95);
+		add(allocatedTablePane);
+		
+		// rand allocated table
+		getRandAllocatedTableButton().setSize(70, 20);
+		getRandAllocatedTableButton().setLocation(85, 70);
+		add(getRandAllocatedTableButton());
+		
+		maximumTableLabel.setSize(80, 20);
+		maximumTableLabel.setLocation(305, 70);
+		add(maximumTableLabel);
+		JScrollPane maximumTablePane = new JScrollPane(maximumTable);
+		maximumTablePane.setSize(300, 342);
+		maximumTablePane.setLocation(305, 95);
+		add(maximumTablePane);
+		
+		// rand allocated table
+		getRandMaximumTableButton().setSize(70, 20);
+		getRandMaximumTableButton().setLocation(385, 70);
+		add(getRandMaximumTableButton());
+		
+		availableTableLabel.setSize(80, 20);
+		availableTableLabel.setLocation(605, 70);
+		add(availableTableLabel);
+		JScrollPane availableTablePane = new JScrollPane(availableTable);
+		availableTablePane.setSize(300, 342);
+		availableTablePane.setLocation(605, 95);
+		add(availableTablePane);
 
+		// rand allocated table
+		getRandAvailableTableButton().setSize(70, 20);
+		getRandAvailableTableButton().setLocation(685, 70);
+		add(getRandAvailableTableButton());
+		
 		// table for arrival time, priority
 		JScrollPane timeTablePane = new JScrollPane(timeTable);
-		timeTablePane.setSize(155, 342);
-		timeTablePane.setLocation(405, 95);
+		timeTablePane.setSize(105, 342);
+		timeTablePane.setLocation(905, 95);
 		add(timeTablePane);
 
 		// start simulation
@@ -229,16 +283,46 @@ public class InputTablePanel extends JPanel {
 		add(getQuantumField());
 	}
 
-	public void randResourcesTable() {
-		int rowCount = resourcesTable.getModel().getRowCount();
-		int colCount = resourcesTable.getModel().getColumnCount();
+	public void randAllocatedTable() {
+		int rowCount = allocatedTable.getModel().getRowCount();
+		int colCount = allocatedTable.getModel().getColumnCount();
 		Random random = new Random();
 		for (int i = 0; i < rowCount; i++) {
 			for (int j = 0; j < colCount; j++) {
 				if (j == 0) {
-					resourcesTable.getModel().setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
+					allocatedTable.getModel().setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
 				} else {
-					resourcesTable.getModel().setValueAt(Integer.toString(random.nextInt(10)), i, j);
+					allocatedTable.getModel().setValueAt(Integer.toString(random.nextInt(10)), i, j);
+				}
+			}
+		}
+	}
+	
+	public void randMaximumTable() {
+		int rowCount = maximumTable.getModel().getRowCount();
+		int colCount = maximumTable.getModel().getColumnCount();
+		Random random = new Random();
+		for (int i = 0; i < rowCount; i++) {
+			for (int j = 0; j < colCount; j++) {
+				if (j == 0) {
+					maximumTable.getModel().setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
+				} else {
+					maximumTable.getModel().setValueAt(Integer.toString(random.nextInt(10)), i, j);
+				}
+			}
+		}
+	}
+	
+	public void randAvailableTable() {
+		int rowCount = availableTable.getModel().getRowCount();
+		int colCount = availableTable.getModel().getColumnCount();
+		Random random = new Random();
+		for (int i = 0; i < rowCount; i++) {
+			for (int j = 0; j < colCount; j++) {
+				if (j == 0) {
+					availableTable.getModel().setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
+				} else {
+					availableTable.getModel().setValueAt(Integer.toString(random.nextInt(10)), i, j);
 				}
 			}
 		}
@@ -251,7 +335,7 @@ public class InputTablePanel extends JPanel {
 	}
 
 	public void setResourcesTableColumnSize(int numColumns) {
-		ResourcesTableModel currentModel = ((ResourcesTableModel) resourcesTable.getModel());
+		ResourcesTableModel currentModel = ((ResourcesTableModel) allocatedTable.getModel());
 		String[][] currentTableData = currentModel.getData();
 		String[][] newTableData = new String[currentTableData.length][numColumns];
 
@@ -276,13 +360,13 @@ public class InputTablePanel extends JPanel {
 			newColumns[i] = "R" + (i + 1);
 		}
 
-		((ResourcesTableModel) resourcesTable.getModel()).setColumnNames(newColumns);
+		((ResourcesTableModel) allocatedTable.getModel()).setColumnNames(newColumns);
 
-		resourcesTable.setModel(new ResourcesTableModel(currentModel.getColumnNames(), newTableData));
+		allocatedTable.setModel(new ResourcesTableModel(currentModel.getColumnNames(), newTableData));
 	}
 
 	public void setResourcesTableRowSize(int numRows) {
-		ResourcesTableModel currentModel = ((ResourcesTableModel) resourcesTable.getModel());
+		ResourcesTableModel currentModel = ((ResourcesTableModel) allocatedTable.getModel());
 		String[][] currentTableData = currentModel.getData();
 		String[][] newTableData = new String[numRows][currentTableData[0].length];
 
@@ -302,7 +386,7 @@ public class InputTablePanel extends JPanel {
 			}
 		}
 
-		resourcesTable.setModel(new ResourcesTableModel(currentModel.getColumnNames(), newTableData));
+		allocatedTable.setModel(new ResourcesTableModel(currentModel.getColumnNames(), newTableData));
 
 		resizeTimeTable(numRows);
 	}
@@ -400,16 +484,16 @@ public class InputTablePanel extends JPanel {
 		this.numResources = numResources;
 	}
 
-	public JButton getRandResourcesTableButton() {
-		return randResourcesTableButton;
+	public JButton getRandAllocatedTableButton() {
+		return randAllocatedTableButton;
 	}
 
 	public void setRandResourcesTableButton(JButton randResourcesTableButton) {
-		this.randResourcesTableButton = randResourcesTableButton;
+		this.randAllocatedTableButton = randResourcesTableButton;
 	}
 
 	public JTable getResourcesTable() {
-		return resourcesTable;
+		return allocatedTable;
 	}
 
 	public JTable getTimeTable() {
@@ -422,5 +506,21 @@ public class InputTablePanel extends JPanel {
 
 	public void setQuantumField(JTextField quantumField) {
 		this.quantumField = quantumField;
+	}
+
+	public JButton getRandMaximumTableButton() {
+		return randMaximumTableButton;
+	}
+
+	public void setRandMaximumTableButton(JButton randMaximumTableButton) {
+		this.randMaximumTableButton = randMaximumTableButton;
+	}
+
+	public JButton getRandAvailableTableButton() {
+		return randAvailableTableButton;
+	}
+
+	public void setRandAvailableTableButton(JButton randAvailableTableButton) {
+		this.randAvailableTableButton = randAvailableTableButton;
 	}
 }
