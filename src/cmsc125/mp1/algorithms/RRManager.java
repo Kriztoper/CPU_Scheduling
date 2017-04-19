@@ -31,7 +31,7 @@ public class RRManager extends Thread {
 		this.resourcesTable = resourcesTable;
 		this.timeTable = timeTable;
 		String quantumString = quantumField.getText();
-		quantum = ((quantumString.isEmpty()) ? (0) : 
+		quantum = ((quantumString.isEmpty()) ? (1) : 
 			(Integer.parseInt(quantumString)));
 	}
 

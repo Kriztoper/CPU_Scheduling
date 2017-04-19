@@ -54,7 +54,7 @@ public class SimulationPanel extends JPanel {
 		string += priorityString.substring(0, priorityString.length() - 2) + "]\nQuantum = ";
 		
 		// quantum
-		string += quantumField.getText();
+		string += ((quantumField.getText().isEmpty()) ? (1) : (quantumField.getText()));
 		
 		JLabel label = new JLabel("<html><div style='text-align: center;'>" + string + "</div></html>");
 		label.setFont(new Font("Verdana", 1, 20));

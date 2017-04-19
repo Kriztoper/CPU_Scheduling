@@ -49,6 +49,12 @@ public class AlgoSimulator {
 			          timeTable); 
 			       
 			np_prioManager.startSimulation(); 
+		} else if (algos.contains("SRTF")) { 
+			SRTFManager srtfManager = new SRTFManager( 
+			          simulationPanel, resourcesTable,  
+			          timeTable); 
+			       
+			srtfManager.startSimulation(); 
 		}
 	}
 }
