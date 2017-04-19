@@ -26,11 +26,11 @@ public class RRManager extends Thread {
 	private int quantum;
 	
 	public RRManager(SimulationPanel simulationPanel, 
-			JTable resourcesTable, JTable timeTable, JTextField quantumField) {
+			JTable resourcesTable, JTable timeTable, String quantumFieldText) {
 		this.simulationPanel = simulationPanel;
 		this.resourcesTable = resourcesTable;
 		this.timeTable = timeTable;
-		String quantumString = quantumField.getText();
+		String quantumString = quantumFieldText;
 		quantum = ((quantumString.isEmpty()) ? (1) : 
 			(Integer.parseInt(quantumString)));
 	}

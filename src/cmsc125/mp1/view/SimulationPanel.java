@@ -24,7 +24,7 @@ public class SimulationPanel extends JPanel {
 		// setBackground(Color.YELLOW);
 	}
 
-	public void startSimulation(ArrayList<String> algos, JTable resourcesTable, JTable timeTable, JTextField quantumField) {
+	public void startSimulation(ArrayList<String> algos, JTable resourcesTable, JTable timeTable, String quantumFieldText) {
 
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		// block to print the resources and arrival time
@@ -54,7 +54,7 @@ public class SimulationPanel extends JPanel {
 		string += priorityString.substring(0, priorityString.length() - 2) + "]\nQuantum = ";
 		
 		// quantum
-		string += ((quantumField.getText().isEmpty()) ? (1) : (quantumField.getText()));
+		string += quantumFieldText;
 		
 		JLabel label = new JLabel("<html><div style='text-align: center;'>" + string + "</div></html>");
 		label.setFont(new Font("Verdana", 1, 20));
@@ -71,7 +71,7 @@ public class SimulationPanel extends JPanel {
 		add(getPanel());
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-		algoSimulator.startSimulation(this, algos, resourcesTable, timeTable, quantumField);
+		algoSimulator.startSimulation(this, algos, resourcesTable, timeTable, quantumFieldText);
 	}
 
 	public JPanel getPanel() {

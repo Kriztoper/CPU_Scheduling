@@ -20,7 +20,7 @@ public class AlgoSimulator {
 	public void startSimulation(
 			SimulationPanel simulationPanel, 
 			ArrayList<String> algos, 
-			JTable resourcesTable, JTable timeTable, JTextField quantumField) {
+			JTable resourcesTable, JTable timeTable, String quantumFieldText) {
 		/*this.simulationPanel = simulationPanel;
 		this.resourcesTable = resourcesTable;
 		this.timeTable = timeTable;*/
@@ -40,7 +40,7 @@ public class AlgoSimulator {
 		} else if (algos.contains("RR")) { 
 			RRManager rrManager = new RRManager( 
 			          simulationPanel, resourcesTable,  
-			          timeTable, quantumField); 
+			          timeTable, quantumFieldText); 
 			       
 			rrManager.startSimulation(); 
 		} else if (algos.contains("NP PRIO")) { 

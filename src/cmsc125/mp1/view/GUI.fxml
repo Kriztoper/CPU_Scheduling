@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.Pane?>
+
+<TabPane maxHeight="500.0" maxWidth="958.0" minHeight="190.0" minWidth="780.0" prefHeight="190.0" prefWidth="780.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cmsc125.mp1.controller.Controller">
+  <tabs>
+      <Tab text="Welcome">
+         <content>
+            <Pane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="24.0" layoutY="37.0" text="Simulate CPU Scheduling Algorithms using this Program." />
+               </children>
+            </Pane>
+         </content>
+      </Tab>
+      <Tab text="Visualization">
+         <content>
+            <AnchorPane prefHeight="267.0" prefWidth="934.0">
+               <children>
+                  <TextField fx:id="numProcessField" layoutX="172.0" layoutY="14.0" promptText="Enter values from 1 to 20 " />
+                  <TextField fx:id="numResourceField" layoutX="172.0" layoutY="48.0" promptText="Enter values from 1 to 10" />
+                  <Label layoutX="14.0" layoutY="18.0" text="Enter number of Processes:" />
+                  <Label layoutX="14.0" layoutY="52.0" text="Enter number of Resources:" />
+                  <Button fx:id="randProcNumBtn" layoutX="332.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#randNumProcesses" text="Randomize" />
+                  <Button fx:id="randResNumBtn" layoutX="332.0" layoutY="48.0" mnemonicParsing="false" onMouseClicked="#randNumResources" text="Randomize" />
+                  <Label layoutX="444.0" layoutY="18.0" text="Select CPU Algorithm:" />
+                  <Pane layoutX="576.0" layoutY="15.0" prefHeight="52.0" prefWidth="215.0">
+                     <children>
+                        <CheckBox fx:id="fcfsCB" layoutY="5.0" mnemonicParsing="false" text="FCFS" />
+                        <CheckBox fx:id="sjfCB" layoutX="153.0" layoutY="5.0" mnemonicParsing="false" text="SJF" />
+                        <CheckBox fx:id="srtfCB" layoutX="67.0" layoutY="5.0" mnemonicParsing="false" text="SRTF" />
+                        <CheckBox fx:id="rrCB" layoutX="152.0" layoutY="30.0" mnemonicParsing="false" text="RR" />
+                        <CheckBox fx:id="npprioCB" layoutX="67.0" layoutY="30.0" mnemonicParsing="false" text="NP PRIO" />
+                        <CheckBox fx:id="prioCB" layoutY="30.0" mnemonicParsing="false" text="PRIO" />
+                     </children>
+                  </Pane>
+                  <Label layoutX="14.0" layoutY="96.0" prefHeight="18.0" prefWidth="211.0" text="Resources held by each Process:" />
+                  <Button fx:id="randResBtn" layoutX="194.0" layoutY="93.0" mnemonicParsing="false" onMouseClicked="#randResourcesTable" text="Randomize" />
+                  <Button fx:id="showResBtn" layoutX="283.0" layoutY="94.0" mnemonicParsing="false" onMouseClicked="#showResourcesTable" prefHeight="55.0" prefWidth="103.0" text="Show and Edit" />
+                  <Button fx:id="startSimulationBtn" layoutX="661.0" layoutY="93.0" mnemonicParsing="false" onMouseClicked="#startSimulation" prefHeight="61.0" prefWidth="110.0" text="Start Simulation">
+                     <effect>
+                        <Lighting bumpInput="$null" diffuseConstant="1.91" specularConstant="2.0" specularExponent="40.0" surfaceScale="0.0">
+                           <light>
+                              <Light.Distant color="#57dbff" />
+                           </light>
+                        </Lighting>
+                     </effect>
+                  </Button>
+                  <Button fx:id="randSelectAlgoBtn" layoutX="482.0" layoutY="39.0" mnemonicParsing="false" onMouseClicked="#randCPUSchedAlgos" text="Randomize" />
+                  <Label layoutX="14.0" layoutY="127.0" prefHeight="17.0" prefWidth="169.0" text="Process Arrival Time &amp; Priority:" />
+                  <Button fx:id="randProcessInfoBtn" layoutX="194.0" layoutY="123.0" mnemonicParsing="false" onMouseClicked="#randProcessInfo" text="Randomize" />
+                  <TextField fx:id="quantumField" layoutX="507.0" layoutY="93.0" prefHeight="25.0" prefWidth="108.0" text="5" />
+                  <Label layoutX="444.0" layoutY="97.0" prefHeight="17.0" prefWidth="57.0" text="Quantum:" />
+               </children>
+            </AnchorPane>
+         </content>
+      </Tab>
+    <Tab text="Help">
+         <content>
+            <Pane prefHeight="200.0" prefWidth="200.0" />
+         </content></Tab>
+    <Tab text="About">
+         <content>
+            <Pane prefHeight="200.0" prefWidth="200.0" />
+         </content></Tab>
+  </tabs>
+</TabPane>
