@@ -55,6 +55,12 @@ public class AlgoSimulator {
 			          timeTable); 
 			       
 			srtfManager.startSimulation(); 
+		} else if (algos.contains("PRIO")) { 
+			PRIOManager prioManager = new PRIOManager( 
+			          simulationPanel, resourcesTable,  
+			          timeTable); 
+			       
+			prioManager.startSimulation(); 
 		}
 	}
 }
