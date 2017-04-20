@@ -64,8 +64,10 @@
                   <Button fx:id="randSelectAlgoBtn" layoutX="482.0" layoutY="39.0" mnemonicParsing="false" onMouseClicked="#randCPUSchedAlgos" text="Randomize" />
                   <Label layoutX="14.0" layoutY="127.0" prefHeight="17.0" prefWidth="169.0" text="Process Arrival Time &amp; Priority:" />
                   <Button fx:id="randProcessInfoBtn" layoutX="194.0" layoutY="123.0" mnemonicParsing="false" onMouseClicked="#randProcessInfo" text="Randomize" />
-                  <TextField fx:id="quantumField" layoutX="528.0" layoutY="93.0" prefHeight="25.0" prefWidth="66.0" text="5" />
-                  <Label layoutX="445.0" layoutY="97.0" prefHeight="17.0" prefWidth="74.0" text="RR Quantum:" />
+                  <TextField fx:id="quantumField" layoutX="558.0" layoutY="93.0" prefHeight="25.0" prefWidth="66.0" text="5" />
+                  <Label layoutX="479.0" layoutY="97.0" prefHeight="17.0" prefWidth="74.0" text="RR Quantum:" />
+                  <Label layoutX="445.0" layoutY="127.0" prefHeight="17.0" prefWidth="108.0" text="Visualization Speed:" />
+                  <TextField fx:id="visualizationSpeed" layoutX="558.0" layoutY="123.0" prefHeight="25.0" prefWidth="66.0" promptText="seconds" text="5" />
                </children>
             </AnchorPane>
          </content>
