@@ -21,6 +21,8 @@ public class RRManager extends Thread {
 	private JTable maximumTable;
 	private JTable availableTable;
 	private JTable timeTable;
+	private int[] arrivalTimes;
+	private int[] priorityNumbers;
 	private Vector<Process> processesVector;
 	private ProcessesQueue readyQueue;
 	private int xProcess;
@@ -51,21 +53,29 @@ public class RRManager extends Thread {
 		start();
 	}
 
-	public int[] getArrivalTimes() {
+	public void initTimeTableData() {
 		String[][] timeData = ((ResourcesTableModel) 
 				timeTable.getModel()).getData();
-		int[] arrivalTimes = new int[timeData.length];
+		arrivalTimes = new int[timeData.length];
+		priorityNumbers = new int[timeData.length];
 		for (int i = 0; i < timeData.length; i++) {
 			arrivalTimes[i] = Integer.parseInt(timeData[i][0]);
+			arrivalTimes[i] = Integer.parseInt(timeData[i][1]);
 		}
-		
+	}
+	
+	public int[] getArrivalTimes() {
 		return arrivalTimes;
+	}
+	
+	public int[] getPriorityNumbers() {
+		return priorityNumbers;
 	}
 	
 	@Override
 	public void run() {
 		bankers = new Bankers(allocatedTable, maximumTable, 
-				availableTable, getArrivalTimes());
+				availableTable, getArrivalTimes(), getPriorityNumbers());
 		long increment = 200;//0;
 		Process currentProcess = null;
 		int currentBurstTime = 0;

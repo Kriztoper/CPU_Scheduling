@@ -81,7 +81,6 @@ public class Controller {
 			public void actionPerformed(ActionEvent e) {
 				inputTablePanel.setResourcesTableRowSize(
 						Integer.parseInt((String) inputTablePanel.getNumProcesses().getSelectedItem()));
-
 			}
 		});
 
@@ -90,7 +89,6 @@ public class Controller {
 			public void actionPerformed(ActionEvent e) {
 				inputTablePanel.setResourcesTableColumnSize(
 						Integer.parseInt((String) inputTablePanel.getNumResources().getSelectedItem()));
-
 			}
 		});
 

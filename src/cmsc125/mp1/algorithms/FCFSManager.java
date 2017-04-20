@@ -20,8 +20,10 @@ public class FCFSManager extends Thread {
 	private JTable maximumTable;
 	private JTable availableTable;
 	private JTable timeTable;
+	private int[] arrivalTimes;
+	private int[] priorityNumbers;
 	private Vector<Process> processesVector;
-	private ProcessesQueue jobQueue;
+	private ProcessesQueue readyQueue;
 	private int xProcess;
 	private int yProcess;
 	private Bankers bankers;
@@ -39,27 +41,36 @@ public class FCFSManager extends Thread {
 	}
 
 	public void startSimulation() {
+		initTimeTableData();
 		initProcessesInVector();
 		sortProcessesToReadyQueue();
 		
 		start();
 	}
 
-	public int[] getArrivalTimes() {
+	public void initTimeTableData() {
 		String[][] timeData = ((ResourcesTableModel) 
 				timeTable.getModel()).getData();
-		int[] arrivalTimes = new int[timeData.length];
+		arrivalTimes = new int[timeData.length];
+		priorityNumbers = new int[timeData.length];
 		for (int i = 0; i < timeData.length; i++) {
 			arrivalTimes[i] = Integer.parseInt(timeData[i][0]);
+			arrivalTimes[i] = Integer.parseInt(timeData[i][1]);
 		}
-		
+	}
+	
+	public int[] getArrivalTimes() {
 		return arrivalTimes;
+	}
+	
+	public int[] getPriorityNumbers() {
+		return priorityNumbers;
 	}
 	
 	@Override
 	public void run() {
 		bankers = new Bankers(allocatedTable, maximumTable, 
-				availableTable, getArrivalTimes());
+				availableTable, getArrivalTimes(), getPriorityNumbers());
 		long increment = 200;//0;
 		Process currentProcess = null;
 		int currentBurstTime = 0;
@@ -69,13 +80,16 @@ public class FCFSManager extends Thread {
 		
 		while (true) {
 			System.out.println("At time " + t);
-			if (jobQueue.isEmpty() &&
+			bankers.allocateResource(t);
+			bankers.getReadyQueue().sortByArrivalTime();
+			readyQueue = bankers.getReadyQueue();
+			if (readyQueue.isEmpty() &&
 					currentProcess == null) {
 				break;
 			} else if (currentProcess == null &&
-					jobQueue.peek().
+					readyQueue.peek().
 					getArrivalTime() <= t) {
-				currentProcess = jobQueue.dequeue();
+				currentProcess = readyQueue.dequeue();
 				currentBurstTime++;
 				//System.out.println("processNum increased to "
 				//		+processNum);
@@ -134,7 +148,7 @@ public class FCFSManager extends Thread {
 		JLabel[] processLabels = new JLabel[processesVector.size()];
 		int x = 5;
 		int y = 80;
-		jobQueue = new ProcessesQueue();
+		readyQueue = new ProcessesQueue();
 		for (int i = 0; i < processesVector.size(); i++) {
 			processLabels[i] = new JLabel(
 					processesVector.get(i).getName());
@@ -147,7 +161,7 @@ public class FCFSManager extends Thread {
 			processLabels[i].setLocation(x, y);
 			x += processLabels[i].getWidth() + 1;
 			simulationPanel.add(processLabels[i]);
-			jobQueue.enqueue(processesVector.get(i));
+			readyQueue.enqueue(processesVector.get(i));
 		}
 	}
 	

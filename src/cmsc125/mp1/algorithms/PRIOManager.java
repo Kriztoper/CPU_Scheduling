@@ -20,11 +20,12 @@ public class PRIOManager extends Thread {
 	private JTable maximumTable;
 	private JTable availableTable;
 	private JTable timeTable;
+	private int[] arrivalTimes;
+	private int[] priorityNumbers;
 	private ProcessesQueue jobQueue;
 	private Vector<Process> readyQueue;
 	private Vector<Process> processesVector;
 	private Vector<Process> origProcessesVector;
-	private int[] arrivalTimes;
 	private int xProcess;
 	private int yProcess;
 	private Bankers bankers;
@@ -133,21 +134,29 @@ public class PRIOManager extends Thread {
 		return intData;
 	}
 	
-	public int[] getArrivalTimes() {
+	public void initTimeTableData() {
 		String[][] timeData = ((ResourcesTableModel) 
 				timeTable.getModel()).getData();
-		int[] arrivalTimes = new int[timeData.length];
+		arrivalTimes = new int[timeData.length];
+		priorityNumbers = new int[timeData.length];
 		for (int i = 0; i < timeData.length; i++) {
 			arrivalTimes[i] = Integer.parseInt(timeData[i][0]);
+			arrivalTimes[i] = Integer.parseInt(timeData[i][1]);
 		}
-		
+	}
+	
+	public int[] getArrivalTimes() {
 		return arrivalTimes;
+	}
+	
+	public int[] getPriorityNumbers() {
+		return priorityNumbers;
 	}
 	
 	@Override
 	public void run() {
 		bankers = new Bankers(allocatedTable, maximumTable, 
-				availableTable, getArrivalTimes());
+				availableTable, getArrivalTimes(), getPriorityNumbers());
 		long increment = 200;//0;
 		int t = 0;
 		Process currentProcess = null;

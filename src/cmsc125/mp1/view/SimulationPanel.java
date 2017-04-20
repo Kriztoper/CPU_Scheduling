@@ -24,6 +24,32 @@ public class SimulationPanel extends JPanel {
 		// setBackground(Color.YELLOW);
 	}
 
+	public void printAllData(String[][] allocatedData,
+			String[][] maximumData, String[][] availableData) {
+		for (int i = 0; i < allocatedData.length; i++) {
+			for (int j = 0; j < allocatedData[i].length; j++) {
+				System.out.print(allocatedData[i][j] + " ");
+			}
+			System.out.println();
+		}
+		System.out.println();
+		
+		for (int i = 0; i < maximumData.length; i++) {
+			for (int j = 0; j < maximumData[i].length; j++) {
+				System.out.print(maximumData[i][j] + " ");
+			}
+			System.out.println();
+		}
+		System.out.println();
+		
+		for (int i = 0; i < maximumData.length; i++) {
+			for (int j = 0; j < maximumData[i].length; j++) {
+				System.out.print(maximumData[i][j] + " ");
+			}
+			System.out.println();
+		}
+	}
+	
 	public void startSimulation(ArrayList<String> algos, 
 			JTable allocatedTable, 
 			JTable maximumTable,
@@ -38,6 +64,8 @@ public class SimulationPanel extends JPanel {
 		String[][] maximumData = ((ResourcesTableModel) maximumTable.getModel()).getData();
 		String[][] availableData = ((ResourcesTableModel) availableTable.getModel()).getData();
 		String[][] timeData = ((ResourcesTableModel) timeTable.getModel()).getData();
+		
+		printAllData(allocatedData, maximumData, availableData);
 		
 		string += "Resources = [";
 		String resString = "";
@@ -69,7 +97,7 @@ public class SimulationPanel extends JPanel {
 		label.setLocation(5, 5);
 		label.setBorder(new LineBorder(Color.BLACK));
 		add(label);
-		System.out.print(string);
+		System.out.println(string);
 
 		// init panel for animation
 		setPanel(new JPanel());
