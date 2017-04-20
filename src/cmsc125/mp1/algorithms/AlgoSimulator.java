@@ -15,15 +15,16 @@ public class AlgoSimulator{
 	private JTable timeTable;
 	private String quantumFieldText;
 	private int numProcess;
+	public static int visualizationSpeed;
 	
 	public AlgoSimulator(int numProcess, ArrayList<String> algos, JTable resourcesTable,
-			JTable timeTable, String quantumFieldText) {
+			JTable timeTable, String quantumFieldText, int visualizationSpeed) {
 		this.numProcess = numProcess;
 		this.algos = algos;
 		this.resourcesTable = resourcesTable;
 		this.timeTable = timeTable;
 		this.quantumFieldText = quantumFieldText;
-		
+		this.visualizationSpeed = visualizationSpeed*1000;
 	}
 	
 	private String prepareGanttInfo(){

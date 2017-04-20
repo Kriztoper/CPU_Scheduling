@@ -67,7 +67,7 @@
                   <TextField fx:id="quantumField" layoutX="558.0" layoutY="93.0" prefHeight="25.0" prefWidth="66.0" text="5" />
                   <Label layoutX="479.0" layoutY="97.0" prefHeight="17.0" prefWidth="74.0" text="RR Quantum:" />
                   <Label layoutX="445.0" layoutY="127.0" prefHeight="17.0" prefWidth="108.0" text="Visualization Speed:" />
-                  <TextField fx:id="visualizationSpeed" layoutX="558.0" layoutY="123.0" prefHeight="25.0" prefWidth="66.0" promptText="seconds" text="5" />
+                  <TextField fx:id="visualizationSpeed" layoutX="558.0" layoutY="123.0" onKeyReleased="#updateVisualizationSpeed" prefHeight="25.0" prefWidth="66.0" promptText="seconds" text="2" />
                </children>
             </AnchorPane>
          </content>

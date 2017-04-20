@@ -147,7 +147,7 @@ public class NP_PRIOManager extends Thread {
 			}
 			
 			try {
-				Thread.sleep(increment);
+				this.sleep(AlgoSimulator.visualizationSpeed);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

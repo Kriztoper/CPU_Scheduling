@@ -10,11 +10,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 public class Controller {	
 	
-	@FXML private TextField numProcessField, numResourceField, quantumField;
+	@FXML private TextField numProcessField, numResourceField, quantumField, visualizationSpeed;
 	@FXML private Button randProcNumBtn, randResNumBtn, randSelectAlgoBtn, randResBtn, showResBtn, startSimulationBtn, randProcessInfoBtn;
 	@FXML private CheckBox fcfsCB, sjfCB, srtfCB, rrCB, npprioCB, prioCB;
 	
@@ -93,12 +95,20 @@ public class Controller {
 				selectedAlgos.add(cb.getText());
 		}
 		
-		AlgoSimulator algoSimulator = new AlgoSimulator(itp.numProcess, selectedAlgos, itp.getResourcesTable(), itp.getTimeTable(), quantumField.getText());
+		AlgoSimulator algoSimulator = new AlgoSimulator(itp.numProcess, selectedAlgos, itp.getResourcesTable(), itp.getTimeTable(), quantumField.getText(), Integer.parseInt(visualizationSpeed.getText()));
 		algoSimulator.startSimulation();
 		frame1.setVisible(false);
 	}
 	
 	@FXML public void showResourcesTable(MouseEvent event){
 		frame1.setVisible(true);
+	}
+	
+	@FXML public void updateVisualizationSpeed(KeyEvent event){
+		if (event.getCode().equals(KeyCode.ENTER))
+        {
+			AlgoSimulator.visualizationSpeed = Integer.parseInt(visualizationSpeed.getText())*1000;
+        }
+		
 	}
 }

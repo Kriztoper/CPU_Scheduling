@@ -136,7 +136,7 @@ public class SRTFManager extends Thread {
 			currentProcess = null;
 
 			try {
-				Thread.sleep(increment);
+				this.sleep(AlgoSimulator.visualizationSpeed);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

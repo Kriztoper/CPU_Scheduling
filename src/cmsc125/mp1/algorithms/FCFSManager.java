@@ -31,7 +31,6 @@ public class FCFSManager extends Thread {
 
 	@Override
 	public void run() {
-		long increment = 2000;// 0;
 		Process currentProcess = null;
 		int currentBurstTime = 0;
 		int t = 0;
@@ -66,12 +65,12 @@ public class FCFSManager extends Thread {
 				currentBurstTime = 0;
 			}
 
-			try {
-				Thread.sleep(increment);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
+				try {
+					this.sleep(AlgoSimulator.visualizationSpeed);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			t++;
 		}
 		System.out.println("Done executing FCFS!");
@@ -108,11 +107,6 @@ public class FCFSManager extends Thread {
 			processesVector.add(new Process(Integer.parseInt(timeData[i][0]), Integer.parseInt(timeData[i][1]),
 					convertToIntArray(resourcesData[i]), ("P" + (i + 1)), ColorConstants.getColor(i)));
 		}
-
-		/*
-		 * for (Process process: processesVector) { System.out.println(process);
-		 * }
-		 */
 	}
 
 	public int[] convertToIntArray(String[] resourcesData) {
