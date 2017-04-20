@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 import cmsc125.mp1.algorithms.AlgoSimulator;
@@ -24,38 +23,39 @@ public class SimulationPanel extends JPanel {
 		// setBackground(Color.YELLOW);
 	}
 
-	public void startSimulation(ArrayList<String> algos, JTable resourcesTable, JTable timeTable, String quantumFieldText) {
+	public void startSimulation(ArrayList<String> algos, JTable resourcesTable, JTable timeTable,
+			String quantumFieldText) {
 
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		// block to print the resources and arrival time
 		String string = "";
 		String[][] data = ((ResourcesTableModel) resourcesTable.getModel()).getData();
 		String[][] timeData = ((ResourcesTableModel) timeTable.getModel()).getData();
-		
+
 		string += "Resources = [";
 		String resString = "";
 		for (int i = 0; i < data.length; i++) {
 			resString += data[i][0] + ", ";
 		}
 		string += resString.substring(0, resString.length() - 2) + "]\nArrival time = [";
-		
+
 		// arrival
 		String arrivalString = "";
 		for (int i = 0; i < timeData.length; i++) {
 			arrivalString += timeData[i][0] + ", ";
 		}
 		string += arrivalString.substring(0, arrivalString.length() - 2) + "]\nPriority = [";
-		
+
 		// priority
 		String priorityString = "";
 		for (int i = 0; i < timeData.length; i++) {
 			priorityString += timeData[i][1] + ", ";
 		}
 		string += priorityString.substring(0, priorityString.length() - 2) + "]\nQuantum = ";
-		
+
 		// quantum
 		string += quantumFieldText;
-		
+
 		JLabel label = new JLabel("<html><div style='text-align: center;'>" + string + "</div></html>");
 		label.setFont(new Font("Verdana", 1, 20));
 		label.setSize(1000, 50);

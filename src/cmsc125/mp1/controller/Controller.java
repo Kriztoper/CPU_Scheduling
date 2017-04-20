@@ -5,6 +5,7 @@ import java.util.Random;
 import javax.swing.JFrame;
 
 import cmsc125.mp1.constants.ScreenConstants;
+import cmsc125.mp1.view.GanttChartStage;
 import cmsc125.mp1.view.InputTablePanel;
 import cmsc125.mp1.view.SimulationPanel;
 import javafx.fxml.FXML;
@@ -103,6 +104,11 @@ public class Controller {
 		f2.setContentPane(p1);
 		f2.setVisible(true);
 		frame1.setVisible(false);
+        Main.ganttVisual = new GanttChartStage();
+		Main.ganttVisual.initGantt(itp.numProcess);
+		Main.ganttVisual.setX(0);
+		Main.ganttVisual.setY(230);
+		
 	}
 	
 	@FXML public void showResourcesTable(MouseEvent event){
