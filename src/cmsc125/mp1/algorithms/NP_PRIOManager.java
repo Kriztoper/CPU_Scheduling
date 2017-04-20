@@ -1,21 +1,17 @@
 package cmsc125.mp1.algorithms;
 
-import java.awt.Color;
 import java.util.Vector;
 
-import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.border.LineBorder;
 
 import cmsc125.mp1.constants.ColorConstants;
+import cmsc125.mp1.controller.Main;
 import cmsc125.mp1.model.Process;
 import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.model.ResourcesTableModel;
-import cmsc125.mp1.view.SimulationPanel;
 
 public class NP_PRIOManager extends Thread {
 
-	private SimulationPanel simulationPanel;
 	private JTable resourcesTable;
 	private JTable timeTable;
 	private ProcessesQueue jobQueue;
@@ -23,12 +19,8 @@ public class NP_PRIOManager extends Thread {
 	private Vector<Process> processesVector;
 	private Vector<Process> origProcessesVector;
 	private int[] arrivalTimes;
-	private int xProcess;
-	private int yProcess;
 	
-	public NP_PRIOManager(SimulationPanel simulationPanel, 
-			JTable resourcesTable, JTable timeTable) {
-		this.simulationPanel = simulationPanel;
+	public NP_PRIOManager(JTable resourcesTable, JTable timeTable) {
 		this.resourcesTable = resourcesTable;
 		this.timeTable = timeTable;
 		readyQueue = new Vector<Process>();
@@ -44,23 +36,8 @@ public class NP_PRIOManager extends Thread {
 	
 	public void sortProcessesToJobQueue() {
 		sortProcessesVector();
-		
-		JLabel[] processLabels = new JLabel[processesVector.size()];
-		int x = 5;
-		int y = 80;
 		jobQueue = new ProcessesQueue();
 		for (int i = 0; i < processesVector.size(); i++) {
-			processLabels[i] = new JLabel(
-					processesVector.get(i).getName());
-			processLabels[i].setBorder(
-					new LineBorder(Color.BLACK));
-			processLabels[i].setBackground(
-					processesVector.get(i).getColor());
-			processLabels[i].setOpaque(true);
-			processLabels[i].setSize(30, 50);
-			processLabels[i].setLocation(x, y);
-			x += processLabels[i].getWidth() + 1;
-			simulationPanel.add(processLabels[i]);
 			jobQueue.enqueue(processesVector.get(i));
 		}
 	}
@@ -127,12 +104,10 @@ public class NP_PRIOManager extends Thread {
 	
 	@Override
 	public void run() {
-		long increment = 200;//0;
+		long increment = 2000;//0;
 		int t = 0;
 		Process currentProcess = null;
 		int currentBurstTime = 0;
-		xProcess = 5;
-		yProcess = 200;
 		
 		while (true) {
 			System.out.println("At time " + t);
@@ -147,7 +122,7 @@ public class NP_PRIOManager extends Thread {
 				currentProcess = readyQueue.remove(0);
 				currentBurstTime++;
 				
-				addProcessLabel(currentProcess);
+				Main.ganttVisual.updateGantt(t, currentProcess.getName());
 				
 				System.out.println(
 						currentProcess.getName() +
@@ -157,7 +132,7 @@ public class NP_PRIOManager extends Thread {
 					currentProcess.getBurstTime()) {
 				currentBurstTime++;
 				
-				addProcessLabel(currentProcess);
+				Main.ganttVisual.updateGantt(t, currentProcess.getName());
 				
 				System.out.println(
 						currentProcess.getName() +
@@ -219,15 +194,4 @@ public class NP_PRIOManager extends Thread {
 		}
 	}
 	
-	public void addProcessLabel(Process process) {
-		JLabel processLabel = new JLabel(process.getName());
-		processLabel.setBackground(process.getColor());
-		processLabel.setBorder(new LineBorder(Color.BLACK));
-		processLabel.setOpaque(true);
-		processLabel.setSize(30, 50);
-		processLabel.setLocation(xProcess, yProcess);
-		xProcess += processLabel.getWidth() + 1;
-		simulationPanel.add(processLabel);
-		simulationPanel.repaint();
-	}
 }

@@ -4,10 +4,8 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
-import cmsc125.mp1.constants.ScreenConstants;
-import cmsc125.mp1.view.GanttChartStage;
+import cmsc125.mp1.algorithms.AlgoSimulator;
 import cmsc125.mp1.view.InputTablePanel;
-import cmsc125.mp1.view.SimulationPanel;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -95,20 +93,9 @@ public class Controller {
 				selectedAlgos.add(cb.getText());
 		}
 		
-		SimulationPanel p1 = new SimulationPanel();
-		p1.startSimulation(selectedAlgos, itp.getResourcesTable(), itp.getTimeTable(), quantumField.getText());
-		JFrame f2 = new JFrame();
-		f2.setTitle("Simulation");
-		f2.setLocation(0, 230);
-		f2.setSize(ScreenConstants.WIDTH, ScreenConstants.HEIGHT-270);
-		f2.setContentPane(p1);
-		f2.setVisible(true);
+		AlgoSimulator algoSimulator = new AlgoSimulator(itp.numProcess, selectedAlgos, itp.getResourcesTable(), itp.getTimeTable(), quantumField.getText());
+		algoSimulator.startSimulation();
 		frame1.setVisible(false);
-        Main.ganttVisual = new GanttChartStage();
-		Main.ganttVisual.initGantt(itp.numProcess);
-		Main.ganttVisual.setX(0);
-		Main.ganttVisual.setY(230);
-		
 	}
 	
 	@FXML public void showResourcesTable(MouseEvent event){

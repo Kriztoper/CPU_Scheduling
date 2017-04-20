@@ -10,24 +10,27 @@ import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-// TODO: use date for x-axis
 public class GanttChartStage extends Stage {
 
     public ArrayList<String> procNames;
     @SuppressWarnings("rawtypes")
 	public ArrayList<XYChart.Series> procSeries;
     
-    GanttChart<Number,String> chart;
+    public GanttChart<Number,String> chart;
     NumberAxis xAxis;
     CategoryAxis yAxis;
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
-	public void initGantt(int numProcess){
-    	this.setTitle("Simulator");
-        
+	public void initGantt(String details, int numProcess){
+    	Label label = new Label();
+    	label.setText(details);
+    	
         xAxis = new NumberAxis();
         yAxis = new CategoryAxis();
         chart = new GanttChart<Number,String>(xAxis,yAxis);
@@ -35,6 +38,8 @@ public class GanttChartStage extends Stage {
         chart.setLegendVisible(false);
         chart.setBlockHeight( 50);
         chart.getStylesheets().add(getClass().getResource("ganttchart.css").toExternalForm());
+        chart.setLayoutX(0);
+        chart.setLayoutY(100);
         
         xAxis.setLabel("Time");
         xAxis.setTickLabelFill(Color.CHOCOLATE);
@@ -54,14 +59,23 @@ public class GanttChartStage extends Stage {
 	        chart.getData().add(procSeries.get(i-1));
 		}
     	yAxis.setCategories(FXCollections.<String>observableArrayList(procNames));
-        Scene scene  = new Scene(chart,ScreenConstants.WIDTH, ScreenConstants.HEIGHT-320);
+
+        StackPane rootPane = new StackPane();
+        Pane pane1 = new Pane();
+        pane1.getChildren().add(label);
+        rootPane.getChildren().addAll(chart,pane1);
+    	
+    	Scene scene  = new Scene(rootPane,ScreenConstants.WIDTH, ScreenConstants.HEIGHT-320);
+        scene.setFill(Color.WHITESMOKE);
         this.setScene(scene);
         this.show();
+        
     }
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void updateGantt(int startTime, int processNumber){
-		Platform.runLater(() -> procSeries.get(processNumber-1).getData().add(new XYChart.Data(startTime, "P"+Integer.toString(processNumber), new ExtraData( 1, "status-red"))));// Update on JavaFX Application Thread
+	public void updateGantt(int startTime, String name){
+		int processNumber = Integer.parseInt(name.substring(1));
+		Platform.runLater(() -> procSeries.get(processNumber-1).getData().add(new XYChart.Data(startTime, name, new ExtraData( 1, name))));// Update on JavaFX Application Thread
 	}
 	
 }
