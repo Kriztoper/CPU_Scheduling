@@ -75,7 +75,7 @@ public class GanttChartStage extends Stage {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void updateGantt(int startTime, String name){
 		int processNumber = Integer.parseInt(name.substring(1));
-		Platform.runLater(() -> procSeries.get(processNumber-1).getData().add(new XYChart.Data(startTime, name, new ExtraData( 1, name))));// Update on JavaFX Application Thread
+		Platform.runLater(() -> procSeries.get(processNumber).getData().add(new XYChart.Data(startTime, name, new ExtraData( 1, name))));// Update on JavaFX Application Thread
 	}
 	
 }

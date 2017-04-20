@@ -20,12 +20,11 @@ public class SimulationPanel extends JPanel {
 
 	public SimulationPanel() {
 		setLayout(null);
-		algoSimulator = new AlgoSimulator();
+		//algoSimulator = new AlgoSimulator();
 		// setBackground(Color.YELLOW);
 	}
 
-	public void printAllData(String[][] allocatedData,
-			String[][] maximumData, String[][] availableData) {
+	public void printAllData(String[][] allocatedData, String[][] maximumData, String[][] availableData) {
 		for (int i = 0; i < allocatedData.length; i++) {
 			for (int j = 0; j < allocatedData[i].length; j++) {
 				System.out.print(allocatedData[i][j] + " ");
@@ -33,7 +32,7 @@ public class SimulationPanel extends JPanel {
 			System.out.println();
 		}
 		System.out.println();
-		
+
 		for (int i = 0; i < maximumData.length; i++) {
 			for (int j = 0; j < maximumData[i].length; j++) {
 				System.out.print(maximumData[i][j] + " ");
@@ -41,7 +40,7 @@ public class SimulationPanel extends JPanel {
 			System.out.println();
 		}
 		System.out.println();
-		
+
 		for (int i = 0; i < maximumData.length; i++) {
 			for (int j = 0; j < maximumData[i].length; j++) {
 				System.out.print(maximumData[i][j] + " ");
@@ -49,13 +48,9 @@ public class SimulationPanel extends JPanel {
 			System.out.println();
 		}
 	}
-	
-	public void startSimulation(ArrayList<String> algos, 
-			JTable allocatedTable, 
-			JTable maximumTable,
-			JTable availableTable,
-			JTable timeTable, 
-			JTextField quantumField) {
+
+	public void startSimulation(ArrayList<String> algos, JTable allocatedTable, JTable maximumTable,
+			JTable availableTable, JTable timeTable, JTextField quantumField) {
 
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		// block to print the resources and arrival time
@@ -64,33 +59,33 @@ public class SimulationPanel extends JPanel {
 		String[][] maximumData = ((ResourcesTableModel) maximumTable.getModel()).getData();
 		String[][] availableData = ((ResourcesTableModel) availableTable.getModel()).getData();
 		String[][] timeData = ((ResourcesTableModel) timeTable.getModel()).getData();
-		
+
 		printAllData(allocatedData, maximumData, availableData);
-		
+
 		string += "Resources = [";
 		String resString = "";
 		for (int i = 0; i < allocatedData.length; i++) {
 			resString += allocatedData[i][0] + ", ";
 		}
 		string += resString.substring(0, resString.length() - 2) + "]\nArrival time = [";
-		
+
 		// arrival
 		String arrivalString = "";
 		for (int i = 0; i < timeData.length; i++) {
 			arrivalString += timeData[i][0] + ", ";
 		}
 		string += arrivalString.substring(0, arrivalString.length() - 2) + "]\nPriority = [";
-		
+
 		// priority
 		String priorityString = "";
 		for (int i = 0; i < timeData.length; i++) {
 			priorityString += timeData[i][1] + ", ";
 		}
 		string += priorityString.substring(0, priorityString.length() - 2) + "]\nQuantum = ";
-		
+
 		// quantum
 		string += ((quantumField.getText().isEmpty()) ? (1) : (quantumField.getText()));
-		
+
 		JLabel label = new JLabel("<html><div style='text-align: center;'>" + string + "</div></html>");
 		label.setFont(new Font("Verdana", 1, 20));
 		label.setSize(1000, 50);
@@ -106,12 +101,7 @@ public class SimulationPanel extends JPanel {
 		add(getPanel());
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-		algoSimulator.startSimulation(this, algos, 
-				allocatedTable, 
-				maximumTable,
-				availableTable,
-				timeTable, 
-				quantumField);
+		//algoSimulator.startSimulation(this, algos, allocatedTable, maximumTable, availableTable, timeTable,quantumField);
 	}
 
 	public JPanel getPanel() {

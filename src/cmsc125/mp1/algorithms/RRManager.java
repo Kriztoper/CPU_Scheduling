@@ -22,13 +22,9 @@ public class RRManager extends Thread {
 	private ProcessesQueue readyQueue;
 	private int quantum;
 	private Bankers bankers;
-	
-	public RRManager(SimulationPanel simulationPanel, 
-			JTable allocatedTable, 
-			JTable maximumTable,
-			JTable availableTable,
-			JTable timeTable, 
-			JTextField quantumField) {
+
+	public RRManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable,
+			String quantumFieldText) {
 		this.allocatedTable = allocatedTable;
 		this.maximumTable = maximumTable;
 		this.availableTable = availableTable;
@@ -45,8 +41,7 @@ public class RRManager extends Thread {
 	}
 
 	public void initTimeTableData() {
-		String[][] timeData = ((ResourcesTableModel) 
-				timeTable.getModel()).getData();
+		String[][] timeData = ((ResourcesTableModel) timeTable.getModel()).getData();
 		arrivalTimes = new int[timeData.length];
 		priorityNumbers = new int[timeData.length];
 		for (int i = 0; i < timeData.length; i++) {
@@ -54,20 +49,19 @@ public class RRManager extends Thread {
 			arrivalTimes[i] = Integer.parseInt(timeData[i][1]);
 		}
 	}
-	
+
 	public int[] getArrivalTimes() {
 		return arrivalTimes;
 	}
-	
+
 	public int[] getPriorityNumbers() {
 		return priorityNumbers;
 	}
-	
+
 	@Override
 	public void run() {
-		bankers = new Bankers(allocatedTable, maximumTable, 
-				availableTable, getArrivalTimes(), getPriorityNumbers());
-		long increment = 200;//0;
+		bankers = new Bankers(allocatedTable, maximumTable, availableTable, getArrivalTimes(), getPriorityNumbers());
+		long increment = 200;// 0;
 		Process currentProcess = null;
 		int currentBurstTime = 0;
 		int t = 0;
@@ -113,7 +107,6 @@ public class RRManager extends Thread {
 		System.out.println("Done executing RR!");
 	}
 
-
 	public void sortProcessesToReadyQueue() {
 		sortProcessesVector();
 		readyQueue = new ProcessesQueue();
@@ -137,17 +130,12 @@ public class RRManager extends Thread {
 
 	public void initProcessesInVector() {
 		processesVector = new Vector<Process>();
-		String[][] resourcesData = ((ResourcesTableModel) 
-				allocatedTable.getModel()).getData();
-		String[][] timeData = ((ResourcesTableModel) 
-				timeTable.getModel()).getData();
-		
+		String[][] resourcesData = ((ResourcesTableModel) allocatedTable.getModel()).getData();
+		String[][] timeData = ((ResourcesTableModel) timeTable.getModel()).getData();
+
 		for (int i = 0; i < timeData.length; i++) {
-			processesVector.add(new Process(
-					Integer.parseInt(timeData[i][0]),
-					Integer.parseInt(timeData[i][1]),
-					convertToIntArray(resourcesData[i]),
-					("P" + i), ColorConstants.getColor(i)));
+			processesVector.add(new Process(Integer.parseInt(timeData[i][0]), Integer.parseInt(timeData[i][1]),
+					convertToIntArray(resourcesData[i]), ("P" + i), ColorConstants.getColor(i)));
 		}
 	}
 
