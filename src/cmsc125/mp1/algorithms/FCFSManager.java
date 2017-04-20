@@ -80,9 +80,9 @@ public class FCFSManager extends Thread {
 		
 		while (true) {
 			System.out.println("At time " + t);
-			bankers.allocateResource(t);
-			bankers.getReadyQueue().sortByArrivalTime();
-			readyQueue = bankers.getReadyQueue();
+			//bankers.allocateResource(t);
+			//bankers.getReadyQueue().sortByArrivalTime();
+			//readyQueue = bankers.getReadyQueue();
 			if (readyQueue.isEmpty() &&
 					currentProcess == null) {
 				break;
