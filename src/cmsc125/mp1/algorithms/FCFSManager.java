@@ -12,35 +12,75 @@ import cmsc125.mp1.model.ResourcesTableModel;
 
 public class FCFSManager extends Thread {
 
-	private JTable resourcesTable;
+	private JTable allocatedTable;
+	private JTable maximumTable;
+	private JTable availableTable;
 	private JTable timeTable;
+	private int[] arrivalTimes;
+	private int[] priorityNumbers;
 	private Vector<Process> processesVector;
-	private ProcessesQueue jobQueue;
+	private ProcessesQueue readyQueue;
+	private Bankers bankers;
 	
-	public FCFSManager(JTable resourcesTable, JTable timeTable) {
-		this.resourcesTable = resourcesTable;
+	public FCFSManager(SimulationPanel simulationPanel, 
+			JTable allocatedTable, 
+			JTable maximumTable,
+			JTable availableTable,
+			JTable timeTable) {
+		this.allocatedTable = allocatedTable;
+		this.maximumTable = maximumTable;
+		this.availableTable = availableTable;
 		this.timeTable = timeTable;
 	}
 
 	public void startSimulation() {
+		initTimeTableData();
 		initProcessesInVector();
 		sortProcessesToReadyQueue();
 
 		start();
 	}
 
+	public void initTimeTableData() {
+		String[][] timeData = ((ResourcesTableModel) 
+				timeTable.getModel()).getData();
+		arrivalTimes = new int[timeData.length];
+		priorityNumbers = new int[timeData.length];
+		for (int i = 0; i < timeData.length; i++) {
+			arrivalTimes[i] = Integer.parseInt(timeData[i][0]);
+			arrivalTimes[i] = Integer.parseInt(timeData[i][1]);
+		}
+	}
+	
+	public int[] getArrivalTimes() {
+		return arrivalTimes;
+	}
+	
+	public int[] getPriorityNumbers() {
+		return priorityNumbers;
+	}
+	
 	@Override
 	public void run() {
+		bankers = new Bankers(allocatedTable, maximumTable, 
+				availableTable, getArrivalTimes(), getPriorityNumbers());
+		long increment = 200;//0;
 		Process currentProcess = null;
 		int currentBurstTime = 0;
 		int t = 0;
 
 		while (true) {
 			System.out.println("At time " + t);
-			if (jobQueue.isEmpty() && currentProcess == null) {
+			//bankers.allocateResource(t);
+			//bankers.getReadyQueue().sortByArrivalTime();
+			//readyQueue = bankers.getReadyQueue();
+			if (readyQueue.isEmpty() &&
+					currentProcess == null) {
 				break;
-			} else if (currentProcess == null && jobQueue.peek().getArrivalTime() <= t) {
-				currentProcess = jobQueue.dequeue();
+			} else if (currentProcess == null &&
+					readyQueue.peek().
+					getArrivalTime() <= t) {
+				currentProcess = readyQueue.dequeue();
 				currentBurstTime++;
 				//System.out.println("processNum increased to "
 				//		+processNum);
@@ -79,9 +119,9 @@ public class FCFSManager extends Thread {
 
 	public void sortProcessesToReadyQueue() {
 		sortProcessesVector();
-		jobQueue = new ProcessesQueue();
+		readyQueue = new ProcessesQueue();
 		for (int i = 0; i < processesVector.size(); i++) {
-			jobQueue.enqueue(processesVector.get(i));
+			readyQueue.enqueue(processesVector.get(i));
 		}
 	}
 
@@ -100,12 +140,17 @@ public class FCFSManager extends Thread {
 
 	public void initProcessesInVector() {
 		processesVector = new Vector<Process>();
-		String[][] resourcesData = ((ResourcesTableModel) resourcesTable.getModel()).getData();
-		String[][] timeData = ((ResourcesTableModel) timeTable.getModel()).getData();
-
+		String[][] resourcesData = ((ResourcesTableModel) 
+				allocatedTable.getModel()).getData();
+		String[][] timeData = ((ResourcesTableModel) 
+				timeTable.getModel()).getData();
+		
 		for (int i = 0; i < timeData.length; i++) {
-			processesVector.add(new Process(Integer.parseInt(timeData[i][0]), Integer.parseInt(timeData[i][1]),
-					convertToIntArray(resourcesData[i]), ("P" + (i + 1)), ColorConstants.getColor(i)));
+			processesVector.add(new Process(
+					Integer.parseInt(timeData[i][0]),
+					Integer.parseInt(timeData[i][1]),
+					convertToIntArray(resourcesData[i]),
+					("P" + i), ColorConstants.getColor(i)));
 		}
 	}
 

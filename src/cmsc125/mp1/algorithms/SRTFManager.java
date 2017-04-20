@@ -12,16 +12,26 @@ import cmsc125.mp1.model.ResourcesTableModel;
 
 public class SRTFManager extends Thread {
 
-	private JTable resourcesTable;
+	private JTable allocatedTable;
+	private JTable maximumTable;
+	private JTable availableTable;
 	private JTable timeTable;
+	private int[] arrivalTimes;
+	private int[] priorityNumbers;
 	private ProcessesQueue jobQueue;
 	private Vector<Process> readyQueue;
 	private Vector<Process> processesVector;
 	private Vector<Process> origProcessesVector;
-	private int[] arrivalTimes;
+	private Bankers bankers;
 	
-	public SRTFManager(JTable resourcesTable, JTable timeTable) {
-		this.resourcesTable = resourcesTable;
+	public SRTFManager(SimulationPanel simulationPanel, 
+			JTable allocatedTable, 
+			JTable maximumTable,
+			JTable availableTable,
+			JTable timeTable) {
+		this.allocatedTable = allocatedTable;
+		this.maximumTable = maximumTable;
+		this.availableTable = availableTable;
 		this.timeTable = timeTable;
 		readyQueue = new Vector<Process>();
 	}
@@ -77,7 +87,7 @@ public class SRTFManager extends Thread {
 		processesVector = new Vector<Process>();
 		origProcessesVector = new Vector<Process>();
 		String[][] resourcesData = ((ResourcesTableModel) 
-				resourcesTable.getModel()).getData();
+				allocatedTable.getModel()).getData();
 		String[][] timeData = ((ResourcesTableModel) 
 				timeTable.getModel()).getData();
 		
@@ -86,7 +96,7 @@ public class SRTFManager extends Thread {
 					Integer.parseInt(timeData[i][0]),
 					Integer.parseInt(timeData[i][1]),
 					convertToIntArray(resourcesData[i]),
-					("P" + (i + 1)),
+					("P" + i),
 					ColorConstants.getColor(i)));
 			origProcessesVector.add(processesVector.
 					get(processesVector.size() - 1));
@@ -103,9 +113,30 @@ public class SRTFManager extends Thread {
 		return intData;
 	}
 	
+	public void initTimeTableData() {
+		String[][] timeData = ((ResourcesTableModel) 
+				timeTable.getModel()).getData();
+		arrivalTimes = new int[timeData.length];
+		priorityNumbers = new int[timeData.length];
+		for (int i = 0; i < timeData.length; i++) {
+			arrivalTimes[i] = Integer.parseInt(timeData[i][0]);
+			arrivalTimes[i] = Integer.parseInt(timeData[i][1]);
+		}
+	}
+	
+	public int[] getArrivalTimes() {
+		return arrivalTimes;
+	}
+	
+	public int[] getPriorityNumbers() {
+		return priorityNumbers;
+	}
+	
 	@Override
 	public void run() {
-		long increment = 2000;//0;
+		bankers = new Bankers(allocatedTable, maximumTable, 
+				availableTable, getArrivalTimes(), getPriorityNumbers());
+		long increment = 200;//0;
 		int t = 0;
 		Process currentProcess = null;
 		int currentBurstTime = 0;

@@ -11,8 +11,12 @@ import cmsc125.mp1.model.ResourcesTableModel;
 
 public class InputTablePanel extends JPanel {
 
-	public int numProcess, numResource;
-	private JTable resourcesTable;
+	private JTable allocatedTable;
+	private JTable maximumTable;
+	private JTable availableTable;
+	private JLabel availableTableLabel;
+	private JLabel maximumTableLabel;
+	private JLabel allocatedTableLabel;
 	private JTable timeTable;
 	
 	public InputTablePanel() {
@@ -42,23 +46,59 @@ public class InputTablePanel extends JPanel {
 
 		// Resources table
 		String[] columnResources = { "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10" };
-		String[][] objects = new String[20][10];
+		String[][] allocatedObjects = new String[20][10];
 		for (int i = 0; i < 20; i++) {
 			for (int j = 0; j < 10; j++) {
 				if (j == 0) {
-					objects[i][j] = "1";
+					allocatedObjects[i][j] = "1";
 				} else {
-					objects[i][j] = "0";
+					allocatedObjects[i][j] = "0";
 				}
 			}
 		}
-		resourcesTable = new JTable(new ResourcesTableModel(columnResources, objects));
+		setAllocatedTable(new JTable(new ResourcesTableModel(columnResources, allocatedObjects)));
 		// resourcesTable.setSize(400, 400);
 		// gresourcesTable.setGridColor(Color.BLACK);
-		resourcesTable.setBackground(Color.WHITE);
-		resourcesTable.setRowSelectionAllowed(true);
-		resourcesTable.setColumnSelectionAllowed(true);
-		resourcesTable.setCellSelectionEnabled(true);
+		getAllocatedTable().setBackground(Color.WHITE);
+		getAllocatedTable().setRowSelectionAllowed(true);
+		getAllocatedTable().setColumnSelectionAllowed(true);
+		getAllocatedTable().setCellSelectionEnabled(true);
+		
+		String[][] maximumObjects = new String[20][10];
+		for (int i = 0; i < 20; i++) {
+			for (int j = 0; j < 10; j++) {
+				if (j == 0) {
+					maximumObjects[i][j] = "1";
+				} else {
+					maximumObjects[i][j] = "0";
+				}
+			}
+		}
+		setMaximumTable(new JTable(new ResourcesTableModel(columnResources, maximumObjects)));
+		// resourcesTable.setSize(400, 400);
+		// gresourcesTable.setGridColor(Color.BLACK);
+		getMaximumTable().setBackground(Color.WHITE);
+		getMaximumTable().setRowSelectionAllowed(true);
+		getMaximumTable().setColumnSelectionAllowed(true);
+		getMaximumTable().setCellSelectionEnabled(true);
+		
+		String[][] availableObjects = new String[20][10];
+		for (int i = 0; i < 20; i++) {
+			for (int j = 0; j < 10; j++) {
+				if (j == 0) {
+					availableObjects[i][j] = "1";
+				} else {
+					availableObjects[i][j] = "0";
+				}
+			}
+		}
+		setAvailableTable(new JTable(new ResourcesTableModel(columnResources, availableObjects)));
+		// resourcesTable.setSize(400, 400);
+		// gresourcesTable.setGridColor(Color.BLACK);
+		getAvailableTable().setBackground(Color.WHITE);
+		getAvailableTable().setRowSelectionAllowed(true);
+		getAvailableTable().setColumnSelectionAllowed(true);
+		getAvailableTable().setCellSelectionEnabled(true);
 		/*
 		 * DefaultTableCellRenderer centerRenderer = new
 		 * DefaultTableCellRenderer(); centerRenderer.setHorizontalAlignment(
@@ -67,7 +107,7 @@ public class InputTablePanel extends JPanel {
 		 */
 
 		// Table for arrival time, priority
-		String[] columnTime = { "Arrival Time", "Priority" };
+		String[] columnTime = { "AT", "Priority" };
 		String[][] objectsTime = new String[20][2];
 		for (int i = 0; i < 20; i++) {
 			for (int j = 0; j < 2; j++) {
@@ -86,29 +126,93 @@ public class InputTablePanel extends JPanel {
 
 	public void addComponents() {
 		// resources table
-		JScrollPane resourcesTablePane = new JScrollPane(resourcesTable);
-		resourcesTablePane.setSize(400, 342);
-		resourcesTablePane.setLocation(0, 0);
-		add(resourcesTablePane);
+		allocatedTableLabel.setSize(80, 20);
+		allocatedTableLabel.setLocation(5, 70);
+		add(allocatedTableLabel);
+		JScrollPane allocatedTablePane = new JScrollPane(getAllocatedTable());
+		allocatedTablePane.setSize(300, 342);
+		allocatedTablePane.setLocation(5, 95);
+		add(allocatedTablePane);
+		
+		// rand allocated table
+		getRandAllocatedTableButton().setSize(70, 20);
+		getRandAllocatedTableButton().setLocation(85, 70);
+		add(getRandAllocatedTableButton());
+		
+		maximumTableLabel.setSize(80, 20);
+		maximumTableLabel.setLocation(305, 70);
+		add(maximumTableLabel);
+		JScrollPane maximumTablePane = new JScrollPane(getMaximumTable());
+		maximumTablePane.setSize(300, 342);
+		maximumTablePane.setLocation(305, 95);
+		add(maximumTablePane);
+		
+		// rand allocated table
+		getRandMaximumTableButton().setSize(70, 20);
+		getRandMaximumTableButton().setLocation(385, 70);
+		add(getRandMaximumTableButton());
+		
+		availableTableLabel.setSize(80, 20);
+		availableTableLabel.setLocation(605, 70);
+		add(availableTableLabel);
+		JScrollPane availableTablePane = new JScrollPane(getAvailableTable());
+		availableTablePane.setSize(300, 342);
+		availableTablePane.setLocation(605, 95);
+		add(availableTablePane);
 
+		// rand allocated table
+		getRandAvailableTableButton().setSize(70, 20);
+		getRandAvailableTableButton().setLocation(685, 70);
+		add(getRandAvailableTableButton());
+		
 		// table for arrival time, priority
 		JScrollPane timeTablePane = new JScrollPane(timeTable);
-		timeTablePane.setSize(155, 342);
-		timeTablePane.setLocation(405, 0);
+		timeTablePane.setSize(105, 342);
+		timeTablePane.setLocation(905, 95);
 		add(timeTablePane);
 
 	}
 
-	public void randResourcesTable() {
-		int rowCount = resourcesTable.getModel().getRowCount();
-		int colCount = resourcesTable.getModel().getColumnCount();
+	public void randAllocatedTable() {
+		int rowCount = getAllocatedTable().getModel().getRowCount();
+		int colCount = getAllocatedTable().getModel().getColumnCount();
 		Random random = new Random();
 		for (int i = 0; i < rowCount; i++) {
 			for (int j = 0; j < colCount; j++) {
 				if (j == 0) {
-					resourcesTable.getModel().setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
+					getAllocatedTable().getModel().setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
 				} else {
-					resourcesTable.getModel().setValueAt(Integer.toString(random.nextInt(10)), i, j);
+					getAllocatedTable().getModel().setValueAt(Integer.toString(random.nextInt(10)), i, j);
+				}
+			}
+		}
+	}
+	
+	public void randMaximumTable() {
+		int rowCount = getMaximumTable().getModel().getRowCount();
+		int colCount = getMaximumTable().getModel().getColumnCount();
+		Random random = new Random();
+		for (int i = 0; i < rowCount; i++) {
+			for (int j = 0; j < colCount; j++) {
+				if (j == 0) {
+					getMaximumTable().getModel().setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
+				} else {
+					getMaximumTable().getModel().setValueAt(Integer.toString(random.nextInt(10)), i, j);
+				}
+			}
+		}
+	}
+	
+	public void randAvailableTable() {
+		int rowCount = getAvailableTable().getModel().getRowCount();
+		int colCount = getAvailableTable().getModel().getColumnCount();
+		Random random = new Random();
+		for (int i = 0; i < rowCount; i++) {
+			for (int j = 0; j < colCount; j++) {
+				if (j == 0) {
+					getAvailableTable().getModel().setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
+				} else {
+					getAvailableTable().getModel().setValueAt(Integer.toString(random.nextInt(10)), i, j);
 				}
 			}
 		}
@@ -116,59 +220,189 @@ public class InputTablePanel extends JPanel {
 
 
 	public void setResourcesTableColumnSize(int numColumns) {
-		ResourcesTableModel currentModel = ((ResourcesTableModel) resourcesTable.getModel());
-		String[][] currentTableData = currentModel.getData();
-		String[][] newTableData = new String[currentTableData.length][numColumns];
+		ResourcesTableModel currentAllocatedModel = ((ResourcesTableModel) getAllocatedTable().getModel());
+		String[][] currentAllocatedTableData = currentAllocatedModel.getData();
+		String[][] newAllocatedTableData = new String[currentAllocatedTableData.length][numColumns];
 
-		for (int i = 0; i < currentTableData.length; i++) {
-			for (int j = 0; j < currentTableData[i].length; j++) {
-				if (currentTableData[i][j] != null && j < numColumns) {
-					newTableData[i][j] = currentTableData[i][j];
+		for (int i = 0; i < currentAllocatedTableData.length; i++) {
+			for (int j = 0; j < currentAllocatedTableData[i].length; j++) {
+				if (currentAllocatedTableData[i][j] != null && j < numColumns) {
+					newAllocatedTableData[i][j] = currentAllocatedTableData[i][j];
 				}
 			}
 		}
 
-		for (int i = 0; i < newTableData.length; i++) {
-			for (int j = 0; j < newTableData[i].length; j++) {
-				if (newTableData[i][j] == null) {
-					newTableData[i][j] = "0";
+		for (int i = 0; i < newAllocatedTableData.length; i++) {
+			for (int j = 0; j < newAllocatedTableData[i].length; j++) {
+				if (newAllocatedTableData[i][j] == null) {
+					newAllocatedTableData[i][j] = "0";
 				}
 			}
 		}
 
-		String[] newColumns = new String[numColumns];
+		String[] newAllocatedColumns = new String[numColumns];
 		for (int i = 0; i < numColumns; i++) {
-			newColumns[i] = "R" + (i + 1);
+			newAllocatedColumns[i] = "R" + (i + 1);
 		}
 
-		((ResourcesTableModel) resourcesTable.getModel()).setColumnNames(newColumns);
+		((ResourcesTableModel) getAllocatedTable().getModel()).setColumnNames(newAllocatedColumns);
 
-		resourcesTable.setModel(new ResourcesTableModel(currentModel.getColumnNames(), newTableData));
+		getAllocatedTable().setModel(new ResourcesTableModel(currentAllocatedModel.getColumnNames(), newAllocatedTableData));
+
+		ResourcesTableModel currentMaximumModel = ((ResourcesTableModel) getMaximumTable().getModel());
+		String[][] currentMaximumTableData = currentMaximumModel.getData();
+		String[][] newMaximumTableData = new String[currentMaximumTableData.length][numColumns];
+
+		for (int i = 0; i < currentMaximumTableData.length; i++) {
+			for (int j = 0; j < currentMaximumTableData[i].length; j++) {
+				if (currentMaximumTableData[i][j] != null && j < numColumns) {
+					newMaximumTableData[i][j] = currentMaximumTableData[i][j];
+				}
+			}
+		}
+
+		for (int i = 0; i < newMaximumTableData.length; i++) {
+			for (int j = 0; j < newMaximumTableData[i].length; j++) {
+				if (newMaximumTableData[i][j] == null) {
+					newMaximumTableData[i][j] = "0";
+				}
+			}
+		}		
+		
+		String[] newMaximumColumns = new String[numColumns];
+		for (int i = 0; i < numColumns; i++) {
+			newMaximumColumns[i] = "R" + (i + 1);
+		}
+
+		((ResourcesTableModel) getMaximumTable().getModel()).setColumnNames(newMaximumColumns);
+		
+		getMaximumTable().setModel(new ResourcesTableModel(currentMaximumModel.getColumnNames(), newMaximumTableData));
+		
+		ResourcesTableModel currentAvailableModel = ((ResourcesTableModel) getAvailableTable().getModel());
+		String[][] currentAvailableTableData = currentAvailableModel.getData();
+		String[][] newAvailableTableData = new String[currentAvailableTableData.length][numColumns];
+
+		for (int i = 0; i < currentAvailableTableData.length; i++) {
+			for (int j = 0; j < currentAvailableTableData[i].length; j++) {
+				if (currentAvailableTableData[i][j] != null && j < numColumns) {
+					newAvailableTableData[i][j] = currentAvailableTableData[i][j];
+				}
+			}
+		}
+
+		for (int i = 0; i < newAvailableTableData.length; i++) {
+			for (int j = 0; j < newAvailableTableData[i].length; j++) {
+				if (newAvailableTableData[i][j] == null) {
+					newAvailableTableData[i][j] = "0";
+				}
+			}
+		}		
+
+		String[] newAvailableColumns = new String[numColumns];
+		for (int i = 0; i < numColumns; i++) {
+			newAvailableColumns[i] = "R" + (i + 1);
+		}
+
+		((ResourcesTableModel) getAvailableTable().getModel()).setColumnNames(newAvailableColumns);
+		
+		getAvailableTable().setModel(new ResourcesTableModel(currentAvailableModel.getColumnNames(), newAvailableTableData));
 	}
 
 	public void setResourcesTableRowSize(int numRows) {
-		ResourcesTableModel currentModel = ((ResourcesTableModel) resourcesTable.getModel());
-		String[][] currentTableData = currentModel.getData();
-		String[][] newTableData = new String[numRows][currentTableData[0].length];
+		ResourcesTableModel currentAllocatedModel = ((ResourcesTableModel) getAllocatedTable().getModel());
+		String[][] currentAllocatedTableData = currentAllocatedModel.getData();
+		String[][] newAllocatedTableData = new String[numRows][currentAllocatedTableData[0].length];
+		
+		for (int i = 0; i < currentAllocatedTableData.length; i++) {
+			for (int j = 0; j < currentAllocatedTableData[i].length; j++) {
+				if (currentAllocatedTableData[i][j] != null && i < numRows) {
+					newAllocatedTableData[i][j] = currentAllocatedTableData[i][j];
+				}
+			}
+		}
 
+		for (int i = 0; i < newAllocatedTableData.length; i++) {
+			for (int j = 0; j < newAllocatedTableData[i].length; j++) {
+				if (newAllocatedTableData[i][j] == null) {
+					newAllocatedTableData[i][j] = "0";
+				}
+			}
+		}
+
+		getAllocatedTable().setModel(new ResourcesTableModel(currentAllocatedModel.getColumnNames(), newAllocatedTableData));
+
+		ResourcesTableModel currentMaximumModel = ((ResourcesTableModel) getMaximumTable().getModel());
+		String[][] currentMaximumTableData = currentMaximumModel.getData();
+		String[][] newMaximumTableData = new String[numRows][currentMaximumTableData[0].length];
+		
+		for (int i = 0; i < currentMaximumTableData.length; i++) {
+			for (int j = 0; j < currentMaximumTableData[i].length; j++) {
+				if (currentMaximumTableData[i][j] != null && i < numRows) {
+					newMaximumTableData[i][j] = currentMaximumTableData[i][j];
+				}
+			}
+		}
+
+		for (int i = 0; i < newMaximumTableData.length; i++) {
+			for (int j = 0; j < newMaximumTableData[i].length; j++) {
+				if (newMaximumTableData[i][j] == null) {
+					newMaximumTableData[i][j] = "0";
+				}
+			}
+		}
+		
+		getMaximumTable().setModel(new ResourcesTableModel(currentMaximumModel.getColumnNames(), newMaximumTableData));
+		
+		ResourcesTableModel currentAvailableModel = ((ResourcesTableModel) getAvailableTable().getModel());
+		String[][] currentAvailableTableData = currentAvailableModel.getData();
+		String[][] newAvailableTableData = new String[numRows][currentAvailableTableData[0].length];
+		
+		for (int i = 0; i < currentAvailableTableData.length; i++) {
+			for (int j = 0; j < currentAvailableTableData[i].length; j++) {
+				if (currentAvailableTableData[i][j] != null && i < numRows) {
+					newAvailableTableData[i][j] = currentAvailableTableData[i][j];
+				}
+			}
+		}
+
+		for (int i = 0; i < newAvailableTableData.length; i++) {
+			for (int j = 0; j < newAvailableTableData[i].length; j++) {
+				if (newAvailableTableData[i][j] == null) {
+					newAvailableTableData[i][j] = "0";
+				}
+			}
+		}
+		
+		getAvailableTable().setModel(new ResourcesTableModel(currentAvailableModel.getColumnNames(), newAvailableTableData));
+
+/*		currentModel = ((ResourcesTableModel) getAllocatedTable().getModel());
+		currentTableData = currentModel.getData();
 		for (int i = 0; i < currentTableData.length; i++) {
 			for (int j = 0; j < currentTableData[i].length; j++) {
-				if (currentTableData[i][j] != null && i < numRows) {
-					newTableData[i][j] = currentTableData[i][j];
-				}
+				System.out.print(currentTableData[i][j] + " ");
 			}
+			System.out.println();
 		}
-
-		for (int i = 0; i < newTableData.length; i++) {
-			for (int j = 0; j < newTableData[i].length; j++) {
-				if (newTableData[i][j] == null) {
-					newTableData[i][j] = "0";
-				}
+		
+		currentModel = ((ResourcesTableModel) getMaximumTable().getModel());
+		currentTableData = currentModel.getData();
+		for (int i = 0; i < currentTableData.length; i++) {
+			for (int j = 0; j < currentTableData[i].length; j++) {
+				System.out.print(currentTableData[i][j] + " ");
 			}
+			System.out.println();
 		}
-
-		resourcesTable.setModel(new ResourcesTableModel(currentModel.getColumnNames(), newTableData));
-
+		
+		currentModel = ((ResourcesTableModel) getAvailableTable().getModel());
+		currentTableData = currentModel.getData();
+		for (int i = 0; i < currentTableData.length; i++) {
+			for (int j = 0; j < currentTableData[i].length; j++) {
+				System.out.print(currentTableData[i][j] + " ");
+			}
+			System.out.println();
+		}*/
+		
+		//System.exit(1);
 		resizeTimeTable(numRows);
 	}
 
@@ -191,7 +425,7 @@ public class InputTablePanel extends JPanel {
 	}
 
 	public JTable getResourcesTable() {
-		return resourcesTable;
+		return getAllocatedTable();
 	}
 
 	public JTable getTimeTable() {
