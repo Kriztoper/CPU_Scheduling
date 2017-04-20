@@ -22,6 +22,7 @@ public class Controller {
 	private InputTablePanel itp;
 	private ArrayList<String> selectedAlgos;
 	private JFrame frame1;
+	private ArrayList<CheckBox> checkBoxList;
 
 	public Controller(){
 		itp = new InputTablePanel();
@@ -32,6 +33,7 @@ public class Controller {
 		frame1.setSize(550,370);
 		frame1.setVisible(false);
 		frame1.add(itp);
+
 	}
 	
 	@FXML public void randNumProcesses(MouseEvent event) {
@@ -52,7 +54,8 @@ public class Controller {
 
 	@FXML public void randCPUSchedAlgos(MouseEvent event) {
 		Random random = new Random();
-		ArrayList<CheckBox> checkBoxList = new ArrayList<CheckBox>();
+		
+		checkBoxList = new ArrayList<CheckBox>();
 		checkBoxList.add(fcfsCB);
 		checkBoxList.add(sjfCB);
 		checkBoxList.add(rrCB);
@@ -78,6 +81,19 @@ public class Controller {
 	}
 	
 	@FXML public void startSimulation(MouseEvent event){
+		checkBoxList = new ArrayList<CheckBox>();
+		checkBoxList.add(fcfsCB);
+		checkBoxList.add(sjfCB);
+		checkBoxList.add(rrCB);
+		checkBoxList.add(prioCB);
+		checkBoxList.add(npprioCB);
+		checkBoxList.add(srtfCB);
+		selectedAlgos = new ArrayList<String>();
+		for (CheckBox cb: checkBoxList){
+			if (cb.isSelected())
+				selectedAlgos.add(cb.getText());
+		}
+		
 		SimulationPanel p1 = new SimulationPanel();
 		p1.startSimulation(selectedAlgos, itp.getResourcesTable(), itp.getTimeTable(), quantumField.getText());
 		JFrame f2 = new JFrame();
