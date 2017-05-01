@@ -107,7 +107,7 @@ public class Controller {
 	@FXML public void updateVisualizationSpeed(KeyEvent event){
 		if (event.getCode().equals(KeyCode.ENTER))
         {
-			AlgoSimulator.visualizationSpeed = Integer.parseInt(visualizationSpeed.getText())*1000;
+			AlgoSimulator.visualizationSpeed = Integer.parseInt(visualizationSpeed.getText());
         }
 		
 	}

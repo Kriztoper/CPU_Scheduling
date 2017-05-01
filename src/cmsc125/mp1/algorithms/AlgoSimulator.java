@@ -25,7 +25,7 @@ public class AlgoSimulator {
 		this.availableTable = availableTable;
 		this.timeTable = timeTable;
 		this.quantumFieldText = quantumFieldText;
-		this.visualizationSpeed = visualizationSpeed * 1000;
+		this.visualizationSpeed = visualizationSpeed;
 	}
 
 	private String prepareGanttInfo() {
