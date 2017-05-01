@@ -80,7 +80,7 @@ public class SJFManager extends Thread {
 
 		for (int i = 0; i < timeData.length; i++) {
 			processesVector.add(new Process(Integer.parseInt(timeData[i][0]), Integer.parseInt(timeData[i][1]),
-					convertToIntArray(resourcesData[i]), ("P" + i), ColorConstants.getColor(i)));
+					convertToIntArray(resourcesData[i]), ("P" + (i + 1)), ColorConstants.getColor(i)));
 			origProcessesVector.add(processesVector.get(processesVector.size() - 1));
 		}
 	}
