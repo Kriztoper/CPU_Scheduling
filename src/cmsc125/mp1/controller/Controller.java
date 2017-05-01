@@ -109,6 +109,28 @@ public class Controller {
         {
 			AlgoSimulator.visualizationSpeed = Integer.parseInt(visualizationSpeed.getText());
         }
-		
+	}
+	
+	@FXML public void setQuantumValue(KeyEvent event){
+		if (event.getCode().equals(KeyCode.ENTER))
+        {
+			AlgoSimulator.visualizationSpeed = Integer.parseInt(visualizationSpeed.getText());
+        }
+	}
+	
+	@FXML public void setNumProcesses(KeyEvent event){
+		if (event.getCode().equals(KeyCode.ENTER))
+        {
+			itp.numProcess = Integer.parseInt(numProcessField.getText());
+			itp.setResourcesTableRowSize(itp.numProcess);
+        }
+	}
+	
+	@FXML public void setNumResources(KeyEvent event){
+		if (event.getCode().equals(KeyCode.ENTER))
+        {
+			itp.numResource = Integer.parseInt(numResourceField.getText());
+			itp.setResourcesTableColumnSize(itp.numResource);
+        }
 	}
 }
