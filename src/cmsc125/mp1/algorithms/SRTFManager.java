@@ -1,35 +1,33 @@
 package cmsc125.mp1.algorithms;
 
-import java.awt.Color;
 import java.util.Vector;
 
-import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.border.LineBorder;
 
 import cmsc125.mp1.constants.ColorConstants;
+import cmsc125.mp1.controller.Main;
 import cmsc125.mp1.model.Process;
 import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.model.ResourcesTableModel;
-import cmsc125.mp1.view.SimulationPanel;
 
 public class SRTFManager extends Thread {
 
-	private SimulationPanel simulationPanel;
-	private JTable resourcesTable;
+	private JTable allocatedTable;
+	private JTable maximumTable;
+	private JTable availableTable;
 	private JTable timeTable;
+	private int[] arrivalTimes;
+	private int[] priorityNumbers;
 	private ProcessesQueue jobQueue;
 	private Vector<Process> readyQueue;
 	private Vector<Process> processesVector;
 	private Vector<Process> origProcessesVector;
-	private int[] arrivalTimes;
-	private int xProcess;
-	private int yProcess;
-	
-	public SRTFManager(SimulationPanel simulationPanel, 
-			JTable resourcesTable, JTable timeTable) {
-		this.simulationPanel = simulationPanel;
-		this.resourcesTable = resourcesTable;
+	private Bankers bankers;
+
+	public SRTFManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable) {
+		this.allocatedTable = allocatedTable;
+		this.maximumTable = maximumTable;
+		this.availableTable = availableTable;
 		this.timeTable = timeTable;
 		readyQueue = new Vector<Process>();
 	}
@@ -38,162 +36,143 @@ public class SRTFManager extends Thread {
 		initProcessesInVector();
 		sortProcessesToJobQueue();
 		setListOfArrivalTimes();
-		
+
 		start();
 	}
-	
+
 	public void sortProcessesToJobQueue() {
 		sortProcessesVector();
-		
-		JLabel[] processLabels = new JLabel[processesVector.size()];
-		int x = 5;
-		int y = 80;
+
 		jobQueue = new ProcessesQueue();
 		for (int i = 0; i < processesVector.size(); i++) {
-			processLabels[i] = new JLabel(
-					processesVector.get(i).getName());
-			processLabels[i].setBorder(
-					new LineBorder(Color.BLACK));
-			processLabels[i].setBackground(
-					processesVector.get(i).getColor());
-			processLabels[i].setOpaque(true);
-			processLabels[i].setSize(30, 50);
-			processLabels[i].setLocation(x, y);
-			x += processLabels[i].getWidth() + 1;
-			simulationPanel.add(processLabels[i]);
 			jobQueue.enqueue(processesVector.get(i));
 		}
 	}
-	
+
 	public void sortProcessesVector() {
 		int size = processesVector.size();
 		for (int i = 0; i < (size - 1); i++) {
 			for (int j = 0; j < size - i - 1; j++) {
-				if (processesVector.get(j).
-						getArrivalTime() > 
-						processesVector.get(j + 1).
-						getArrivalTime()) {
+				if (processesVector.get(j).getArrivalTime() > processesVector.get(j + 1).getArrivalTime()) {
 					Process temp = processesVector.get(j);
-					processesVector.set(j, 
-							processesVector.get(j + 1));
+					processesVector.set(j, processesVector.get(j + 1));
 					processesVector.set(j + 1, temp);
 					temp = origProcessesVector.get(j);
-					origProcessesVector.set(j, 
-							origProcessesVector.get(j + 1));
+					origProcessesVector.set(j, origProcessesVector.get(j + 1));
 					origProcessesVector.set(j + 1, temp);
 				}
 			}
 		}
 	}
-	
+
 	public void setListOfArrivalTimes() {
 		int size = processesVector.size();
 		arrivalTimes = new int[size];
-		for (int i = 0; i< size; i++) {
-			arrivalTimes[i] = 
-					processesVector.get(i).getArrivalTime();
+		for (int i = 0; i < size; i++) {
+			arrivalTimes[i] = processesVector.get(i).getArrivalTime();
 		}
 	}
-	
+
 	public void initProcessesInVector() {
 		processesVector = new Vector<Process>();
 		origProcessesVector = new Vector<Process>();
-		String[][] resourcesData = ((ResourcesTableModel) 
-				resourcesTable.getModel()).getData();
-		String[][] timeData = ((ResourcesTableModel) 
-				timeTable.getModel()).getData();
-		
+		String[][] resourcesData = ((ResourcesTableModel) allocatedTable.getModel()).getData();
+		String[][] timeData = ((ResourcesTableModel) timeTable.getModel()).getData();
+
 		for (int i = 0; i < timeData.length; i++) {
-			processesVector.add(new Process(
-					Integer.parseInt(timeData[i][0]),
-					Integer.parseInt(timeData[i][1]),
-					convertToIntArray(resourcesData[i]),
-					("P" + (i + 1)),
-					ColorConstants.getColor(i)));
-			origProcessesVector.add(processesVector.
-					get(processesVector.size() - 1));
+			processesVector.add(new Process(Integer.parseInt(timeData[i][0]), Integer.parseInt(timeData[i][1]),
+					convertToIntArray(resourcesData[i]), ("P" + (i + 1)), ColorConstants.getColor(i)));
+			origProcessesVector.add(processesVector.get(processesVector.size() - 1));
 		}
 	}
-	
+
 	public int[] convertToIntArray(String[] resourcesData) {
 		int size = resourcesData.length;
 		int[] intData = new int[size];
 		for (int i = 0; i < size; i++) {
 			intData[i] = Integer.parseInt(resourcesData[i]);
 		}
-		
+
 		return intData;
 	}
-	
+
+	public void initTimeTableData() {
+		String[][] timeData = ((ResourcesTableModel) timeTable.getModel()).getData();
+		arrivalTimes = new int[timeData.length];
+		priorityNumbers = new int[timeData.length];
+		for (int i = 0; i < timeData.length; i++) {
+			arrivalTimes[i] = Integer.parseInt(timeData[i][0]);
+			arrivalTimes[i] = Integer.parseInt(timeData[i][1]);
+		}
+	}
+
+	public int[] getArrivalTimes() {
+		return arrivalTimes;
+	}
+
+	public int[] getPriorityNumbers() {
+		return priorityNumbers;
+	}
+
 	@Override
 	public void run() {
-		long increment = 200;//0;
+		bankers = new Bankers(allocatedTable, maximumTable, availableTable, getArrivalTimes(), getPriorityNumbers());
+		long increment = 200;// 0;
 		int t = 0;
 		Process currentProcess = null;
 		int currentBurstTime = 0;
-		xProcess = 5;
-		yProcess = 200;
-		
+
 		while (true) {
 			System.out.println("At time " + t);
 			fillReadyQueue(t);
 			sortReadyQueue();
-			if (readyQueue.isEmpty() &&
-					currentProcess == null) {
+			if (readyQueue.isEmpty() && currentProcess == null) {
 				break;
-			} else if (readyQueue.get(0).
-					getArrivalTime() <= t) {
+			} else if (readyQueue.get(0).getArrivalTime() <= t) {
 				currentProcess = readyQueue.get(0);
 				currentProcess.decBurstTime();
-				
-				addProcessLabel(currentProcess);
-				
-				System.out.println(
-						currentProcess.getName() +
-						"[" + currentBurstTime + "]");
+
+				Main.ganttVisual.updateGantt(t, currentProcess.getName());
+
+				System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
 			}
-			
+
 			if (currentProcess.getBurstTime() == 0) {
 				readyQueue.remove(0);
 			}
-			
+
 			currentProcess = null;
 
 			try {
-				Thread.sleep(increment);
+				this.sleep(AlgoSimulator.visualizationSpeed);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			
+
 			t++;
 		}
 		System.out.println("Done executing SRTF!");
 	}
-	
+
 	public void sortReadyQueue() {
 		int size = readyQueue.size();
 		for (int i = 0; i < (size - 1); i++) {
 			for (int j = 0; j < size - i - 1; j++) {
-				if (readyQueue.get(j).
-						getBurstTime() > 
-					readyQueue.get(j + 1).
-						getBurstTime()) {
+				if (readyQueue.get(j).getBurstTime() > readyQueue.get(j + 1).getBurstTime()) {
 					Process temp = readyQueue.get(j);
-					readyQueue.set(j, 
-							readyQueue.get(j + 1));
+					readyQueue.set(j, readyQueue.get(j + 1));
 					readyQueue.set(j + 1, temp);
 				}
 			}
 		}
 	}
-	
+
 	public void fillReadyQueue(int t) {
 		int size = processesVector.size();
 		int[] indicesToRemove = new int[size];
 		int index = 0;
 		for (int i = 0; i < size; i++) {
-			if (processesVector.get(i).
-					getArrivalTime() <= t) {
+			if (processesVector.get(i).getArrivalTime() <= t) {
 				readyQueue.add(processesVector.get(i));
 				indicesToRemove[index++] = i;
 			} else {
@@ -206,17 +185,4 @@ public class SRTFManager extends Thread {
 			}
 		}
 	}
-	
-	public void addProcessLabel(Process process) {
-		JLabel processLabel = new JLabel(process.getName());
-		processLabel.setBackground(process.getColor());
-		processLabel.setBorder(new LineBorder(Color.BLACK));
-		processLabel.setOpaque(true);
-		processLabel.setSize(30, 50);
-		processLabel.setLocation(xProcess, yProcess);
-		xProcess += processLabel.getWidth() + 1;
-		simulationPanel.add(processLabel);
-		simulationPanel.repaint();
-	}
 }
-
