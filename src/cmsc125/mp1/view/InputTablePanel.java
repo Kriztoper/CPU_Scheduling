@@ -129,13 +129,13 @@ public class InputTablePanel extends JPanel {
 		//available allocated table
 		JScrollPane availableTablePane = new JScrollPane(availableTable);
 		availableTablePane.setSize(300, 342);
-		availableTablePane.setLocation(605, 0);
+		availableTablePane.setLocation(610, 0);
 		add(availableTablePane);
 
 		// table for arrival time, priority
 		JScrollPane timeTablePane = new JScrollPane(timeTable);
 		timeTablePane.setSize(105, 342);
-		timeTablePane.setLocation(905, 0);
+		timeTablePane.setLocation(915, 0);
 		add(timeTablePane);
 
 	}
