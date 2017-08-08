@@ -185,6 +185,21 @@ public class InputTablePanel extends JPanel {
 		}
 	}
 
+	public void randATPT() {
+		int rowCount = timeTable.getModel().getRowCount();
+		int colCount = timeTable.getModel().getColumnCount();
+		Random random = new Random();
+		for (int i = 0; i < rowCount; i++) {
+			for (int j = 0; j < colCount; j++) {
+				if (j == 0) {
+					timeTable.getModel().setValueAt(Integer.toString(random.nextInt(rowCount) + 1), i, j);
+				} else {
+					timeTable.getModel().setValueAt(Integer.toString(random.nextInt(rowCount)), i, j);
+				}
+			}
+		}
+	}
+	
 	public void setResourcesTableColumnSize(int numColumns) {
 		ResourcesTableModel currentAllocatedModel = ((ResourcesTableModel) allocatedTable.getModel());
 		String[][] currentAllocatedTableData = currentAllocatedModel.getData();
@@ -389,11 +404,9 @@ public class InputTablePanel extends JPanel {
 	public JTable getResourcesTable() {
 		return allocatedTable;
 	}
-
 	public JTable getTimeTable() {
 		return timeTable;
 	}
-
 	public JTable getAllocatedTable() {
 		return allocatedTable;
 	}

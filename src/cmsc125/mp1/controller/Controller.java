@@ -79,6 +79,7 @@ public class Controller {
 	}
 	
 	@FXML public void randProcessInfo(MouseEvent event){
+		itp.randATPT();
 	}
 	
 	@FXML public void startSimulation(MouseEvent event){
