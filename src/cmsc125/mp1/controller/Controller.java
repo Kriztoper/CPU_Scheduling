@@ -29,7 +29,7 @@ public class Controller {
 		itp = new InputTablePanel();
 		frame1 = new JFrame();
 		frame1.setTitle("Resources Table");
-		frame1.setLocation(800, 0);
+		frame1.setLocation(0, 230);
 		frame1.setResizable(true);
 		frame1.setSize(1050,370);
 		frame1.setVisible(false);
@@ -77,9 +77,12 @@ public class Controller {
 
 	@FXML public void randResourcesTable(MouseEvent event) {
 		itp.randAllocatedTable();
+		itp.randAvailableTable();
+		itp.randMaximumTable();
 	}
 	
 	@FXML public void randProcessInfo(MouseEvent event){
+		itp.randATPT();
 	}
 	
 	@FXML public void startSimulation(MouseEvent event){
@@ -122,7 +125,13 @@ public class Controller {
 	@FXML public void setNumProcesses(KeyEvent event){
 		if (event.getCode().equals(KeyCode.ENTER))
         {
-			itp.numProcess = Integer.parseInt(numProcessField.getText());
+			int val = Integer.parseInt(numProcessField.getText());
+			if (val > 20)
+				itp.numProcess = 20;
+			else if (val <0)
+				itp.numProcess = 1;
+			else				
+				itp.numProcess = val;
 			itp.setResourcesTableRowSize(itp.numProcess);
         }
 	}
@@ -130,7 +139,13 @@ public class Controller {
 	@FXML public void setNumResources(KeyEvent event){
 		if (event.getCode().equals(KeyCode.ENTER))
         {
-			itp.numResource = Integer.parseInt(numResourceField.getText());
+			int val = Integer.parseInt(numResourceField.getText());
+			if (val > 10)
+				itp.numResource = 10;
+			else if (val < 0)
+				itp.numResource = 1;
+			else
+				itp.numResource = val;
 			itp.setResourcesTableColumnSize(itp.numResource);
         }
 	}
