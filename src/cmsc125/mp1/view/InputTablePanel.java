@@ -3,6 +3,7 @@ package cmsc125.mp1.view;
 import java.awt.Color;
 import java.util.Random;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -11,6 +12,9 @@ import cmsc125.mp1.model.ResourcesTableModel;
 
 public class InputTablePanel extends JPanel {
 
+	private JLabel allocatedTableLabel;
+	private JLabel maximumTableLabel;
+	private JLabel availableTableLabel;
 	private JTable allocatedTable;
 	private JTable maximumTable;
 	private JTable availableTable;
@@ -29,6 +33,10 @@ public class InputTablePanel extends JPanel {
 	}
 
 	public void initComponents() {
+		allocatedTableLabel = new JLabel("Allocated Table");
+		maximumTableLabel = new JLabel("Maximum Table");
+		availableTableLabel = new JLabel("Available Table");
+		
 		// drop-down list to choose number of processes
 		String[] oneToTwenty = new String[20];
 		for (int i = 1; i <= oneToTwenty.length; i++) {
@@ -115,27 +123,36 @@ public class InputTablePanel extends JPanel {
 
 	public void addComponents() {
 		// resources table
+		allocatedTableLabel.setSize(150, 10);
+		allocatedTableLabel.setLocation(0, 0);
+		add(allocatedTableLabel);
 		JScrollPane allocatedTablePane = new JScrollPane(allocatedTable);
 		allocatedTablePane.setSize(300, 342);
-		allocatedTablePane.setLocation(0, 0);
+		allocatedTablePane.setLocation(0, 10);
 		add(allocatedTablePane);
 
 		// rand allocated table
+		maximumTableLabel.setSize(150, 10);
+		maximumTableLabel.setLocation(305, 0);
+		add(maximumTableLabel);
 		JScrollPane maximumTablePane = new JScrollPane(maximumTable);
 		maximumTablePane.setSize(300, 342);
-		maximumTablePane.setLocation(305, 0);
+		maximumTablePane.setLocation(305, 10);
 		add(maximumTablePane);
 
 		//available allocated table
+		availableTableLabel.setSize(150, 10);
+		availableTableLabel.setLocation(605, 0);
+		add(availableTableLabel);
 		JScrollPane availableTablePane = new JScrollPane(availableTable);
 		availableTablePane.setSize(300, 342);
-		availableTablePane.setLocation(605, 0);
+		availableTablePane.setLocation(605, 10);
 		add(availableTablePane);
 
 		// table for arrival time, priority
 		JScrollPane timeTablePane = new JScrollPane(timeTable);
 		timeTablePane.setSize(105, 342);
-		timeTablePane.setLocation(905, 0);
+		timeTablePane.setLocation(905, 10);
 		add(timeTablePane);
 
 	}

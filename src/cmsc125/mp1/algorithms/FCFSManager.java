@@ -19,7 +19,7 @@ public class FCFSManager extends Thread {
 	private int[] arrivalTimes;
 	private int[] priorityNumbers;
 	private Vector<Process> processesVector;
-	private ProcessesQueue readyQueue;
+	private ProcessesQueue jobQueue;
 	private Bankers bankers;
 
 	public FCFSManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable) {
@@ -32,7 +32,7 @@ public class FCFSManager extends Thread {
 	public void startSimulation() {
 		initTimeTableData();
 		initProcessesInVector();
-		sortProcessesToReadyQueue();
+		sortProcessesToJobQueue();
 
 		start();
 	}
@@ -65,12 +65,17 @@ public class FCFSManager extends Thread {
 		while (true) {
 			System.out.println("At time " + t);
 			// bankers.allocateResource(t);
-			// bankers.getReadyQueue().sortByArrivalTime();
-			// readyQueue = bankers.getReadyQueue();
-			if (readyQueue.isEmpty() && currentProcess == null) {
+			// bankers.getjobQueue().sortByArrivalTime();
+			// jobQueue = bankers.getjobQueue();
+
+			// If ready queue is empty and there is no current process running
+			if (jobQueue.isEmpty() && currentProcess == null) {
 				break;
-			} else if (currentProcess == null && readyQueue.peek().getArrivalTime() <= t) {
-				currentProcess = readyQueue.dequeue();
+			} else if (currentProcess == null && jobQueue.peek().getArrivalTime() <= t) {
+				// there is a process waiting in ready queue available for execution and there
+				// is no current process running
+
+				currentProcess = jobQueue.dequeue();
 				currentBurstTime++;
 				// System.out.println("processNum increased to "
 				// +processNum);
@@ -79,6 +84,8 @@ public class FCFSManager extends Thread {
 
 				System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
 			} else if (currentProcess != null && currentBurstTime < currentProcess.getBurstTime()) {
+				// there is still a current process executing
+
 				currentBurstTime++;
 
 				Main.ganttVisual.updateGantt(t, currentProcess.getName());
@@ -86,15 +93,15 @@ public class FCFSManager extends Thread {
 				System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
 			}
 
-			if (null != currentProcess && currentBurstTime == currentProcess.getBurstTime()) {
+			// there is still a current process running but it has completed executing
+			if (currentProcess != null && currentBurstTime == currentProcess.getBurstTime()) {
 				currentProcess = null;
 				currentBurstTime = 0;
 			}
 
 			try {
-				this.sleep(AlgoSimulator.visualizationSpeed);
+				this.sleep(AlgoSimulator.visualizationSpeed); // delay
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			t++;
@@ -102,11 +109,11 @@ public class FCFSManager extends Thread {
 		System.out.println("Done executing FCFS!");
 	}
 
-	public void sortProcessesToReadyQueue() {
+	public void sortProcessesToJobQueue() {
 		sortProcessesVector();
-		readyQueue = new ProcessesQueue();
+		jobQueue = new ProcessesQueue();
 		for (int i = 0; i < processesVector.size(); i++) {
-			readyQueue.enqueue(processesVector.get(i));
+			jobQueue.enqueue(processesVector.get(i));
 		}
 	}
 

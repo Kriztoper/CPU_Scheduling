@@ -31,8 +31,9 @@ public class Controller {
 		frame1.setTitle("Resources Table");
 		frame1.setLocation(800, 0);
 		frame1.setResizable(true);
-		frame1.setSize(550,370);
+		frame1.setSize(1050,370);
 		frame1.setVisible(false);
+		frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame1.add(itp);
 
 	}
@@ -97,7 +98,7 @@ public class Controller {
 		
 		AlgoSimulator algoSimulator = new AlgoSimulator(itp.numProcess, selectedAlgos, itp.getAllocatedTable(), itp.getMaximumTable(), itp.getAvailableTable(), itp.getTimeTable(), quantumField.getText(), Integer.parseInt(visualizationSpeed.getText()));
 		algoSimulator.startSimulation();
-		frame1.setVisible(false);
+//		frame1.setVisible(false);
 	}
 	
 	@FXML public void showResourcesTable(MouseEvent event){
