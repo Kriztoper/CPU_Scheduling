@@ -122,36 +122,41 @@ public class SRTFManager extends Thread {
 		Process currentProcess = null;
 		int currentBurstTime = 0;
 
-		while (true) {
-			System.out.println("At time " + t);
-			fillReadyQueue(t);
-			sortReadyQueue();
-			if (readyQueue.isEmpty() && currentProcess == null) {
-				break;
-			} else if (readyQueue.get(0).getArrivalTime() <= t) {
-				currentProcess = readyQueue.get(0);
-				currentProcess.decBurstTime();
-
-				Main.ganttVisual.updateGantt(t, currentProcess.getName());
-
-				System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
+		if (bankers.isSafeState()) {
+			while (true) {
+				System.out.println("At time " + t);
+				fillReadyQueue(t);
+				sortReadyQueue();
+				if (readyQueue.isEmpty() && currentProcess == null) {
+					break;
+				} else if (readyQueue.get(0).getArrivalTime() <= t) {
+					currentProcess = readyQueue.get(0);
+					currentProcess.decBurstTime();
+	
+					Main.ganttVisual.updateGantt(t, currentProcess.getName());
+	
+					System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
+				}
+	
+				if (currentProcess.getBurstTime() == 0) {
+					readyQueue.remove(0);
+				}
+	
+				currentProcess = null;
+	
+				try {
+					this.sleep(AlgoSimulator.visualizationSpeed);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+	
+				t++;
 			}
-
-			if (currentProcess.getBurstTime() == 0) {
-				readyQueue.remove(0);
-			}
-
-			currentProcess = null;
-
-			try {
-				this.sleep(AlgoSimulator.visualizationSpeed);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			t++;
+			System.out.println("Done executing SRTF!");
+		} else {
+//			System.out.println("DEADLOCK!");
+			System.exit(0);
 		}
-		System.out.println("Done executing SRTF!");
 	}
 
 	public void sortReadyQueue() {

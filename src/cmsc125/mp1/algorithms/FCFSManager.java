@@ -20,6 +20,7 @@ public class FCFSManager extends Thread {
 	private int[] priorityNumbers;
 	private Vector<Process> processesVector;
 	private ProcessesQueue jobQueue;
+	private ProcessesQueue readyQueue;
 	private Bankers bankers;
 
 	public FCFSManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable) {
@@ -32,7 +33,7 @@ public class FCFSManager extends Thread {
 	public void startSimulation() {
 		initTimeTableData();
 		initProcessesInVector();
-		sortProcessesToJobQueue();
+		sortProcessesToReadyQueue();
 
 		start();
 	}
@@ -62,58 +63,63 @@ public class FCFSManager extends Thread {
 		int currentBurstTime = 0;
 		int t = 0;
 
-		while (true) {
-			System.out.println("At time " + t);
-			// bankers.allocateResource(t);
-			// bankers.getjobQueue().sortByArrivalTime();
-			// jobQueue = bankers.getjobQueue();
-
-			// If ready queue is empty and there is no current process running
-			if (jobQueue.isEmpty() && currentProcess == null) {
-				break;
-			} else if (currentProcess == null && jobQueue.peek().getArrivalTime() <= t) {
-				// there is a process waiting in ready queue available for execution and there
-				// is no current process running
-
-				currentProcess = jobQueue.dequeue();
-				currentBurstTime++;
-				// System.out.println("processNum increased to "
-				// +processNum);
-
-				Main.ganttVisual.updateGantt(t, currentProcess.getName());
-
-				System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
-			} else if (currentProcess != null && currentBurstTime < currentProcess.getBurstTime()) {
-				// there is still a current process executing
-
-				currentBurstTime++;
-
-				Main.ganttVisual.updateGantt(t, currentProcess.getName());
-
-				System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
+		if (bankers.isSafeState()) {
+			while (true) {
+				System.out.println("At time " + t);
+	//			bankers.allocateResource(t);
+	//			bankers.getJobQueue().sortByArrivalTime();
+	//			jobQueue = bankers.getJobQueue();
+	
+				// If ready queue is empty and there is no current process running
+				if (readyQueue.isEmpty() && currentProcess == null) {
+					break;
+				} else if (currentProcess == null && readyQueue.peek().getArrivalTime() <= t) {
+					// there is a process waiting in ready queue available for execution and there
+					// is no current process running
+	
+					currentProcess = readyQueue.dequeue();
+					currentBurstTime++;
+					// System.out.println("processNum increased to "
+					// +processNum);
+	
+					Main.ganttVisual.updateGantt(t, currentProcess.getName());
+	
+					System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
+				} else if (currentProcess != null && currentBurstTime < currentProcess.getBurstTime()) {
+					// there is still a current process executing
+	
+					currentBurstTime++;
+	
+					Main.ganttVisual.updateGantt(t, currentProcess.getName());
+	
+					System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
+				}
+	
+				// there is still a current process running but it has completed executing
+				if (currentProcess != null && currentBurstTime == currentProcess.getBurstTime()) {
+					currentProcess = null;
+					currentBurstTime = 0;
+				}
+	
+				try {
+					this.sleep(AlgoSimulator.visualizationSpeed); // delay
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				t++;
 			}
-
-			// there is still a current process running but it has completed executing
-			if (currentProcess != null && currentBurstTime == currentProcess.getBurstTime()) {
-				currentProcess = null;
-				currentBurstTime = 0;
-			}
-
-			try {
-				this.sleep(AlgoSimulator.visualizationSpeed); // delay
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			t++;
+			System.out.println("Done executing FCFS!");
+		} else {
+//			System.out.println("DEADLOCK!");
+			System.exit(0);
 		}
-		System.out.println("Done executing FCFS!");
 	}
 
-	public void sortProcessesToJobQueue() {
+	public void sortProcessesToReadyQueue() {
 		sortProcessesVector();
-		jobQueue = new ProcessesQueue();
+		readyQueue = new ProcessesQueue();
 		for (int i = 0; i < processesVector.size(); i++) {
-			jobQueue.enqueue(processesVector.get(i));
+			readyQueue.enqueue(processesVector.get(i));
 		}
 	}
 

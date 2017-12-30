@@ -66,45 +66,50 @@ public class RRManager extends Thread {
 		int currentBurstTime = 0;
 		int t = 0;
 
-		while (true) {
-			System.out.println("At time " + t);
-			if (readyQueue.isEmpty() && currentProcess == null) {
-				break;
-			} else if (currentProcess == null && readyQueue.peek().getArrivalTime() <= t) {
-				currentProcess = readyQueue.dequeue();
-				currentProcess.decBurstTime();
-				currentBurstTime++;
-
-				Main.ganttVisual.updateGantt(t, currentProcess.getName());
-
-				System.out.println(currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
-			} else if (currentProcess != null) {
-				currentProcess.decBurstTime();// currentBurstTime++;
-				currentBurstTime++;
-
-				Main.ganttVisual.updateGantt(t, currentProcess.getName());
-
-				System.out.println(currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
+		if (bankers.isSafeState()) {
+			while (true) {
+				System.out.println("At time " + t);
+				if (readyQueue.isEmpty() && currentProcess == null) {
+					break;
+				} else if (currentProcess == null && readyQueue.peek().getArrivalTime() <= t) {
+					currentProcess = readyQueue.dequeue();
+					currentProcess.decBurstTime();
+					currentBurstTime++;
+	
+					Main.ganttVisual.updateGantt(t, currentProcess.getName());
+	
+					System.out.println(currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
+				} else if (currentProcess != null) {
+					currentProcess.decBurstTime();// currentBurstTime++;
+					currentBurstTime++;
+	
+					Main.ganttVisual.updateGantt(t, currentProcess.getName());
+	
+					System.out.println(currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
+				}
+	
+				if (null != currentProcess && currentBurstTime == quantum && currentProcess.getBurstTime() != 0) {
+					readyQueue.enqueue(currentProcess);
+					currentProcess = null;
+					currentBurstTime = 0;
+				} else if (null != currentProcess && currentProcess.getBurstTime() == 0) {
+					currentBurstTime = 0;
+					currentProcess = null;
+				}
+	
+				try {
+					this.sleep(AlgoSimulator.visualizationSpeed);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+	
+				t++;
 			}
-
-			if (null != currentProcess && currentBurstTime == quantum && currentProcess.getBurstTime() != 0) {
-				readyQueue.enqueue(currentProcess);
-				currentProcess = null;
-				currentBurstTime = 0;
-			} else if (null != currentProcess && currentProcess.getBurstTime() == 0) {
-				currentBurstTime = 0;
-				currentProcess = null;
-			}
-
-			try {
-				this.sleep(AlgoSimulator.visualizationSpeed);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			t++;
+			System.out.println("Done executing RR!");
+		} else {
+//			System.out.println("DEADLOCK!");
+			System.exit(0);
 		}
-		System.out.println("Done executing RR!");
 	}
 
 	public void sortProcessesToReadyQueue() {
