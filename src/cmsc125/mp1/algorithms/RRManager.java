@@ -9,6 +9,7 @@ import cmsc125.mp1.controller.Main;
 import cmsc125.mp1.model.Process;
 import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.model.ResourcesTableModel;
+import cmsc125.mp1.view.GanttChartStage;
 
 public class RRManager extends Thread {
 
@@ -22,13 +23,15 @@ public class RRManager extends Thread {
 	private ProcessesQueue readyQueue;
 	private int quantum;
 	private Bankers bankers;
+	private GanttChartStage ganttChart;
 
 	public RRManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable,
-			String quantumFieldText) {
+			String quantumFieldText, GanttChartStage ganttChart) {
 		this.allocatedTable = allocatedTable;
 		this.maximumTable = maximumTable;
 		this.availableTable = availableTable;
 		this.timeTable = timeTable;
+		this.ganttChart = ganttChart;
 		String quantumString = quantumFieldText;
 		quantum = ((quantumString.isEmpty()) ? (1) : (Integer.parseInt(quantumString)));
 	}
@@ -60,14 +63,14 @@ public class RRManager extends Thread {
 
 	@Override
 	public void run() {
-		bankers = new Bankers(allocatedTable, maximumTable, availableTable, getArrivalTimes(), getPriorityNumbers());
+		bankers = new Bankers(this.allocatedTable, maximumTable, availableTable, getArrivalTimes(), getPriorityNumbers());
 		long increment = 200;// 0;
 		Process currentProcess = null;
 		int currentBurstTime = 0;
 		int t = 0;
 
 		while (true) {
-			System.out.println("At time " + t);
+			System.out.println("RR: At time " + t);
 			if (readyQueue.isEmpty() && currentProcess == null) {
 				break;
 			} else if (currentProcess == null && readyQueue.peek().getArrivalTime() <= t) {
@@ -75,16 +78,16 @@ public class RRManager extends Thread {
 				currentProcess.decBurstTime();
 				currentBurstTime++;
 
-				Main.ganttVisual.updateGantt(t, currentProcess.getName());
+				ganttChart.updateGantt(t, currentProcess.getName());
 
-				System.out.println(currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
+				System.out.println("RR: "+currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
 			} else if (currentProcess != null) {
 				currentProcess.decBurstTime();// currentBurstTime++;
 				currentBurstTime++;
 
-				Main.ganttVisual.updateGantt(t, currentProcess.getName());
+				ganttChart.updateGantt(t, currentProcess.getName());
 
-				System.out.println(currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
+				System.out.println("RR: "+currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
 			}
 
 			if (null != currentProcess && currentBurstTime == quantum && currentProcess.getBurstTime() != 0) {

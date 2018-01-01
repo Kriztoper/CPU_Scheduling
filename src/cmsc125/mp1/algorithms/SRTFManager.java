@@ -9,6 +9,7 @@ import cmsc125.mp1.controller.Main;
 import cmsc125.mp1.model.Process;
 import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.model.ResourcesTableModel;
+import cmsc125.mp1.view.GanttChartStage;
 
 public class SRTFManager extends Thread {
 
@@ -23,12 +24,14 @@ public class SRTFManager extends Thread {
 	private Vector<Process> processesVector;
 	private Vector<Process> origProcessesVector;
 	private Bankers bankers;
+	private GanttChartStage ganttChart;
 
-	public SRTFManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable) {
+	public SRTFManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable, GanttChartStage ganttChart) {
 		this.allocatedTable = allocatedTable;
 		this.maximumTable = maximumTable;
 		this.availableTable = availableTable;
 		this.timeTable = timeTable;
+		this.ganttChart = ganttChart;
 		readyQueue = new Vector<Process>();
 	}
 
@@ -132,7 +135,7 @@ public class SRTFManager extends Thread {
 				currentProcess = readyQueue.get(0);
 				currentProcess.decBurstTime();
 
-				Main.ganttVisual.updateGantt(t, currentProcess.getName());
+				ganttChart.updateGantt(t, currentProcess.getName());
 
 				System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
 			}

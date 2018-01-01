@@ -9,6 +9,7 @@ import cmsc125.mp1.controller.Main;
 import cmsc125.mp1.model.Process;
 import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.model.ResourcesTableModel;
+import cmsc125.mp1.view.GanttChartStage;
 
 public class FCFSManager extends Thread {
 
@@ -21,12 +22,14 @@ public class FCFSManager extends Thread {
 	private Vector<Process> processesVector;
 	private ProcessesQueue jobQueue;
 	private Bankers bankers;
+	private GanttChartStage ganttChart;
 
-	public FCFSManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable) {
+	public FCFSManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable, GanttChartStage ganttChart) {
 		this.allocatedTable = allocatedTable;
 		this.maximumTable = maximumTable;
 		this.availableTable = availableTable;
 		this.timeTable = timeTable;
+		this.ganttChart = ganttChart;
 	}
 
 	public void startSimulation() {
@@ -63,7 +66,7 @@ public class FCFSManager extends Thread {
 		int t = 0;
 
 		while (true) {
-			System.out.println("At time " + t);
+			System.out.println("FCFS: At time " + t);
 			// bankers.allocateResource(t);
 			// bankers.getjobQueue().sortByArrivalTime();
 			// jobQueue = bankers.getjobQueue();
@@ -80,17 +83,17 @@ public class FCFSManager extends Thread {
 				// System.out.println("processNum increased to "
 				// +processNum);
 
-				Main.ganttVisual.updateGantt(t, currentProcess.getName());
+				ganttChart.updateGantt(t, currentProcess.getName());
 
-				System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
+				System.out.println("FCFS: "+currentProcess.getName() + "[" + currentBurstTime + "]");
 			} else if (currentProcess != null && currentBurstTime < currentProcess.getBurstTime()) {
 				// there is still a current process executing
 
 				currentBurstTime++;
 
-				Main.ganttVisual.updateGantt(t, currentProcess.getName());
+				ganttChart.updateGantt(t, currentProcess.getName());
 
-				System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
+				System.out.println("FCFS: "+currentProcess.getName() + "[" + currentBurstTime + "]");
 			}
 
 			// there is still a current process running but it has completed executing

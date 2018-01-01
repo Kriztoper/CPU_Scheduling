@@ -1,6 +1,5 @@
 package cmsc125.mp1.controller;
 
-import cmsc125.mp1.view.GanttChartStage;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,8 +7,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
  
 public class Main extends Application {
-	
-	public static GanttChartStage ganttVisual;
 	
     public static void main(String[] args) {
         launch(args);
