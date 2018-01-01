@@ -10,8 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -27,19 +25,13 @@ public class GanttChartStage extends Stage {
     CategoryAxis yAxis;
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
-	public void initGantt(String details, int numProcess){
-    	Label label = new Label();
-    	label.setText(details);
-    	
+	public GanttChartStage(int numProcess){    	
         xAxis = new NumberAxis();
         yAxis = new CategoryAxis();
         chart = new GanttChart<Number,String>(xAxis,yAxis);
         chart.setTitle("FCFS Visualization");
-        chart.setLegendVisible(false);
-        chart.setBlockHeight( 50);
+        chart.setBlockHeight(15);
         chart.getStylesheets().add(getClass().getResource("ganttchart.css").toExternalForm());
-        chart.setLayoutX(0);
-        chart.setLayoutY(100);
         
         xAxis.setLabel("Time");
         xAxis.setTickLabelFill(Color.CHOCOLATE);
@@ -61,11 +53,9 @@ public class GanttChartStage extends Stage {
     	yAxis.setCategories(FXCollections.<String>observableArrayList(procNames));
 
         StackPane rootPane = new StackPane();
-        Pane pane1 = new Pane();
-        pane1.getChildren().add(label);
-        rootPane.getChildren().addAll(chart,pane1);
+        rootPane.getChildren().addAll(chart);
     	
-    	Scene scene  = new Scene(rootPane,ScreenConstants.WIDTH, ScreenConstants.HEIGHT-320);
+    	Scene scene  = new Scene(rootPane);
         scene.setFill(Color.WHITESMOKE);
         this.setScene(scene);
         this.show();

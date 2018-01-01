@@ -17,21 +17,22 @@ import javafx.scene.input.MouseEvent;
 public class Controller {	
 	
 	@FXML private TextField numProcessField, numResourceField, quantumField, visualizationSpeed;
-	@FXML private Button randProcNumBtn, randResNumBtn, randSelectAlgoBtn, randResBtn, showResBtn, startSimulationBtn, randProcessInfoBtn;
+	@FXML private Button randProcNumBtn, randResNumBtn, randSelectAlgoBtn, randResBtn, showResBtn, startSimulationBtn, randProcessInfoBtn, allSelectAlgoBtn;
 	@FXML private CheckBox fcfsCB, sjfCB, srtfCB, rrCB, npprioCB, prioCB;
 	
 	private InputTablePanel itp;
 	private ArrayList<String> selectedAlgos;
 	private JFrame frame1;
 	private ArrayList<CheckBox> checkBoxList;
+	private boolean allTick = false;
 
 	public Controller(){
 		itp = new InputTablePanel();
 		frame1 = new JFrame();
 		frame1.setTitle("Resources Table");
-		frame1.setLocation(0, 230);
-		frame1.setResizable(true);
-		frame1.setSize(1050,370);
+		frame1.setLocation(0, 330);
+		frame1.setResizable(false);
+		frame1.setSize(1015,380);
 		frame1.setVisible(false);
 		frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame1.add(itp);
@@ -74,6 +75,22 @@ public class Controller {
 				selectedAlgos.add(cb.getText());
 		}
 	}
+	
+	@FXML public void selectAllCPUSchedAlgos(MouseEvent event) {
+		checkBoxList = new ArrayList<CheckBox>();
+		checkBoxList.add(fcfsCB);
+		checkBoxList.add(sjfCB);
+		checkBoxList.add(rrCB);
+		checkBoxList.add(prioCB);
+		checkBoxList.add(npprioCB);
+		checkBoxList.add(srtfCB);
+		selectedAlgos = new ArrayList<String>();
+		for (CheckBox cb: checkBoxList){
+			cb.setSelected(allTick);
+			selectedAlgos.add(cb.getText());
+		}
+		allTick = !allTick;
+	}
 
 	@FXML public void randResourcesTable(MouseEvent event) {
 		itp.randAllocatedTable();
@@ -86,6 +103,9 @@ public class Controller {
 	}
 	
 	@FXML public void startSimulation(MouseEvent event){
+		if(numProcessField.getText() == "" || numResourceField.getText() == "")
+			return;
+		
 		checkBoxList = new ArrayList<CheckBox>();
 		checkBoxList.add(fcfsCB);
 		checkBoxList.add(sjfCB);
@@ -101,11 +121,13 @@ public class Controller {
 		
 		AlgoSimulator algoSimulator = new AlgoSimulator(itp.numProcess, selectedAlgos, itp.getAllocatedTable(), itp.getMaximumTable(), itp.getAvailableTable(), itp.getTimeTable(), quantumField.getText(), Integer.parseInt(visualizationSpeed.getText()));
 		algoSimulator.startSimulation();
-//		frame1.setVisible(false);
 	}
 	
 	@FXML public void showResourcesTable(MouseEvent event){
-		frame1.setVisible(true);
+		if(frame1.isVisible())
+			frame1.setVisible(false);
+		else
+			frame1.setVisible(true);
 	}
 	
 	@FXML public void updateVisualizationSpeed(KeyEvent event){

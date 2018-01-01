@@ -18,12 +18,9 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
     	Parent root = FXMLLoader.load(getClass().getResource("/cmsc125/mp1/view/GUI.fxml"));
-        Scene scene = new Scene(root, 780, 190);
+        Scene scene = new Scene(root);
         primaryStage.setResizable(false);
-        primaryStage.setTitle("CMSC125-MP1: Simulation of CPU Scheduling Algorithm and Bankers Algorithm");
-        primaryStage.setAlwaysOnTop(true);
-        primaryStage.setX(0);
-        primaryStage.setY(0);
+        primaryStage.setTitle("CMSC125-MP1: Scheduling and Bankers Algorithm");
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
