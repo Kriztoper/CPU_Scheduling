@@ -5,7 +5,6 @@ import java.util.Vector;
 import javax.swing.JTable;
 
 import cmsc125.mp1.constants.ColorConstants;
-import cmsc125.mp1.controller.Main;
 import cmsc125.mp1.model.Process;
 import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.model.ResourcesTableModel;
@@ -103,7 +102,7 @@ public class FCFSManager extends Thread {
 			}
 
 			try {
-				this.sleep(AlgoSimulator.visualizationSpeed); // delay
+				FCFSManager.sleep(AlgoSimulator.visualizationSpeed); // delay
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

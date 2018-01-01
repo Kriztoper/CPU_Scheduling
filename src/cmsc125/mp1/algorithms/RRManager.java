@@ -5,7 +5,6 @@ import java.util.Vector;
 import javax.swing.JTable;
 
 import cmsc125.mp1.constants.ColorConstants;
-import cmsc125.mp1.controller.Main;
 import cmsc125.mp1.model.Process;
 import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.model.ResourcesTableModel;
@@ -61,10 +60,8 @@ public class RRManager extends Thread {
 		return priorityNumbers;
 	}
 
-	@Override
 	public void run() {
 		bankers = new Bankers(this.allocatedTable, maximumTable, availableTable, getArrivalTimes(), getPriorityNumbers());
-		long increment = 200;// 0;
 		Process currentProcess = null;
 		int currentBurstTime = 0;
 		int t = 0;
@@ -100,7 +97,7 @@ public class RRManager extends Thread {
 			}
 
 			try {
-				this.sleep(AlgoSimulator.visualizationSpeed);
+				RRManager.sleep(AlgoSimulator.visualizationSpeed);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

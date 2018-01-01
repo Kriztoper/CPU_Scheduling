@@ -2,6 +2,7 @@ package cmsc125.mp1.model;
 
 import javax.swing.table.AbstractTableModel;
 
+@SuppressWarnings("serial")
 public class ResourcesTableModel extends AbstractTableModel {
 
 	private String[] columnNames;

@@ -2,7 +2,6 @@ package cmsc125.mp1.view;
 
 import java.util.ArrayList;
 
-import cmsc125.mp1.constants.ScreenConstants;
 import cmsc125.mp1.view.GanttChart.ExtraData;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

@@ -10,6 +10,7 @@ import javax.swing.JTable;
 
 import cmsc125.mp1.model.ResourcesTableModel;
 
+@SuppressWarnings("serial")
 public class InputTablePanel extends JPanel {
 
 	private JLabel allocatedTableLabel;
@@ -19,7 +20,7 @@ public class InputTablePanel extends JPanel {
 	private JTable maximumTable;
 	private JTable availableTable;
 	private JTable timeTable;
-	public static int numProcess, numResource;
+	public int numProcess, numResource;
 
 	public InputTablePanel() {
 		initPanel();
