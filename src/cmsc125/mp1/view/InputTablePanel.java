@@ -2,6 +2,7 @@ package cmsc125.mp1.view;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.image.ColorModel;
 import java.util.Random;
 
 import javax.swing.JLabel;
@@ -9,16 +10,17 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.text.TableView.TableRow;
 
+import cmsc125.mp1.constants.ColorConstants;
 import cmsc125.mp1.model.ResourcesTableModel;
 
 @SuppressWarnings("serial")
 public class InputTablePanel extends JPanel {
 
-	private JLabel allocatedTableLabel;
-	private JLabel maximumTableLabel;
-	private JLabel availableTableLabel;
 	private JTable allocatedTable;
 	private JTable maximumTable;
 	private JTable availableTable;
@@ -37,10 +39,6 @@ public class InputTablePanel extends JPanel {
 	}
 
 	public void initComponents() {
-		allocatedTableLabel = new JLabel("Allocated Table");
-		maximumTableLabel = new JLabel("Maximum Table");
-		availableTableLabel = new JLabel("Available Table");
-		
 		// drop-down list to choose number of processes
 		String[] oneToTwenty = new String[20];
 		for (int i = 1; i <= oneToTwenty.length; i++) {
@@ -133,13 +131,38 @@ public class InputTablePanel extends JPanel {
 	}
 
 	public void addComponents() {
+		JLabel allocatedTableLabel = new JLabel("Allocated Table");
+		JLabel maximumTableLabel = new JLabel("Maximum Table");
+		JLabel availableTableLabel = new JLabel("Available Table");
+		JTable colorsTable = new JTable(20, 1);
+		
 		// resources table
 		allocatedTableLabel.setSize(150, 10);
 		allocatedTableLabel.setLocation(0, 0);
 		add(allocatedTableLabel);
+		
+		String[] processHeader = { "P#" };
+		String[][] colors = new String[20][1];
+		for (int i = 0; i < colors.length; i++) {
+			colors[i][0] = "P" + i;
+		}
+		colorsTable = new JTable(new ResourcesTableModel(processHeader, colors) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return column != 0 ? true : false;
+			}
+		});
+		ColorRowRenderer colorRowRenderer = new ColorRowRenderer();
+		colorsTable.getColumn(colorsTable.getColumnName(0)).setCellRenderer(colorRowRenderer);
+		
+		JScrollPane colorsTablePane = new JScrollPane(colorsTable);
+		colorsTablePane.setSize(50, 342);
+		colorsTablePane.setLocation(0, 10);
+		add(colorsTablePane);
+		
 		JScrollPane allocatedTablePane = new JScrollPane(allocatedTable);
 		allocatedTablePane.setSize(300, 342);
-		allocatedTablePane.setLocation(0, 10);
+		allocatedTablePane.setLocation(50, 10);
 		add(allocatedTablePane);
 
 		// maximum allocated table
@@ -495,5 +518,40 @@ public class InputTablePanel extends JPanel {
 	      
 	      return cell;
 	   }
+	}
+	
+	class ColorRowRenderer extends JLabel implements TableCellRenderer
+	{
+		public ColorRowRenderer() {
+			setOpaque(true);
+		}
+		
+		public Component getTableCellRendererComponent
+		(JTable table, Object value, boolean isSelected,
+				boolean hasFocus, int row, int column)
+		{
+			Object columnValue = table.getValueAt(row, table.getColumnModel().getColumnIndex("P#"));
+			
+			if (isSelected) {
+				setBackground(table.getSelectionBackground());
+				setForeground(table.getSelectionForeground());
+			} else {
+				setBackground(table.getBackground());
+				setForeground(table.getForeground());
+			}
+			
+			for (int i = 0; i < 20; i++) {
+				if (columnValue.equals("P" + i)) {
+					setBackground(ColorConstants.getColor(i));
+					setText("P" + i);
+					
+					if (i == 19) {
+						setForeground(Color.WHITE);
+					}
+				}
+			}
+			
+			return this;
+		}
 	}
 }
