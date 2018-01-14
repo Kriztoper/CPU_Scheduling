@@ -72,7 +72,9 @@ public class RRManager extends Thread {
 			while (true) {
 				System.out.println("At time " + t);
 				bankers.updateJobQueue(t, processesQueue);
+				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
 				readyQueue = bankers.requestResources(t, readyQueue);
+				ganttChart.displayUpdatedReadyQueue(readyQueue);
 				
 				// If ready queue is empty and there is no current process running
 				if (processesQueue.isEmpty() && bankers.hasAllProcessesInJobQueueAllocated() && readyQueue.isEmpty() && currentProcess == null) {

@@ -71,7 +71,9 @@ public class PRIOManager extends Thread {
 			while (true) {
 				System.out.println("At time " + t);
 				bankers.updateJobQueue(t, processesQueue);
-				readyQueue = bankers.requestResources(t, readyQueue);				
+				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
+				readyQueue = bankers.requestResources(t, readyQueue);
+				ganttChart.displayUpdatedReadyQueue(readyQueue);
 				
 //				fillReadyQueue(t);
 				sortReadyQueue();

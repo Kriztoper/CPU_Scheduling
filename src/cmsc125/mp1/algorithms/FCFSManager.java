@@ -70,7 +70,9 @@ public class FCFSManager extends Thread {
 			while (true) {
 				System.out.println("At time " + t);
 				bankers.updateJobQueue(t, processesQueue);
+				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
 				readyQueue = bankers.requestResources(t, readyQueue);
+				ganttChart.displayUpdatedReadyQueue(readyQueue);
 				
 //				bankers.allocateResource(t);
 	//			bankers.getJobQueue().sortByArrivalTime();

@@ -2,15 +2,18 @@ package cmsc125.mp1.view;
 
 import java.util.ArrayList;
 
+import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.view.GanttChart.ExtraData;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class GanttChartStage extends Stage {
@@ -68,4 +71,63 @@ public class GanttChartStage extends Stage {
 		Platform.runLater(() -> procSeries.get(processNumber).getData().add(new XYChart.Data(startTime, name, new ExtraData( 1, name))));// Update on JavaFX Application Thread
 	}
 	
+	public void displayUpdatedJobQueue(ProcessesQueue jobQueue) {
+		//TODO: display all the current processes in the job queue, NOTE: The color of the square for the process is the color it is assigned in the ganttchart
+		// Design:
+		/**
+		 * 		Job Queue
+		 * 		-----------
+		 * 		|    |	  |
+		 * 		| P0 | P1 |
+		 * 		|	 |    |
+		 * 		-----------
+		 *        
+		 * 
+		 * 
+		 * */
+	}
+	
+	public void displayUpdatedReadyQueue(ProcessesQueue readyQueue) {
+		//TODO: display all the current processes in the ready queue, NOTE: The color of the square for the process is the color it is assigned in the ganttchart
+		// Design:
+		/**
+		 * 		Ready Queue
+		 * 		-----------
+		 * 		|    |	  |
+		 * 		| P0 | P1 |
+		 * 		|	 |    |
+		 * 		-----------
+		 *        
+		 * 
+		 * 
+		 * */
+		
+		// Positioning in the panel (but this can be subject to change if mayda mas better na layout and mayda ig-aadd na components)
+		/**
+		 * 
+		 *    ----------------------------------
+		 *    |          FCFS Simulation       |
+		 *    | t = 1                          |
+		 *    | Job Queue                      |
+		 *    | -----------                    |
+		 * 	  | |    |	  |                    |
+		 * 	  | | P0 | P1 |                    |
+		 * 	  | |	 |    |                    |
+		 * 	  | -----------                    |
+		 *    | Ready Queue                    |
+		 *    | -----------                    |
+		 * 	  | |    |	  |                    |
+		 * 	  | | P0 | P1 |                    |
+		 * 	  | |	 |    |                    |
+		 * 	  | -----------                    |
+		 *    | Gantt Chart                    |
+		 *    | -----------                    |
+		 * 	  | |    |	  |                    |
+		 * 	  | |    |    |                    |
+		 * 	  | |	 |    |                    |
+		 * 	  | -----------                    |
+		 *    | 0    5    10                   |
+		 *    ----------------------------------
+		 * */
+	}
 }
