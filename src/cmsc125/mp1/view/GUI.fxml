@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="357.0" prefWidth="430.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cmsc125.mp1.controller.Controller">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="376.0" prefWidth="423.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cmsc125.mp1.controller.Controller">
    <children>
       <Pane layoutX="11.0" layoutY="30.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
          <children>
@@ -31,16 +31,18 @@
             <TextField fx:id="numResourceField" layoutX="158.0" layoutY="34.0" onKeyReleased="#setNumResources" promptText="Enter values from 1 to 10" />
          </children>
       </Pane>
-      <Pane layoutX="11.0" layoutY="107.0" prefHeight="59.0" prefWidth="400.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="85.0">
+      <Pane layoutX="11.0" layoutY="107.0" prefHeight="91.0" prefWidth="400.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="85.0">
          <children>
             <Button fx:id="randResBtn" layoutX="196.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#randResourcesTable" text="Randomize" />
             <Button fx:id="randProcessInfoBtn" layoutX="196.0" layoutY="31.0" mnemonicParsing="false" onMouseClicked="#randProcessInfo" text="Randomize" />
-            <Button fx:id="showResBtn" layoutX="291.0" layoutY="1.0" mnemonicParsing="false" onMouseClicked="#showResourcesTable" prefHeight="59.0" prefWidth="103.0" text="Show and Edit" />
+            <Button fx:id="showResBtn" layoutX="280.0" layoutY="1.0" mnemonicParsing="false" onMouseClicked="#showResourcesTable" prefHeight="83.0" prefWidth="114.0" text="Show and Edit" />
             <Label focusTraversable="false" layoutY="35.0" prefHeight="17.0" prefWidth="169.0" text="Process Arrival Time &amp; Priority:" />
             <Label focusTraversable="false" layoutY="5.0" prefHeight="18.0" prefWidth="211.0" text="Resources held by each Process:" />
+            <Label focusTraversable="false" layoutY="64.0" prefHeight="17.0" prefWidth="169.0" text="Disk Cylinder Positions:" />
+            <Button fx:id="randDiskBtn" layoutX="196.0" layoutY="60.0" mnemonicParsing="false" onMouseClicked="#randDiskTable" text="Randomize" />
          </children>
       </Pane>
-      <Pane layoutX="14.0" layoutY="151.0" prefHeight="59.0" prefWidth="400.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="151.0">
+      <Pane layoutX="15.0" layoutY="176.0" prefHeight="59.0" prefWidth="400.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="176.0">
          <children>
             <Label focusTraversable="false" prefHeight="45.0" prefWidth="97.0" text="Select CPU Sched Algorithm:" wrapText="true" />
             <Button fx:id="randSelectAlgoBtn" layoutX="104.0" layoutY="3.0" mnemonicParsing="false" onMouseClicked="#randCPUSchedAlgos" text="Randomize" />
@@ -53,12 +55,12 @@
             <Button fx:id="allSelectAlgoBtn" layoutX="104.0" layoutY="31.0" mnemonicParsing="false" onMouseClicked="#selectAllCPUSchedAlgos" prefHeight="25.0" prefWidth="75.0" text="All" />
          </children>
       </Pane>
-      <Pane layoutX="15.0" layoutY="282.0" prefHeight="55.0" prefWidth="179.0" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="282.0">
+      <Pane layoutX="15.0" layoutY="307.0" prefHeight="55.0" prefWidth="179.0" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="307.0">
          <children>
             <TextField fx:id="quantumField" layoutX="113.0" onKeyReleased="#setQuantumValue" prefHeight="25.0" prefWidth="66.0" text="5" />
             <TextField fx:id="visualizationSpeed" layoutX="113.0" layoutY="30.0" onKeyReleased="#updateVisualizationSpeed" prefHeight="25.0" prefWidth="66.0" promptText="seconds" text="1000" />
             <Label focusTraversable="false" layoutY="6.0" prefHeight="17.0" prefWidth="74.0" text="RR Quantum:" />
-            <Label focusTraversable="false" layoutY="34.0" prefHeight="17.0" prefWidth="108.0" text="Visualization Speed:" />
+            <Label focusTraversable="false" layoutY="34.0" prefHeight="17.0" prefWidth="108.0" text="Visuals Speed (ms):" />
             <Button fx:id="startSimulationBtn" layoutX="200.0" mnemonicParsing="false" onMouseClicked="#startSimulation" prefHeight="55.0" prefWidth="195.0" text="Start Simulation">
                <effect>
                   <Lighting bumpInput="$null" diffuseConstant="1.91" specularConstant="2.0" specularExponent="40.0" surfaceScale="0.0">
@@ -70,7 +72,7 @@
             </Button>
          </children>
       </Pane>
-      <Pane layoutX="15.0" layoutY="217.0" prefHeight="59.0" prefWidth="400.0">
+      <Pane layoutX="15.0" layoutY="242.0" prefHeight="59.0" prefWidth="400.0">
          <children>
             <Label focusTraversable="false" prefHeight="45.0" prefWidth="97.0" text="Select Disk Sched Algorithm:" wrapText="true" />
             <Button fx:id="randSelectDiskAlgoBtn" layoutX="104.0" layoutY="3.0" mnemonicParsing="false" onMouseClicked="#randDiskSchedAlgos" text="Randomize" />

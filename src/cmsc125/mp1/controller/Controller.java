@@ -17,7 +17,7 @@ import javafx.scene.input.MouseEvent;
 public class Controller {	
 	
 	@FXML private TextField numProcessField, numResourceField, quantumField, visualizationSpeed;
-	@FXML private Button randProcNumBtn, randResNumBtn, randSelectAlgoBtn, randResBtn, showResBtn, startSimulationBtn, randProcessInfoBtn, allSelectAlgoBtn, randSelectDiskInfoBtn, allSelectDiskAlgoBtn;
+	@FXML private Button randProcNumBtn, randResNumBtn, randSelectAlgoBtn, randResBtn, showResBtn, startSimulationBtn, randProcessInfoBtn, allSelectAlgoBtn, randSelectDiskInfoBtn, allSelectDiskAlgoBtn, randDiskBtn;
 	@FXML private CheckBox fcfsCB, sjfCB, srtfCB, rrCB, npprioCB, prioCB, fcfsDiskCB, sstfDiskCB, scanDiskCB, cscanDiskCB, lookDiskCB, clookDiskCB;
 	
 	private InputTablePanel itp;
@@ -30,9 +30,8 @@ public class Controller {
 		itp = new InputTablePanel();
 		frame1 = new JFrame();
 		frame1.setTitle("Resources Table");
-		frame1.setLocation(0, 330);
 		frame1.setResizable(false);
-		frame1.setSize(1065,380);
+		frame1.setSize(1065,450);
 		frame1.setVisible(false);
 		frame1.add(itp);
 	}
@@ -133,6 +132,10 @@ public class Controller {
 		itp.randMaximumTable();
 		itp.randAllocatedTable();
 		itp.randAvailableTable();
+	}
+	
+	@FXML public void randDiskTable(MouseEvent event) {
+		itp.randDiskTable();
 	}
 	
 	@FXML public void randProcessInfo(MouseEvent event){
