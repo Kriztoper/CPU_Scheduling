@@ -1,12 +1,15 @@
 package cmsc125.mp1.view;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.util.Random;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import cmsc125.mp1.model.ResourcesTableModel;
 
@@ -30,7 +33,7 @@ public class InputTablePanel extends JPanel {
 
 	public void initPanel() {
 		setLayout(null);
-		setBackground(Color.ORANGE);
+		setBackground(new Color(217,218,219)); // gray dirty white
 	}
 
 	public void initComponents() {
@@ -51,22 +54,29 @@ public class InputTablePanel extends JPanel {
 		}
 
 		// Resources table
-		String[] columnResources = { "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10" };
+		String[] columnResources = { "R0", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9" };
 		String[][] allocatedObjects = new String[20][10];
 		for (int i = 0; i < 20; i++) {
 			for (int j = 0; j < 10; j++) {
-				if (j == 0) {
-					allocatedObjects[i][j] = "1";
-				} else {
+//				if (j == 0) {
+//					allocatedObjects[i][j] = "1";
+//				} else {
 					allocatedObjects[i][j] = "0";
-				}
+//				}
 			}
 		}
-		allocatedTable = new JTable(new ResourcesTableModel(columnResources, allocatedObjects));
+		allocatedTable = new JTable(new ResourcesTableModel(columnResources, allocatedObjects) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return column != 0 ? true : false;
+			}
+		});
 		allocatedTable.setBackground(Color.WHITE);
-		allocatedTable.setRowSelectionAllowed(true);
-		allocatedTable.setColumnSelectionAllowed(true);
-		allocatedTable.setCellSelectionEnabled(true);
+		TableColumn tm = allocatedTable.getColumnModel().getColumn(0);
+		tm.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.GRAY));
+//		allocatedTable.setRowSelectionAllowed(true);
+//		allocatedTable.setColumnSelectionAllowed(true);
+//		allocatedTable.setCellSelectionEnabled(true);
 
 		String[][] maximumObjects = new String[20][10];
 		for (int i = 0; i < 20; i++) {
@@ -84,8 +94,8 @@ public class InputTablePanel extends JPanel {
 		maximumTable.setColumnSelectionAllowed(true);
 		maximumTable.setCellSelectionEnabled(true);
 
-		String[][] availableObjects = new String[20][10];
-		for (int i = 0; i < 20; i++) {
+		String[][] availableObjects = new String[1][10];
+		for (int i = 0; i < 1; i++) {
 			for (int j = 0; j < 10; j++) {
 				if (j == 0) {
 					availableObjects[i][j] = "1";
@@ -163,7 +173,7 @@ public class InputTablePanel extends JPanel {
 		int colCount = allocatedTable.getModel().getColumnCount();
 		Random random = new Random();
 		for (int i = 0; i < rowCount; i++) {
-			for (int j = 0; j < colCount; j++) {
+			for (int j = 1; j < colCount; j++) {
 				if (j == 0) {
 					allocatedTable.getModel().setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
 				} else {
@@ -219,12 +229,13 @@ public class InputTablePanel extends JPanel {
 	}
 	
 	public void setResourcesTableColumnSize(int numColumns) {
+		// allocated table
 		ResourcesTableModel currentAllocatedModel = ((ResourcesTableModel) allocatedTable.getModel());
 		String[][] currentAllocatedTableData = currentAllocatedModel.getData();
 		String[][] newAllocatedTableData = new String[currentAllocatedTableData.length][numColumns];
 
 		for (int i = 0; i < currentAllocatedTableData.length; i++) {
-			for (int j = 0; j < currentAllocatedTableData[i].length; j++) {
+			for (int j = 1; j < currentAllocatedTableData[i].length; j++) {
 				if (currentAllocatedTableData[i][j] != null && j < numColumns) {
 					newAllocatedTableData[i][j] = currentAllocatedTableData[i][j];
 				}
@@ -241,13 +252,22 @@ public class InputTablePanel extends JPanel {
 
 		String[] newAllocatedColumns = new String[numColumns];
 		for (int i = 0; i < numColumns; i++) {
-			newAllocatedColumns[i] = "R" + (i + 1);
+			newAllocatedColumns[i] = "R" + (i);
 		}
 
 		((ResourcesTableModel) allocatedTable.getModel()).setColumnNames(newAllocatedColumns);
 
-		allocatedTable.setModel(new ResourcesTableModel(currentAllocatedModel.getColumnNames(), newAllocatedTableData));
+		allocatedTable.setModel(new ResourcesTableModel(currentAllocatedModel.getColumnNames(), newAllocatedTableData) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return column != 0 ? true : false;
+			}
+		});
+		TableColumn tm = allocatedTable.getColumnModel().getColumn(0);
+		tm.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.GRAY));
+		
 
+		// maximum table
 		ResourcesTableModel currentMaximumModel = ((ResourcesTableModel) maximumTable.getModel());
 		String[][] currentMaximumTableData = currentMaximumModel.getData();
 		String[][] newMaximumTableData = new String[currentMaximumTableData.length][numColumns];
@@ -270,13 +290,15 @@ public class InputTablePanel extends JPanel {
 
 		String[] newMaximumColumns = new String[numColumns];
 		for (int i = 0; i < numColumns; i++) {
-			newMaximumColumns[i] = "R" + (i + 1);
+			newMaximumColumns[i] = "R" + (i);
 		}
 
 		((ResourcesTableModel) maximumTable.getModel()).setColumnNames(newMaximumColumns);
 
 		maximumTable.setModel(new ResourcesTableModel(currentMaximumModel.getColumnNames(), newMaximumTableData));
 
+		
+		// available table
 		ResourcesTableModel currentAvailableModel = ((ResourcesTableModel) availableTable.getModel());
 		String[][] currentAvailableTableData = currentAvailableModel.getData();
 		String[][] newAvailableTableData = new String[currentAvailableTableData.length][numColumns];
@@ -299,7 +321,7 @@ public class InputTablePanel extends JPanel {
 
 		String[] newAvailableColumns = new String[numColumns];
 		for (int i = 0; i < numColumns; i++) {
-			newAvailableColumns[i] = "R" + (i + 1);
+			newAvailableColumns[i] = "R" + (i);
 		}
 
 		((ResourcesTableModel) availableTable.getModel()).setColumnNames(newAvailableColumns);
@@ -308,12 +330,13 @@ public class InputTablePanel extends JPanel {
 	}
 
 	public void setResourcesTableRowSize(int numRows) {
+		// allocated table
 		ResourcesTableModel currentAllocatedModel = ((ResourcesTableModel) allocatedTable.getModel());
 		String[][] currentAllocatedTableData = currentAllocatedModel.getData();
 		String[][] newAllocatedTableData = new String[numRows][currentAllocatedTableData[0].length];
 
 		for (int i = 0; i < currentAllocatedTableData.length; i++) {
-			for (int j = 0; j < currentAllocatedTableData[i].length; j++) {
+			for (int j = 1; j < currentAllocatedTableData[i].length; j++) {
 				if (currentAllocatedTableData[i][j] != null && i < numRows) {
 					newAllocatedTableData[i][j] = currentAllocatedTableData[i][j];
 				}
@@ -328,8 +351,17 @@ public class InputTablePanel extends JPanel {
 			}
 		}
 
-		allocatedTable.setModel(new ResourcesTableModel(currentAllocatedModel.getColumnNames(), newAllocatedTableData));
+		allocatedTable.setModel(new ResourcesTableModel(currentAllocatedModel.getColumnNames(), newAllocatedTableData) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return column != 0 ? true : false;
+			}
+		});
+		TableColumn tm = allocatedTable.getColumnModel().getColumn(0);
+		tm.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.GRAY));
 
+		
+		// maximum table
 		ResourcesTableModel currentMaximumModel = ((ResourcesTableModel) maximumTable.getModel());
 		String[][] currentMaximumTableData = currentMaximumModel.getData();
 		String[][] newMaximumTableData = new String[numRows][currentMaximumTableData[0].length];
@@ -352,7 +384,9 @@ public class InputTablePanel extends JPanel {
 
 		maximumTable.setModel(new ResourcesTableModel(currentMaximumModel.getColumnNames(), newMaximumTableData));
 
-		ResourcesTableModel currentAvailableModel = ((ResourcesTableModel) availableTable.getModel());
+		
+		// available table
+		/*ResourcesTableModel currentAvailableModel = ((ResourcesTableModel) availableTable.getModel());
 		String[][] currentAvailableTableData = currentAvailableModel.getData();
 		String[][] newAvailableTableData = new String[numRows][currentAvailableTableData[0].length];
 
@@ -372,7 +406,7 @@ public class InputTablePanel extends JPanel {
 			}
 		}
 
-		availableTable.setModel(new ResourcesTableModel(currentAvailableModel.getColumnNames(), newAvailableTableData));
+		availableTable.setModel(new ResourcesTableModel(currentAvailableModel.getColumnNames(), newAvailableTableData));*/
 
 		/*
 		 * currentModel = ((ResourcesTableModel) allocatedTable.getModel());
@@ -435,4 +469,31 @@ public class InputTablePanel extends JPanel {
 		return availableTable;
 	}
 
+	/**
+	* Applied background and foreground color to single column of a JTable
+	* in order to distinguish it apart from other columns.
+	*/
+	class ColorColumnRenderer extends DefaultTableCellRenderer
+	{
+	   Color bkgndColor, fgndColor;
+	     
+	   public ColorColumnRenderer(Color bkgnd, Color foregnd) {
+	      super();
+	      bkgndColor = bkgnd;
+	      fgndColor = foregnd;
+	   }
+	     
+	   public Component getTableCellRendererComponent
+	        (JTable table, Object value, boolean isSelected,
+	         boolean hasFocus, int row, int column)
+	   {
+	      Component cell = super.getTableCellRendererComponent
+	         (table, value, isSelected, hasFocus, row, column);
+	  
+	      cell.setBackground( bkgndColor );
+	      cell.setForeground( fgndColor );
+	      
+	      return cell;
+	   }
+	}
 }
