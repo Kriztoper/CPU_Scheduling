@@ -174,11 +174,11 @@ public class InputTablePanel extends JPanel {
 		Random random = new Random();
 		for (int i = 0; i < rowCount; i++) {
 			for (int j = 1; j < colCount; j++) {
-				if (j == 0) {
-					allocatedTable.getModel().setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
-				} else {
+//				if (j == 0) {
+//					allocatedTable.getModel().setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
+//				} else {
 					allocatedTable.getModel().setValueAt(Integer.toString(random.nextInt(10)), i, j);
-				}
+//				}
 			}
 		}
 	}

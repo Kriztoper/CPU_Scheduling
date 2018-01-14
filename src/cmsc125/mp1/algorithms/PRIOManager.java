@@ -95,6 +95,9 @@ public class PRIOManager extends Thread {
 				}
 	
 				if (currentProcess != null && currentProcess.getBurstTime() == 0) {
+					currentProcess.setCompletionTime(t + 1);
+					currentProcess.setTurnaroundTime(currentProcess.getCompletionTime() - currentProcess.getArrivalTime());
+					currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
 					bankers.releaseResourcesForProcess(currentProcess);
 					readyQueue.dequeue();
 				}
@@ -110,6 +113,23 @@ public class PRIOManager extends Thread {
 				t++;
 			}
 			System.out.println("Done executing PRIO!");
+			
+			bankers.setAvgCompletionTime(0.0);
+			bankers.setAvgTurnaroundTime(0.0);
+			bankers.setAvgWaitingTime(0.0);
+			for (int i = 0; i < processesVector.size(); i++) {
+				Process process = processesVector.get(i);
+				System.out.println(process.getName() + " CT=" + process.getCompletionTime() + ", TAT=" + process.getTurnaroundTime() + ", WT=" + process.getWaitingTime());
+				bankers.setAvgCompletionTime(bankers.getAvgCompletionTime() + ((double) process.getCompletionTime()));
+				bankers.setAvgTurnaroundTime(bankers.getAvgTurnaroundTime() + ((double) process.getTurnaroundTime()));
+				bankers.setAvgWaitingTime(bankers.getAvgWaitingTime() + ((double) process.getWaitingTime()));
+			}
+			
+			bankers.setAvgCompletionTime((bankers.getAvgCompletionTime()) / ((double) processesVector.size()));
+			bankers.setAvgTurnaroundTime(bankers.getAvgTurnaroundTime() / ((double) processesVector.size()));
+			bankers.setAvgWaitingTime(bankers.getAvgWaitingTime() / ((double) processesVector.size()));
+			
+			System.out.println("Avg CT = " + bankers.getAvgCompletionTime() + ", Avg TAT = " + bankers.getAvgTurnaroundTime() + ", Avg WT = " + bankers.getAvgWaitingTime());
 		} else {
 			System.exit(0);
 		}

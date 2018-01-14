@@ -107,6 +107,9 @@ public class FCFSManager extends Thread {
 	
 				// there is still a current process running but it has completed executing
 				if (currentProcess != null && currentBurstTime == currentProcess.getBurstTime()) {
+					currentProcess.setCompletionTime(t + 1);
+					currentProcess.setTurnaroundTime(currentProcess.getCompletionTime() - currentProcess.getArrivalTime());
+					currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
 					bankers.releaseResourcesForProcess(currentProcess);
 					currentProcess = null;
 					currentBurstTime = 0;
@@ -121,6 +124,23 @@ public class FCFSManager extends Thread {
 				t++;
 			}
 			System.out.println("Done executing FCFS!");
+			
+			bankers.setAvgCompletionTime(0.0);
+			bankers.setAvgTurnaroundTime(0.0);
+			bankers.setAvgWaitingTime(0.0);
+			for (int i = 0; i < processesVector.size(); i++) {
+				Process process = processesVector.get(i);
+				System.out.println(process.getName() + " CT=" + process.getCompletionTime() + ", TAT=" + process.getTurnaroundTime() + ", WT=" + process.getWaitingTime());
+				bankers.setAvgCompletionTime(bankers.getAvgCompletionTime() + ((double) process.getCompletionTime()));
+				bankers.setAvgTurnaroundTime(bankers.getAvgTurnaroundTime() + ((double) process.getTurnaroundTime()));
+				bankers.setAvgWaitingTime(bankers.getAvgWaitingTime() + ((double) process.getWaitingTime()));
+			}
+			
+			bankers.setAvgCompletionTime((bankers.getAvgCompletionTime()) / ((double) processesVector.size()));
+			bankers.setAvgTurnaroundTime(bankers.getAvgTurnaroundTime() / ((double) processesVector.size()));
+			bankers.setAvgWaitingTime(bankers.getAvgWaitingTime() / ((double) processesVector.size()));
+			
+			System.out.println("Avg CT = " + bankers.getAvgCompletionTime() + ", Avg TAT = " + bankers.getAvgTurnaroundTime() + ", Avg WT = " + bankers.getAvgWaitingTime());
 		} else {
 			System.exit(0);
 		}

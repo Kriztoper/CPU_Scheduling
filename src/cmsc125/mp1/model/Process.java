@@ -11,6 +11,11 @@ public class Process {
 	private Color color;
 	private boolean allocated;
 	private boolean arrived;
+	private int completionTime;
+	private int turnaroundTime;
+	private int waitingTime;
+	private int contextSwitch;
+	private int totalCylinders;
 	
 	public Process(int arrivalTime, int priorityNum, int[] resources,
 			String name, Color color) {
@@ -94,5 +99,45 @@ public class Process {
 
 	public void setArrived(boolean arrived) {
 		this.arrived = arrived;
+	}
+
+	public int getCompletionTime() {
+		return completionTime;
+	}
+
+	public void setCompletionTime(int completionTime) {
+		this.completionTime = completionTime;
+	}
+
+	public int getTurnaroundTime() {
+		return turnaroundTime;
+	}
+
+	public void setTurnaroundTime(int turnaroundTime) {
+		this.turnaroundTime = turnaroundTime;
+	}
+
+	public int getWaitingTime() {
+		return waitingTime;
+	}
+
+	public void setWaitingTime(int waitingTime) {
+		this.waitingTime = waitingTime;
+	}
+	
+	public int getTotalCylinders() {
+		return totalCylinders;
+	}
+
+	public void setTotalCylinders(int totalCylinders) {
+		this.totalCylinders = totalCylinders;
+	}
+
+	public int getContextSwitch() {
+		return contextSwitch;
+	}
+
+	public void setContextSwitch(int contextSwitch) {
+		this.contextSwitch = contextSwitch;
 	}
 }

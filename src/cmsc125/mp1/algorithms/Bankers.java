@@ -27,6 +27,9 @@ public class Bankers {
 	private int processCount;
 	private int numProcesses;
 	private int numResources;
+	private double avgCompletionTime;
+	private double avgTurnaroundTime;
+	private double avgWaitingTime;
 	
 	public Bankers(JTable allocatedTable, JTable maximumTable,
 			JTable availableTable, int[] arrivalTimes, 
@@ -126,8 +129,10 @@ public class Bankers {
 						Integer.parseInt(allocatedData[i][j]);
 				maximumTableData[i][j] = 
 						Integer.parseInt(maximumData[i][j]);
-				availableTableData[i][j] = 
-						Integer.parseInt(availableData[i][j]);
+				if (i == 0) {
+					availableTableData[i][j] = 
+							Integer.parseInt(availableData[i][j]);
+				}
 			}
 		}
 	}
@@ -290,5 +295,29 @@ public class Bankers {
 	
 	public ProcessesQueue getJobQueue() {
 		return jobQueue;
+	}
+
+	public double getAvgCompletionTime() {
+		return avgCompletionTime;
+	}
+
+	public void setAvgCompletionTime(double avgCompletionTime) {
+		this.avgCompletionTime = avgCompletionTime;
+	}
+
+	public double getAvgTurnaroundTime() {
+		return avgTurnaroundTime;
+	}
+
+	public void setAvgTurnaroundTime(double avgTurnaroundTime) {
+		this.avgTurnaroundTime = avgTurnaroundTime;
+	}
+
+	public double getAvgWaitingTime() {
+		return avgWaitingTime;
+	}
+
+	public void setAvgWaitingTime(double avgWaitingTime) {
+		this.avgWaitingTime = avgWaitingTime;
 	}
 }
