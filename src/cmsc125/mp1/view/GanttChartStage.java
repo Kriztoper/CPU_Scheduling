@@ -54,7 +54,7 @@ public class GanttChartStage extends Stage {
     	procSeries = new ArrayList<XYChart.Series>();
     	
         for (int i=1; i<=numProcess; i++){
-			procNames.add("P"+Integer.toString(i));
+			procNames.add("P"+Integer.toString(i-1));
 			procSeries.add(new XYChart.Series<>());
 	        chart.getData().add(procSeries.get(i-1));
 		}
@@ -75,7 +75,8 @@ public class GanttChartStage extends Stage {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void updateGantt(int startTime, String name){
 		int processNumber = Integer.parseInt(name.substring(1));
-		Platform.runLater(() -> procSeries.get(processNumber-1).getData().add(new XYChart.Data(startTime, name, new ExtraData( 1, name))));// Update on JavaFX Application Thread
+		System.out.println("processNumber = " + processNumber + " name = " + name);
+		Platform.runLater(() -> procSeries.get(processNumber).getData().add(new XYChart.Data(startTime, name, new ExtraData( 1, name))));// Update on JavaFX Application Thread
 	}
 	
 }

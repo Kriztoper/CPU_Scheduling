@@ -19,7 +19,7 @@ public class FCFSManager extends Thread {
 	private int[] arrivalTimes;
 	private int[] priorityNumbers;
 	private Vector<Process> processesVector;
-	private ProcessesQueue jobQueue;
+	private ProcessesQueue processesQueue;
 	private ProcessesQueue readyQueue;
 	private Bankers bankers;
 
@@ -33,7 +33,8 @@ public class FCFSManager extends Thread {
 	public void startSimulation() {
 		initTimeTableData();
 		initProcessesInVector();
-		sortProcessesToReadyQueue();
+		sortProcessesToProcessesQueue();
+		readyQueue = new ProcessesQueue();
 
 		start();
 	}
@@ -44,7 +45,7 @@ public class FCFSManager extends Thread {
 		priorityNumbers = new int[timeData.length];
 		for (int i = 0; i < timeData.length; i++) {
 			arrivalTimes[i] = Integer.parseInt(timeData[i][0]);
-			arrivalTimes[i] = Integer.parseInt(timeData[i][1]);
+			priorityNumbers[i] = Integer.parseInt(timeData[i][1]);
 		}
 	}
 
@@ -66,17 +67,22 @@ public class FCFSManager extends Thread {
 		if (bankers.isSafeState()) {
 			while (true) {
 				System.out.println("At time " + t);
-	//			bankers.allocateResource(t);
+				bankers.updateJobQueue(t, processesQueue);
+				readyQueue = bankers.requestResources(t, readyQueue);
+				
+//				bankers.allocateResource(t);
 	//			bankers.getJobQueue().sortByArrivalTime();
 	//			jobQueue = bankers.getJobQueue();
 	
 				// If ready queue is empty and there is no current process running
-				if (readyQueue.isEmpty() && currentProcess == null) {
+				if (processesQueue.isEmpty() && readyQueue.isEmpty() && currentProcess == null) {
+					System.out.println("Ready Queue is empty!");
 					break;
-				} else if (currentProcess == null && readyQueue.peek().getArrivalTime() <= t) {
+				} else if (!readyQueue.isEmpty() && currentProcess == null && readyQueue.peek().getArrivalTime() <= t) {
 					// there is a process waiting in ready queue available for execution and there
 					// is no current process running
 	
+//					requestResources();
 					currentProcess = readyQueue.dequeue();
 					currentBurstTime++;
 					// System.out.println("processNum increased to "
@@ -84,7 +90,7 @@ public class FCFSManager extends Thread {
 	
 					Main.ganttVisual.updateGantt(t, currentProcess.getName());
 	
-					System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
+					System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]\n");
 				} else if (currentProcess != null && currentBurstTime < currentProcess.getBurstTime()) {
 					// there is still a current process executing
 	
@@ -97,6 +103,7 @@ public class FCFSManager extends Thread {
 	
 				// there is still a current process running but it has completed executing
 				if (currentProcess != null && currentBurstTime == currentProcess.getBurstTime()) {
+					bankers.releaseResourcesForProcess(currentProcess);
 					currentProcess = null;
 					currentBurstTime = 0;
 				}
@@ -106,20 +113,20 @@ public class FCFSManager extends Thread {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				
 				t++;
 			}
 			System.out.println("Done executing FCFS!");
 		} else {
-//			System.out.println("DEADLOCK!");
 			System.exit(0);
 		}
 	}
 
-	public void sortProcessesToReadyQueue() {
+	public void sortProcessesToProcessesQueue() {
 		sortProcessesVector();
-		readyQueue = new ProcessesQueue();
+		processesQueue = new ProcessesQueue();
 		for (int i = 0; i < processesVector.size(); i++) {
-			readyQueue.enqueue(processesVector.get(i));
+			processesQueue.enqueue(processesVector.get(i));
 		}
 	}
 
@@ -143,7 +150,7 @@ public class FCFSManager extends Thread {
 
 		for (int i = 0; i < timeData.length; i++) {
 			processesVector.add(new Process(Integer.parseInt(timeData[i][0]), Integer.parseInt(timeData[i][1]),
-					convertToIntArray(resourcesData[i]), ("P" + (i + 1)), ColorConstants.getColor(i)));
+					convertToIntArray(resourcesData[i]), ("P" + (i)), ColorConstants.getColor(i)));
 		}
 	}
 

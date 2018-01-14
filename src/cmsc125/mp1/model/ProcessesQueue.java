@@ -11,7 +11,20 @@ public class ProcessesQueue {
 	}
 
 	public Process peek() {
-		return processes.get(0);
+		if (processes.isEmpty()) {
+			return null;
+		} else {
+			return processes.get(0);
+		}
+	}
+	
+	public void removeAll(ArrayList<Process> processesQueue) {
+		/*for (int i = 0; i < processesQueue.size(); i++) {
+			if (processesQueue.get(i).equals(processes.get(i))) {
+				processes.remove(processes.get(i));
+			}
+		}*/
+		processes.removeAll(processesQueue);
 	}
 
 	public void enqueue(Process process) {
@@ -21,7 +34,19 @@ public class ProcessesQueue {
 	public Process dequeue() {
 		return processes.remove(0);
 	}
+	
+	public Process get(int index) {
+		return processes.get(index);
+	}
 
+	public void set(int index, Process process) {
+		processes.set(index, process);
+	}
+	
+	public void remove(int index) {
+		processes.remove(index);
+	}
+	
 	public int getSize() {
 		return processes.size();
 	}

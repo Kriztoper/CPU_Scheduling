@@ -19,6 +19,7 @@ public class RRManager extends Thread {
 	private int[] arrivalTimes;
 	private int[] priorityNumbers;
 	private Vector<Process> processesVector;
+	private ProcessesQueue processesQueue;
 	private ProcessesQueue readyQueue;
 	private int quantum;
 	private Bankers bankers;
@@ -35,8 +36,9 @@ public class RRManager extends Thread {
 
 	public void startSimulation() {
 		initProcessesInVector();
-		sortProcessesToReadyQueue();
-
+		sortProcessesToProcessesQueue();
+		readyQueue = new ProcessesQueue();
+		
 		start();
 	}
 
@@ -46,7 +48,7 @@ public class RRManager extends Thread {
 		priorityNumbers = new int[timeData.length];
 		for (int i = 0; i < timeData.length; i++) {
 			arrivalTimes[i] = Integer.parseInt(timeData[i][0]);
-			arrivalTimes[i] = Integer.parseInt(timeData[i][1]);
+			priorityNumbers[i] = Integer.parseInt(timeData[i][1]);
 		}
 	}
 
@@ -61,7 +63,6 @@ public class RRManager extends Thread {
 	@Override
 	public void run() {
 		bankers = new Bankers(allocatedTable, maximumTable, availableTable, getArrivalTimes(), getPriorityNumbers());
-		long increment = 200;// 0;
 		Process currentProcess = null;
 		int currentBurstTime = 0;
 		int t = 0;
@@ -69,9 +70,17 @@ public class RRManager extends Thread {
 		if (bankers.isSafeState()) {
 			while (true) {
 				System.out.println("At time " + t);
-				if (readyQueue.isEmpty() && currentProcess == null) {
+				bankers.updateJobQueue(t, processesQueue);
+				readyQueue = bankers.requestResources(t, readyQueue);
+				
+				// If ready queue is empty and there is no current process running
+				if (processesQueue.isEmpty() && bankers.hasAllProcessesInJobQueueAllocated() && readyQueue.isEmpty() && currentProcess == null) {
+					System.out.println("Ready Queue is empty!");
 					break;
-				} else if (currentProcess == null && readyQueue.peek().getArrivalTime() <= t) {
+				} else if (!readyQueue.isEmpty() && currentProcess == null && readyQueue.peek().getArrivalTime() <= t) {
+					// there is a process waiting in ready queue available for execution and there
+					// is no current process running
+					
 					currentProcess = readyQueue.dequeue();
 					currentProcess.decBurstTime();
 					currentBurstTime++;
@@ -80,6 +89,8 @@ public class RRManager extends Thread {
 	
 					System.out.println(currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
 				} else if (currentProcess != null) {
+					// there is still a current process executing
+					
 					currentProcess.decBurstTime();// currentBurstTime++;
 					currentBurstTime++;
 	
@@ -88,17 +99,19 @@ public class RRManager extends Thread {
 					System.out.println(currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
 				}
 	
-				if (null != currentProcess && currentBurstTime == quantum && currentProcess.getBurstTime() != 0) {
-					readyQueue.enqueue(currentProcess);
+				if (currentProcess != null && currentBurstTime == quantum && currentProcess.getBurstTime() != 0) {
+					bankers.releaseResourcesForProcess(currentProcess);
+					bankers.returnProcessToJobQueue(currentProcess);
 					currentProcess = null;
 					currentBurstTime = 0;
-				} else if (null != currentProcess && currentProcess.getBurstTime() == 0) {
+				} else if (currentProcess != null && currentProcess.getBurstTime() == 0) {
+					bankers.releaseResourcesForProcess(currentProcess);
 					currentBurstTime = 0;
 					currentProcess = null;
 				}
 	
 				try {
-					this.sleep(AlgoSimulator.visualizationSpeed);
+					this.sleep(AlgoSimulator.visualizationSpeed); //delay
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -107,16 +120,15 @@ public class RRManager extends Thread {
 			}
 			System.out.println("Done executing RR!");
 		} else {
-//			System.out.println("DEADLOCK!");
 			System.exit(0);
 		}
 	}
 
-	public void sortProcessesToReadyQueue() {
+	public void sortProcessesToProcessesQueue() {
 		sortProcessesVector();
-		readyQueue = new ProcessesQueue();
+		processesQueue = new ProcessesQueue();
 		for (int i = 0; i < processesVector.size(); i++) {
-			readyQueue.enqueue(processesVector.get(i));
+			processesQueue.enqueue(processesVector.get(i));
 		}
 	}
 
@@ -140,7 +152,7 @@ public class RRManager extends Thread {
 
 		for (int i = 0; i < timeData.length; i++) {
 			processesVector.add(new Process(Integer.parseInt(timeData[i][0]), Integer.parseInt(timeData[i][1]),
-					convertToIntArray(resourcesData[i]), ("P" + (i + 1)), ColorConstants.getColor(i)));
+					convertToIntArray(resourcesData[i]), ("P" + (i)), ColorConstants.getColor(i)));
 		}
 	}
 

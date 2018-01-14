@@ -9,6 +9,8 @@ public class Process {
 	private int priorityNum;
 	private int[] resources;
 	private Color color;
+	private boolean allocated;
+	private boolean arrived;
 	
 	public Process(int arrivalTime, int priorityNum, int[] resources,
 			String name, Color color) {
@@ -17,6 +19,8 @@ public class Process {
 		setResources(resources);
 		setName(name);
 		setColor(color);
+		setAllocated(false);
+		setArrived(false);
 	}
 	
 	@Override
@@ -55,6 +59,10 @@ public class Process {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public int getProcessNumber() {
+		return Integer.parseInt(name.charAt(1) + "");
+	}
 
 	public Color getColor() {
 		return color;
@@ -70,5 +78,21 @@ public class Process {
 
 	public void setPriorityNum(int priorityNum) {
 		this.priorityNum = priorityNum;
+	}
+
+	public boolean isAllocated() {
+		return allocated;
+	}
+
+	public void setAllocated(boolean allocated) {
+		this.allocated = allocated;
+	}
+
+	public boolean isArrived() {
+		return arrived;
+	}
+
+	public void setArrived(boolean arrived) {
+		this.arrived = arrived;
 	}
 }

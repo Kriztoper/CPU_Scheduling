@@ -18,10 +18,10 @@ public class SRTFManager extends Thread {
 	private JTable timeTable;
 	private int[] arrivalTimes;
 	private int[] priorityNumbers;
-	private ProcessesQueue jobQueue;
-	private Vector<Process> readyQueue;
 	private Vector<Process> processesVector;
 	private Vector<Process> origProcessesVector;
+	private ProcessesQueue processesQueue;
+	private ProcessesQueue readyQueue;
 	private Bankers bankers;
 
 	public SRTFManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable) {
@@ -29,23 +29,134 @@ public class SRTFManager extends Thread {
 		this.maximumTable = maximumTable;
 		this.availableTable = availableTable;
 		this.timeTable = timeTable;
-		readyQueue = new Vector<Process>();
 	}
 
 	public void startSimulation() {
 		initProcessesInVector();
-		sortProcessesToJobQueue();
+		sortProcessesToProcessesQueue();
 		setListOfArrivalTimes();
+		readyQueue = new ProcessesQueue();
 
 		start();
 	}
 
-	public void sortProcessesToJobQueue() {
+	public void initTimeTableData() {
+		String[][] timeData = ((ResourcesTableModel) timeTable.getModel()).getData();
+		arrivalTimes = new int[timeData.length];
+		priorityNumbers = new int[timeData.length];
+		for (int i = 0; i < timeData.length; i++) {
+			arrivalTimes[i] = Integer.parseInt(timeData[i][0]);
+			priorityNumbers[i] = Integer.parseInt(timeData[i][1]);
+		}
+	}
+
+	public int[] getArrivalTimes() {
+		return arrivalTimes;
+	}
+
+	public int[] getPriorityNumbers() {
+		return priorityNumbers;
+	}
+
+	@Override
+	public void run() {
+		bankers = new Bankers(allocatedTable, maximumTable, availableTable, getArrivalTimes(), getPriorityNumbers());
+		Process currentProcess = null;
+		int currentBurstTime = 0;
+		int t = 0;
+
+		if (bankers.isSafeState()) {
+			while (true) {
+				System.out.println("At time " + t);
+				bankers.updateJobQueue(t, processesQueue);
+				readyQueue = bankers.requestResources(t, readyQueue);
+				
+//				fillReadyQueue(t);
+				sortReadyQueue();
+				
+				// If ready queue is empty and there is no current process running
+				if (processesQueue.isEmpty() && readyQueue.isEmpty() && currentProcess == null) {
+					System.out.println("Ready Queue is empty!");
+					break;
+				} else if (!readyQueue.isEmpty() && currentProcess == null && readyQueue.get(0).getArrivalTime() <= t) {
+					// there is a process waiting in ready queue available for execution and there
+					// is no current process running
+					
+					currentProcess = readyQueue.get(0);
+					currentProcess.decBurstTime();
+					
+					Main.ganttVisual.updateGantt(t, currentProcess.getName());
+	
+					System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
+				}
+	
+				if (currentProcess != null && currentProcess.getBurstTime() == 0) {
+					bankers.releaseResourcesForProcess(currentProcess);
+					readyQueue.dequeue();
+				}
+	
+				currentProcess = null;
+	
+				try {
+					this.sleep(AlgoSimulator.visualizationSpeed); //delay
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+	
+				t++;
+			}
+			System.out.println("Done executing SRTF!");
+		} else {
+			System.exit(0);
+		}
+	}
+
+	public void setListOfArrivalTimes() {
+		int size = processesVector.size();
+		arrivalTimes = new int[size];
+		for (int i = 0; i < size; i++) {
+			arrivalTimes[i] = processesVector.get(i).getArrivalTime();
+		}
+	}
+
+	public void fillReadyQueue(int t) {
+		int size = processesVector.size();
+		int[] indicesToRemove = new int[size];
+		int index = 0;
+		for (int i = 0; i < size; i++) {
+			if (processesVector.get(i).getArrivalTime() <= t) {
+				readyQueue.enqueue(processesVector.get(i));
+				indicesToRemove[index++] = i;
+			} else {
+				indicesToRemove[index++] = -1;
+			}
+		}
+		for (int i = indicesToRemove.length - 1; i >= 0; i--) {
+			if (indicesToRemove[i] != -1) {
+				processesVector.remove(indicesToRemove[i]);
+			}
+		}
+	}
+	
+	public void sortReadyQueue() {
+		int size = readyQueue.getSize();
+		for (int i = 0; i < (size - 1); i++) {
+			for (int j = 0; j < size - i - 1; j++) {
+				if (readyQueue.get(j).getBurstTime() > readyQueue.get(j + 1).getBurstTime()) {
+					Process temp = readyQueue.get(j);
+					readyQueue.set(j, readyQueue.get(j + 1));
+					readyQueue.set(j + 1, temp);
+				}
+			}
+		}
+	}
+	
+	public void sortProcessesToProcessesQueue() {
 		sortProcessesVector();
 
-		jobQueue = new ProcessesQueue();
+		processesQueue = new ProcessesQueue();
 		for (int i = 0; i < processesVector.size(); i++) {
-			jobQueue.enqueue(processesVector.get(i));
+			processesQueue.enqueue(processesVector.get(i));
 		}
 	}
 
@@ -65,14 +176,6 @@ public class SRTFManager extends Thread {
 		}
 	}
 
-	public void setListOfArrivalTimes() {
-		int size = processesVector.size();
-		arrivalTimes = new int[size];
-		for (int i = 0; i < size; i++) {
-			arrivalTimes[i] = processesVector.get(i).getArrivalTime();
-		}
-	}
-
 	public void initProcessesInVector() {
 		processesVector = new Vector<Process>();
 		origProcessesVector = new Vector<Process>();
@@ -81,7 +184,7 @@ public class SRTFManager extends Thread {
 
 		for (int i = 0; i < timeData.length; i++) {
 			processesVector.add(new Process(Integer.parseInt(timeData[i][0]), Integer.parseInt(timeData[i][1]),
-					convertToIntArray(resourcesData[i]), ("P" + (i + 1)), ColorConstants.getColor(i)));
+					convertToIntArray(resourcesData[i]), ("P" + (i)), ColorConstants.getColor(i)));
 			origProcessesVector.add(processesVector.get(processesVector.size() - 1));
 		}
 	}
@@ -94,100 +197,5 @@ public class SRTFManager extends Thread {
 		}
 
 		return intData;
-	}
-
-	public void initTimeTableData() {
-		String[][] timeData = ((ResourcesTableModel) timeTable.getModel()).getData();
-		arrivalTimes = new int[timeData.length];
-		priorityNumbers = new int[timeData.length];
-		for (int i = 0; i < timeData.length; i++) {
-			arrivalTimes[i] = Integer.parseInt(timeData[i][0]);
-			arrivalTimes[i] = Integer.parseInt(timeData[i][1]);
-		}
-	}
-
-	public int[] getArrivalTimes() {
-		return arrivalTimes;
-	}
-
-	public int[] getPriorityNumbers() {
-		return priorityNumbers;
-	}
-
-	@Override
-	public void run() {
-		bankers = new Bankers(allocatedTable, maximumTable, availableTable, getArrivalTimes(), getPriorityNumbers());
-		long increment = 200;// 0;
-		int t = 0;
-		Process currentProcess = null;
-		int currentBurstTime = 0;
-
-		if (bankers.isSafeState()) {
-			while (true) {
-				System.out.println("At time " + t);
-				fillReadyQueue(t);
-				sortReadyQueue();
-				if (readyQueue.isEmpty() && currentProcess == null) {
-					break;
-				} else if (readyQueue.get(0).getArrivalTime() <= t) {
-					currentProcess = readyQueue.get(0);
-					currentProcess.decBurstTime();
-	
-					Main.ganttVisual.updateGantt(t, currentProcess.getName());
-	
-					System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
-				}
-	
-				if (currentProcess.getBurstTime() == 0) {
-					readyQueue.remove(0);
-				}
-	
-				currentProcess = null;
-	
-				try {
-					this.sleep(AlgoSimulator.visualizationSpeed);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-	
-				t++;
-			}
-			System.out.println("Done executing SRTF!");
-		} else {
-//			System.out.println("DEADLOCK!");
-			System.exit(0);
-		}
-	}
-
-	public void sortReadyQueue() {
-		int size = readyQueue.size();
-		for (int i = 0; i < (size - 1); i++) {
-			for (int j = 0; j < size - i - 1; j++) {
-				if (readyQueue.get(j).getBurstTime() > readyQueue.get(j + 1).getBurstTime()) {
-					Process temp = readyQueue.get(j);
-					readyQueue.set(j, readyQueue.get(j + 1));
-					readyQueue.set(j + 1, temp);
-				}
-			}
-		}
-	}
-
-	public void fillReadyQueue(int t) {
-		int size = processesVector.size();
-		int[] indicesToRemove = new int[size];
-		int index = 0;
-		for (int i = 0; i < size; i++) {
-			if (processesVector.get(i).getArrivalTime() <= t) {
-				readyQueue.add(processesVector.get(i));
-				indicesToRemove[index++] = i;
-			} else {
-				indicesToRemove[index++] = -1;
-			}
-		}
-		for (int i = indicesToRemove.length - 1; i >= 0; i--) {
-			if (indicesToRemove[i] != -1) {
-				processesVector.remove(indicesToRemove[i]);
-			}
-		}
 	}
 }
