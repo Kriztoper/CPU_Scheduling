@@ -10,6 +10,7 @@ import javax.swing.JTable;
 
 import cmsc125.mp1.model.ResourcesTableModel;
 
+@SuppressWarnings("serial")
 public class InputTablePanel extends JPanel {
 
 	private JLabel allocatedTableLabel;
@@ -19,7 +20,7 @@ public class InputTablePanel extends JPanel {
 	private JTable maximumTable;
 	private JTable availableTable;
 	private JTable timeTable;
-	public static int numProcess, numResource;
+	public int numProcess, numResource;
 
 	public InputTablePanel() {
 		initPanel();
@@ -131,22 +132,22 @@ public class InputTablePanel extends JPanel {
 		allocatedTablePane.setLocation(0, 10);
 		add(allocatedTablePane);
 
-		// rand allocated table
+		// maximum allocated table
 		maximumTableLabel.setSize(150, 10);
-		maximumTableLabel.setLocation(305, 0);
+		maximumTableLabel.setLocation(300, 0);
 		add(maximumTableLabel);
 		JScrollPane maximumTablePane = new JScrollPane(maximumTable);
 		maximumTablePane.setSize(300, 342);
-		maximumTablePane.setLocation(305, 10);
+		maximumTablePane.setLocation(300, 10);
 		add(maximumTablePane);
 
 		//available allocated table
 		availableTableLabel.setSize(150, 10);
-		availableTableLabel.setLocation(605, 0);
+		availableTableLabel.setLocation(600, 0);
 		add(availableTableLabel);
 		JScrollPane availableTablePane = new JScrollPane(availableTable);
 		availableTablePane.setSize(300, 342);
-		availableTablePane.setLocation(605, 10);
+		availableTablePane.setLocation(600, 10);
 		add(availableTablePane);
 
 		// table for arrival time, priority

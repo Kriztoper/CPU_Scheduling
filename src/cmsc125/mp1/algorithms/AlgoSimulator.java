@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 import javax.swing.JTable;
 
-import cmsc125.mp1.controller.Main;
-import cmsc125.mp1.model.ResourcesTableModel;
+import cmsc125.mp1.constants.ScreenConstants;
 import cmsc125.mp1.view.GanttChartStage;
 
 public class AlgoSimulator {
 
+	public GanttChartStage ganttFCFS, ganttSJF, ganttRR, ganttNPPRIO, ganttSRTF, ganttPRIO;
 	private ArrayList<String> algos;
 	private JTable allocatedTable, maximumTable, availableTable, timeTable;
 	private String quantumFieldText;
@@ -25,105 +25,87 @@ public class AlgoSimulator {
 		this.availableTable = availableTable;
 		this.timeTable = timeTable;
 		this.quantumFieldText = quantumFieldText;
-		this.visualizationSpeed = visualizationSpeed;
-	}
-
-	private String prepareGanttInfo() {
-		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-		// block to print the resources and arrival time
-		String string = "";
-		String[][] data = ((ResourcesTableModel) allocatedTable.getModel()).getData();
-		String[][] timeData = ((ResourcesTableModel) timeTable.getModel()).getData();
-
-		string += "Resources = [";
-		String resString = "";
-		for (int i = 0; i < data.length; i++) {
-			resString += data[i][0] + ", ";
-		}
-		string += resString.substring(0, resString.length() - 2) + "]    Arrival time = [";
-
-		// arrival
-		String arrivalString = "";
-		for (int i = 0; i < timeData.length; i++) {
-			arrivalString += timeData[i][0] + ", ";
-		}
-		string += arrivalString.substring(0, arrivalString.length() - 2) + "]\nPriority = [";
-
-		// priority
-		String priorityString = "";
-		for (int i = 0; i < timeData.length; i++) {
-			priorityString += timeData[i][1] + ", ";
-		}
-		string += priorityString.substring(0, priorityString.length() - 2) + "]    Quantum = ";
-
-		// quantum
-		string += quantumFieldText;
-
-		return string;
+		AlgoSimulator.visualizationSpeed = visualizationSpeed;
 	}
 
 	public void startSimulation() {
 		if (algos.contains("FCFS")) {
-			Main.ganttVisual = new GanttChartStage();
-			Main.ganttVisual.initGantt(prepareGanttInfo(), numProcess);
-			Main.ganttVisual.setX(0);
-			Main.ganttVisual.setY(230);
-			Main.ganttVisual.chart.setTitle("FCFS Simulation");
-			Main.ganttVisual.setTitle("FCFS Simulation");
+			ganttFCFS = new GanttChartStage(numProcess);
+			ganttFCFS.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			ganttFCFS.setWidth(ScreenConstants.WIDTH/3);
+			ganttFCFS.setX(0);
+			ganttFCFS.setY(0);
+			ganttFCFS.chart.setTitle("FCFS Simulation");
+			ganttFCFS.setTitle("CPU Scheduling: FCFS Simulation");
 
-			FCFSManager fcfsManager = new FCFSManager(allocatedTable, maximumTable, availableTable, timeTable);
+			FCFSManager fcfsManager = new FCFSManager(allocatedTable, maximumTable, availableTable, timeTable, ganttFCFS);
 			fcfsManager.startSimulation();
-		} else if (algos.contains("SJF")) {
-			Main.ganttVisual = new GanttChartStage();
-			Main.ganttVisual.initGantt(prepareGanttInfo(), numProcess);
-			Main.ganttVisual.setX(0);
-			Main.ganttVisual.setY(230);
-			Main.ganttVisual.chart.setTitle("SJF Simulation");
-			Main.ganttVisual.setTitle("SJF Simulation");
+		}
+		
+		if (algos.contains("SRTF")) {
+			ganttSRTF = new GanttChartStage(numProcess);
+			ganttSRTF.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			ganttSRTF.setWidth(ScreenConstants.WIDTH/3);
+			ganttSRTF.setX(ScreenConstants.WIDTH/3);
+			ganttSRTF.setY(0);
+			ganttSRTF.chart.setTitle("SRTF Simulation");
+			ganttSRTF.setTitle("CPU Scheduling: SRTF Simulation");
 
-			SJFManager sjfManager = new SJFManager(allocatedTable, maximumTable, availableTable, timeTable);
+			SRTFManager srtfManager = new SRTFManager(allocatedTable, maximumTable, availableTable, timeTable, ganttSRTF);
+			srtfManager.startSimulation();
+		}
+		
+		if (algos.contains("SJF")) {
+			ganttSJF = new GanttChartStage(numProcess);
+			ganttSJF.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			ganttSJF.setWidth(ScreenConstants.WIDTH/3);
+			ganttSJF.setX(ScreenConstants.WIDTH*2/3);
+			ganttSJF.setY(0);
+			ganttSJF.chart.setTitle("SJF Simulation");
+			ganttSJF.setTitle("CPU Scheduling: SJF Simulation");
+
+			SJFManager sjfManager = new SJFManager(allocatedTable, maximumTable, availableTable, timeTable, ganttSJF);
 			sjfManager.startSimulation();
-		} else if (algos.contains("RR")) {
-			Main.ganttVisual = new GanttChartStage();
-			Main.ganttVisual.initGantt(prepareGanttInfo(), numProcess);
-			Main.ganttVisual.setX(0);
-			Main.ganttVisual.setY(230);
-			Main.ganttVisual.chart.setTitle("RR Simulation");
-			Main.ganttVisual.setTitle("RR Simulation");
+		}
+		
+		if (algos.contains("PRIO")) {
+			ganttPRIO = new GanttChartStage(numProcess);
+			ganttPRIO.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			ganttPRIO.setWidth(ScreenConstants.WIDTH/3);
+			ganttPRIO.setX(0);
+			ganttPRIO.setY(ScreenConstants.HEIGHT/2 - 10);
+			ganttPRIO.chart.setTitle("PRIO Simulation");
+			ganttPRIO.setTitle("CPU Scheduling: PRIO Simulation");
+
+			PRIOManager prioManager = new PRIOManager(allocatedTable, maximumTable, availableTable, timeTable, ganttPRIO);
+			prioManager.startSimulation();
+		}
+
+		if (algos.contains("NP PRIO")) {
+			ganttNPPRIO = new GanttChartStage(numProcess);
+			ganttNPPRIO.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			ganttNPPRIO.setWidth(ScreenConstants.WIDTH/3);
+			ganttNPPRIO.setX(ScreenConstants.WIDTH/3);
+			ganttNPPRIO.setY(ScreenConstants.HEIGHT/2 - 10);
+			ganttNPPRIO.chart.setTitle("NP PRIO Simulation");
+			ganttNPPRIO.setTitle("CPU Scheduling: NP PRIO Simulation");
+
+			NP_PRIOManager np_prioManager = new NP_PRIOManager(allocatedTable, maximumTable, availableTable, timeTable, ganttNPPRIO);
+			np_prioManager.startSimulation();
+		}
+		
+		if (algos.contains("RR")) {
+			ganttRR = new GanttChartStage(numProcess);
+			ganttRR.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			ganttRR.setWidth(ScreenConstants.WIDTH/3);
+			ganttRR.setX(ScreenConstants.WIDTH*2/3);
+			ganttRR.setY(ScreenConstants.HEIGHT/2 - 10);
+			ganttRR.chart.setTitle("RR Simulation");
+			ganttRR.setTitle("CPU Scheduling: RR Simulation");
 
 			RRManager rrManager = new RRManager(allocatedTable, maximumTable, availableTable, timeTable,
-					quantumFieldText);
+					quantumFieldText, ganttRR);
 			rrManager.startSimulation();
-		} else if (algos.contains("NP PRIO")) {
-			Main.ganttVisual = new GanttChartStage();
-			Main.ganttVisual.initGantt(prepareGanttInfo(), numProcess);
-			Main.ganttVisual.setX(0);
-			Main.ganttVisual.setY(230);
-			Main.ganttVisual.chart.setTitle("NP PRIO Simulation");
-			Main.ganttVisual.setTitle("NP PRIO Simulation");
-
-			NP_PRIOManager np_prioManager = new NP_PRIOManager(allocatedTable, maximumTable, availableTable, timeTable);
-			np_prioManager.startSimulation();
-		} else if (algos.contains("SRTF")) {
-			Main.ganttVisual = new GanttChartStage();
-			Main.ganttVisual.initGantt(prepareGanttInfo(), numProcess);
-			Main.ganttVisual.setX(0);
-			Main.ganttVisual.setY(230);
-			Main.ganttVisual.chart.setTitle("SRTF Simulation");
-			Main.ganttVisual.setTitle("SRTF Simulation");
-
-			SRTFManager srtfManager = new SRTFManager(allocatedTable, maximumTable, availableTable, timeTable);
-			srtfManager.startSimulation();
-		} else if (algos.contains("PRIO")) {
-			Main.ganttVisual = new GanttChartStage();
-			Main.ganttVisual.initGantt(prepareGanttInfo(), numProcess);
-			Main.ganttVisual.setX(0);
-			Main.ganttVisual.setY(230);
-			Main.ganttVisual.chart.setTitle("PRIO Simulation");
-			Main.ganttVisual.setTitle("PRIO Simulation");
-
-			PRIOManager prioManager = new PRIOManager(allocatedTable, maximumTable, availableTable, timeTable);
-			prioManager.startSimulation();
 		}
 	}
 }

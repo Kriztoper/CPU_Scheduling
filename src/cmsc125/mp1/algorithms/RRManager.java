@@ -5,10 +5,10 @@ import java.util.Vector;
 import javax.swing.JTable;
 
 import cmsc125.mp1.constants.ColorConstants;
-import cmsc125.mp1.controller.Main;
 import cmsc125.mp1.model.Process;
 import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.model.ResourcesTableModel;
+import cmsc125.mp1.view.GanttChartStage;
 
 public class RRManager extends Thread {
 
@@ -23,13 +23,15 @@ public class RRManager extends Thread {
 	private ProcessesQueue readyQueue;
 	private int quantum;
 	private Bankers bankers;
+	private GanttChartStage ganttChart;
 
 	public RRManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable,
-			String quantumFieldText) {
+			String quantumFieldText, GanttChartStage ganttChart) {
 		this.allocatedTable = allocatedTable;
 		this.maximumTable = maximumTable;
 		this.availableTable = availableTable;
 		this.timeTable = timeTable;
+		this.ganttChart = ganttChart;
 		String quantumString = quantumFieldText;
 		quantum = ((quantumString.isEmpty()) ? (1) : (Integer.parseInt(quantumString)));
 	}
@@ -60,7 +62,6 @@ public class RRManager extends Thread {
 		return priorityNumbers;
 	}
 
-	@Override
 	public void run() {
 		bankers = new Bankers(allocatedTable, maximumTable, availableTable, getArrivalTimes(), getPriorityNumbers());
 		Process currentProcess = null;
@@ -85,7 +86,7 @@ public class RRManager extends Thread {
 					currentProcess.decBurstTime();
 					currentBurstTime++;
 	
-					Main.ganttVisual.updateGantt(t, currentProcess.getName());
+					ganttChart.updateGantt(t, currentProcess.getName());
 	
 					System.out.println(currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
 				} else if (currentProcess != null) {
@@ -94,7 +95,7 @@ public class RRManager extends Thread {
 					currentProcess.decBurstTime();// currentBurstTime++;
 					currentBurstTime++;
 	
-					Main.ganttVisual.updateGantt(t, currentProcess.getName());
+					ganttChart.updateGantt(t, currentProcess.getName());
 	
 					System.out.println(currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
 				}

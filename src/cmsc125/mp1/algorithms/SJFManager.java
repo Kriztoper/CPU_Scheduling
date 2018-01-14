@@ -5,10 +5,10 @@ import java.util.Vector;
 import javax.swing.JTable;
 
 import cmsc125.mp1.constants.ColorConstants;
-import cmsc125.mp1.controller.Main;
 import cmsc125.mp1.model.Process;
 import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.model.ResourcesTableModel;
+import cmsc125.mp1.view.GanttChartStage;
 
 public class SJFManager extends Thread {
 
@@ -23,12 +23,14 @@ public class SJFManager extends Thread {
 	private ProcessesQueue processesQueue;
 	private ProcessesQueue readyQueue;
 	private Bankers bankers;
+	private GanttChartStage ganttChart;
 
-	public SJFManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable) {
+	public SJFManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable, GanttChartStage ganttChart) {
 		this.allocatedTable = allocatedTable;
 		this.maximumTable = maximumTable;
 		this.availableTable = availableTable;
 		this.timeTable = timeTable;
+		this.ganttChart = ganttChart;
 	}
 
 	public void startSimulation() {
@@ -84,7 +86,7 @@ public class SJFManager extends Thread {
 					currentProcess = readyQueue.dequeue();
 					currentBurstTime++;
 	
-					Main.ganttVisual.updateGantt(t, currentProcess.getName());
+					ganttChart.updateGantt(t, currentProcess.getName());
 	
 					System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
 				} else if (currentProcess != null && currentBurstTime < currentProcess.getBurstTime()) {
@@ -92,7 +94,7 @@ public class SJFManager extends Thread {
 					
 					currentBurstTime++;
 	
-					Main.ganttVisual.updateGantt(t, currentProcess.getName());
+					ganttChart.updateGantt(t, currentProcess.getName());
 	
 					System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
 				}
