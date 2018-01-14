@@ -14,7 +14,6 @@ public class Process {
 	private int completionTime;
 	private int turnaroundTime;
 	private int waitingTime;
-	private int contextSwitch;
 	private int totalCylinders;
 	
 	public Process(int arrivalTime, int priorityNum, int[] resources,
@@ -131,13 +130,5 @@ public class Process {
 
 	public void setTotalCylinders(int totalCylinders) {
 		this.totalCylinders = totalCylinders;
-	}
-
-	public int getContextSwitch() {
-		return contextSwitch;
-	}
-
-	public void setContextSwitch(int contextSwitch) {
-		this.contextSwitch = contextSwitch;
 	}
 }

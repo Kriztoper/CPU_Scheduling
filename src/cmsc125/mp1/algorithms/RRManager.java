@@ -126,6 +126,7 @@ public class RRManager extends Thread {
 			}
 			System.out.println("Done executing RR!");
 			
+			sortProcessesVectorByProcessNumber();
 			bankers.setAvgCompletionTime(0.0);
 			bankers.setAvgTurnaroundTime(0.0);
 			bankers.setAvgWaitingTime(0.0);
@@ -141,7 +142,7 @@ public class RRManager extends Thread {
 			bankers.setAvgTurnaroundTime(bankers.getAvgTurnaroundTime() / ((double) processesVector.size()));
 			bankers.setAvgWaitingTime(bankers.getAvgWaitingTime() / ((double) processesVector.size()));
 			
-			System.out.println("Avg CT = " + bankers.getAvgCompletionTime() + ", Avg TAT = " + bankers.getAvgTurnaroundTime() + ", Avg WT = " + bankers.getAvgWaitingTime());
+			System.out.printf("Avg CT = %.5f, Avg TAT = %.5f, Avg WT = %.5f \n", bankers.getAvgCompletionTime(), bankers.getAvgTurnaroundTime(), bankers.getAvgWaitingTime());
 		} else {
 			System.exit(0);
 		}
@@ -168,6 +169,19 @@ public class RRManager extends Thread {
 		}
 	}
 
+	public void sortProcessesVectorByProcessNumber() {
+		int size = processesVector.size();
+		for (int i = 0; i < (size - 1); i++) {
+			for (int j = 0; j < size - i - 1; j++) {
+				if (processesVector.get(j).getProcessNumber() > processesVector.get(j + 1).getProcessNumber()) {
+					Process temp = processesVector.get(j);
+					processesVector.set(j, processesVector.get(j + 1));
+					processesVector.set(j + 1, temp);
+				}
+			}
+		}
+	}
+	
 	public void initProcessesInVector() {
 		processesVector = new Vector<Process>();
 		String[][] resourcesData = ((ResourcesTableModel) allocatedTable.getModel()).getData();
