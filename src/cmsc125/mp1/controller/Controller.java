@@ -17,13 +17,13 @@ import javafx.scene.input.MouseEvent;
 public class Controller {	
 	
 	@FXML private TextField numProcessField, numResourceField, quantumField, visualizationSpeed;
-	@FXML private Button randProcNumBtn, randResNumBtn, randSelectAlgoBtn, randResBtn, showResBtn, startSimulationBtn, randProcessInfoBtn, allSelectAlgoBtn;
-	@FXML private CheckBox fcfsCB, sjfCB, srtfCB, rrCB, npprioCB, prioCB;
+	@FXML private Button randProcNumBtn, randResNumBtn, randSelectAlgoBtn, randResBtn, showResBtn, startSimulationBtn, randProcessInfoBtn, allSelectAlgoBtn, randSelectDiskInfoBtn, allSelectDiskAlgoBtn;
+	@FXML private CheckBox fcfsCB, sjfCB, srtfCB, rrCB, npprioCB, prioCB, fcfsDiskCB, sstfDiskCB, scanDiskCB, cscanDiskCB, lookDiskCB, clookDiskCB;
 	
 	private InputTablePanel itp;
-	private ArrayList<String> selectedAlgos;
+	private ArrayList<String> selectedCPUAlgos, selectedDiskAlgos;
 	private JFrame frame1;
-	private ArrayList<CheckBox> checkBoxList;
+	private ArrayList<CheckBox> CPUcheckBoxList, DiskCheckBoxList;
 	private boolean allTick = false;
 
 	public Controller(){
@@ -34,9 +34,7 @@ public class Controller {
 		frame1.setResizable(false);
 		frame1.setSize(1065,380);
 		frame1.setVisible(false);
-		frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame1.add(itp);
-
 	}
 	
 	@FXML public void randNumProcesses(MouseEvent event) {
@@ -58,36 +56,75 @@ public class Controller {
 	@FXML public void randCPUSchedAlgos(MouseEvent event) {
 		Random random = new Random();
 		
-		checkBoxList = new ArrayList<CheckBox>();
-		checkBoxList.add(fcfsCB);
-		checkBoxList.add(sjfCB);
-		checkBoxList.add(rrCB);
-		checkBoxList.add(prioCB);
-		checkBoxList.add(npprioCB);
-		checkBoxList.add(srtfCB);
+		CPUcheckBoxList = new ArrayList<CheckBox>();
+		CPUcheckBoxList.add(fcfsCB);
+		CPUcheckBoxList.add(sjfCB);
+		CPUcheckBoxList.add(rrCB);
+		CPUcheckBoxList.add(prioCB);
+		CPUcheckBoxList.add(npprioCB);
+		CPUcheckBoxList.add(srtfCB);
 		
-		selectedAlgos = new ArrayList<String>();
-		for (CheckBox cb: checkBoxList){
+		selectedCPUAlgos = new ArrayList<String>();
+		for (CheckBox cb: CPUcheckBoxList){
 			int randomIndex = random.nextInt(100) + 1;
 			boolean randomBool = ((randomIndex <= 50) ? (false) : (true));
 			cb.setSelected(randomBool);
 			if (randomBool)
-				selectedAlgos.add(cb.getText());
+				selectedCPUAlgos.add(cb.getText());
 		}
 	}
 	
 	@FXML public void selectAllCPUSchedAlgos(MouseEvent event) {
-		checkBoxList = new ArrayList<CheckBox>();
-		checkBoxList.add(fcfsCB);
-		checkBoxList.add(sjfCB);
-		checkBoxList.add(rrCB);
-		checkBoxList.add(prioCB);
-		checkBoxList.add(npprioCB);
-		checkBoxList.add(srtfCB);
-		selectedAlgos = new ArrayList<String>();
-		for (CheckBox cb: checkBoxList){
+		CPUcheckBoxList = new ArrayList<CheckBox>();
+		CPUcheckBoxList.add(fcfsCB);
+		CPUcheckBoxList.add(sjfCB);
+		CPUcheckBoxList.add(rrCB);
+		CPUcheckBoxList.add(prioCB);
+		CPUcheckBoxList.add(npprioCB);
+		CPUcheckBoxList.add(srtfCB);
+		selectedCPUAlgos = new ArrayList<String>();
+		for (CheckBox cb: CPUcheckBoxList){
 			cb.setSelected(allTick);
-			selectedAlgos.add(cb.getText());
+			selectedCPUAlgos.add(cb.getText());
+		}
+		allTick = !allTick;
+		
+		
+	}
+	
+	@FXML public void randDiskSchedAlgos(MouseEvent event) {
+		Random random = new Random();
+		
+		DiskCheckBoxList = new ArrayList<CheckBox>();
+		DiskCheckBoxList.add(fcfsDiskCB);
+		DiskCheckBoxList.add(sstfDiskCB);
+		DiskCheckBoxList.add(scanDiskCB);
+		DiskCheckBoxList.add(lookDiskCB);
+		DiskCheckBoxList.add(cscanDiskCB);
+		DiskCheckBoxList.add(clookDiskCB);
+		
+		selectedDiskAlgos = new ArrayList<String>();
+		for (CheckBox cb: DiskCheckBoxList){
+			int randomIndex = random.nextInt(100) + 1;
+			boolean randomBool = ((randomIndex <= 50) ? (false) : (true));
+			cb.setSelected(randomBool);
+			if (randomBool)
+				selectedDiskAlgos.add(cb.getText());
+		}
+	}
+	
+	@FXML public void selectAllDiskSchedAlgos(MouseEvent event) {
+		DiskCheckBoxList = new ArrayList<CheckBox>();
+		DiskCheckBoxList.add(fcfsDiskCB);
+		DiskCheckBoxList.add(sstfDiskCB);
+		DiskCheckBoxList.add(scanDiskCB);
+		DiskCheckBoxList.add(lookDiskCB);
+		DiskCheckBoxList.add(cscanDiskCB);
+		DiskCheckBoxList.add(clookDiskCB);
+		selectedDiskAlgos = new ArrayList<String>();
+		for (CheckBox cb: DiskCheckBoxList){
+			cb.setSelected(allTick);
+			selectedDiskAlgos.add(cb.getText());
 		}
 		allTick = !allTick;
 	}
@@ -106,20 +143,20 @@ public class Controller {
 		if(numProcessField.getText() == "" || numResourceField.getText() == "")
 			return;
 		
-		checkBoxList = new ArrayList<CheckBox>();
-		checkBoxList.add(fcfsCB);
-		checkBoxList.add(sjfCB);
-		checkBoxList.add(rrCB);
-		checkBoxList.add(prioCB);
-		checkBoxList.add(npprioCB);
-		checkBoxList.add(srtfCB);
-		selectedAlgos = new ArrayList<String>();
-		for (CheckBox cb: checkBoxList){
+		CPUcheckBoxList = new ArrayList<CheckBox>();
+		CPUcheckBoxList.add(fcfsCB);
+		CPUcheckBoxList.add(sjfCB);
+		CPUcheckBoxList.add(rrCB);
+		CPUcheckBoxList.add(prioCB);
+		CPUcheckBoxList.add(npprioCB);
+		CPUcheckBoxList.add(srtfCB);
+		selectedCPUAlgos = new ArrayList<String>();
+		for (CheckBox cb: CPUcheckBoxList){
 			if (cb.isSelected())
-				selectedAlgos.add(cb.getText());
+				selectedCPUAlgos.add(cb.getText());
 		}
 		
-		AlgoSimulator algoSimulator = new AlgoSimulator(itp.numProcess, selectedAlgos, itp.getAllocatedTable(), itp.getMaximumTable(), itp.getAvailableTable(), itp.getTimeTable(), quantumField.getText(), Integer.parseInt(visualizationSpeed.getText()));
+		AlgoSimulator algoSimulator = new AlgoSimulator(itp.numProcess, selectedCPUAlgos, itp.getAllocatedTable(), itp.getMaximumTable(), itp.getAvailableTable(), itp.getTimeTable(), quantumField.getText(), Integer.parseInt(visualizationSpeed.getText()));
 		algoSimulator.startSimulation();
 	}
 	
