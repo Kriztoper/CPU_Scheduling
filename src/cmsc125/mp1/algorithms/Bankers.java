@@ -1,6 +1,5 @@
 package cmsc125.mp1.algorithms;
 
-import java.rmi.server.UID;
 import java.util.ArrayList;
 
 import javax.swing.JTable;
@@ -214,7 +213,7 @@ public class Bankers {
 //			if (jobQueue.get(currentJobQueueIndex).getArrivalTime() == t) {
 				boolean canAllocate = true;
 
-				int processIndex = jobQueue.get(currentJobQueueIndex).getProcessNumber();
+				//int processIndex = jobQueue.get(currentJobQueueIndex).getProcessNumber();
 				
 				if (!jobQueue.get(currentJobQueueIndex).isAllocated()) {					
 //					int[] neededData = new int[maximumTableData[currentJobQueueIndex].length];
