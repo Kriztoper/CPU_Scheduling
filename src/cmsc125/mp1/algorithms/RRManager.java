@@ -5,10 +5,10 @@ import java.util.Vector;
 import javax.swing.JTable;
 
 import cmsc125.mp1.constants.ColorConstants;
-import cmsc125.mp1.controller.Main;
 import cmsc125.mp1.model.Process;
 import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.model.ResourcesTableModel;
+import cmsc125.mp1.view.GanttChartStage;
 
 public class RRManager extends Thread {
 
@@ -19,24 +19,28 @@ public class RRManager extends Thread {
 	private int[] arrivalTimes;
 	private int[] priorityNumbers;
 	private Vector<Process> processesVector;
+	private ProcessesQueue processesQueue;
 	private ProcessesQueue readyQueue;
 	private int quantum;
 	private Bankers bankers;
+	private GanttChartStage ganttChart;
 
 	public RRManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable,
-			String quantumFieldText) {
+			String quantumFieldText, GanttChartStage ganttChart) {
 		this.allocatedTable = allocatedTable;
 		this.maximumTable = maximumTable;
 		this.availableTable = availableTable;
 		this.timeTable = timeTable;
+		this.ganttChart = ganttChart;
 		String quantumString = quantumFieldText;
 		quantum = ((quantumString.isEmpty()) ? (1) : (Integer.parseInt(quantumString)));
 	}
 
 	public void startSimulation() {
 		initProcessesInVector();
-		sortProcessesToReadyQueue();
-
+		sortProcessesToProcessesQueue();
+		readyQueue = new ProcessesQueue();
+		
 		start();
 	}
 
@@ -46,7 +50,7 @@ public class RRManager extends Thread {
 		priorityNumbers = new int[timeData.length];
 		for (int i = 0; i < timeData.length; i++) {
 			arrivalTimes[i] = Integer.parseInt(timeData[i][0]);
-			arrivalTimes[i] = Integer.parseInt(timeData[i][1]);
+			priorityNumbers[i] = Integer.parseInt(timeData[i][1]);
 		}
 	}
 
@@ -58,60 +62,96 @@ public class RRManager extends Thread {
 		return priorityNumbers;
 	}
 
-	@Override
 	public void run() {
 		bankers = new Bankers(allocatedTable, maximumTable, availableTable, getArrivalTimes(), getPriorityNumbers());
-		long increment = 200;// 0;
 		Process currentProcess = null;
 		int currentBurstTime = 0;
 		int t = 0;
 
-		while (true) {
-			System.out.println("At time " + t);
-			if (readyQueue.isEmpty() && currentProcess == null) {
-				break;
-			} else if (currentProcess == null && readyQueue.peek().getArrivalTime() <= t) {
-				currentProcess = readyQueue.dequeue();
-				currentProcess.decBurstTime();
-				currentBurstTime++;
-
-				Main.ganttVisual.updateGantt(t, currentProcess.getName());
-
-				System.out.println(currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
-			} else if (currentProcess != null) {
-				currentProcess.decBurstTime();// currentBurstTime++;
-				currentBurstTime++;
-
-				Main.ganttVisual.updateGantt(t, currentProcess.getName());
-
-				System.out.println(currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
+		if (bankers.isSafeState()) {
+			while (true) {
+				System.out.println("At time " + t);
+				bankers.updateJobQueue(t, processesQueue);
+				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
+				readyQueue = bankers.requestResources(t, readyQueue);
+				ganttChart.displayUpdatedReadyQueue(readyQueue);
+				
+				// If ready queue is empty and there is no current process running
+				if (processesQueue.isEmpty() && bankers.hasAllProcessesInJobQueueAllocated() && readyQueue.isEmpty() && currentProcess == null) {
+					System.out.println("Ready Queue is empty!");
+					break;
+				} else if (!readyQueue.isEmpty() && currentProcess == null && readyQueue.peek().getArrivalTime() <= t) {
+					// there is a process waiting in ready queue available for execution and there
+					// is no current process running
+					
+					currentProcess = readyQueue.dequeue();
+					currentProcess.decBurstTime();
+					currentBurstTime++;
+	
+					ganttChart.updateGantt(t, currentProcess.getName());
+	
+					System.out.println(currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
+				} else if (currentProcess != null) {
+					// there is still a current process executing
+					
+					currentProcess.decBurstTime();// currentBurstTime++;
+					currentBurstTime++;
+	
+					ganttChart.updateGantt(t, currentProcess.getName());
+	
+					System.out.println(currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
+				}
+	
+				if (currentProcess != null && currentBurstTime == quantum && currentProcess.getBurstTime() != 0) {
+					bankers.releaseResourcesForProcess(currentProcess);
+					bankers.returnProcessToJobQueue(currentProcess);
+					currentProcess = null;
+					currentBurstTime = 0;
+				} else if (currentProcess != null && currentProcess.getBurstTime() == 0) {
+					currentProcess.setCompletionTime(t + 1);
+					currentProcess.setTurnaroundTime(currentProcess.getCompletionTime() - currentProcess.getArrivalTime());
+					currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
+					bankers.releaseResourcesForProcess(currentProcess);
+					currentBurstTime = 0;
+					currentProcess = null;
+				}
+	
+				try {
+					this.sleep(AlgoSimulator.visualizationSpeed); //delay
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+	
+				t++;
 			}
-
-			if (null != currentProcess && currentBurstTime == quantum && currentProcess.getBurstTime() != 0) {
-				readyQueue.enqueue(currentProcess);
-				currentProcess = null;
-				currentBurstTime = 0;
-			} else if (null != currentProcess && currentProcess.getBurstTime() == 0) {
-				currentBurstTime = 0;
-				currentProcess = null;
+			System.out.println("Done executing RR!");
+			
+			bankers.setAvgCompletionTime(0.0);
+			bankers.setAvgTurnaroundTime(0.0);
+			bankers.setAvgWaitingTime(0.0);
+			for (int i = 0; i < processesVector.size(); i++) {
+				Process process = processesVector.get(i);
+				System.out.println(process.getName() + " CT=" + process.getCompletionTime() + ", TAT=" + process.getTurnaroundTime() + ", WT=" + process.getWaitingTime());
+				bankers.setAvgCompletionTime(bankers.getAvgCompletionTime() + ((double) process.getCompletionTime()));
+				bankers.setAvgTurnaroundTime(bankers.getAvgTurnaroundTime() + ((double) process.getTurnaroundTime()));
+				bankers.setAvgWaitingTime(bankers.getAvgWaitingTime() + ((double) process.getWaitingTime()));
 			}
-
-			try {
-				this.sleep(AlgoSimulator.visualizationSpeed);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			t++;
+			
+			bankers.setAvgCompletionTime((bankers.getAvgCompletionTime()) / ((double) processesVector.size()));
+			bankers.setAvgTurnaroundTime(bankers.getAvgTurnaroundTime() / ((double) processesVector.size()));
+			bankers.setAvgWaitingTime(bankers.getAvgWaitingTime() / ((double) processesVector.size()));
+			
+			System.out.println("Avg CT = " + bankers.getAvgCompletionTime() + ", Avg TAT = " + bankers.getAvgTurnaroundTime() + ", Avg WT = " + bankers.getAvgWaitingTime());
+		} else {
+			System.exit(0);
 		}
-		System.out.println("Done executing RR!");
 	}
 
-	public void sortProcessesToReadyQueue() {
+	public void sortProcessesToProcessesQueue() {
 		sortProcessesVector();
-		readyQueue = new ProcessesQueue();
+		processesQueue = new ProcessesQueue();
 		for (int i = 0; i < processesVector.size(); i++) {
-			readyQueue.enqueue(processesVector.get(i));
+			processesQueue.enqueue(processesVector.get(i));
 		}
 	}
 
@@ -131,11 +171,13 @@ public class RRManager extends Thread {
 	public void initProcessesInVector() {
 		processesVector = new Vector<Process>();
 		String[][] resourcesData = ((ResourcesTableModel) allocatedTable.getModel()).getData();
+		String[][] burstData = ((ResourcesTableModel) maximumTable.getModel()).getData();
 		String[][] timeData = ((ResourcesTableModel) timeTable.getModel()).getData();
 
-		for (int i = 0; i < timeData.length; i++) {
+		for (int i = 0; i < timeData.length; i++) {		
+			resourcesData[i][0] = burstData[i][0];
 			processesVector.add(new Process(Integer.parseInt(timeData[i][0]), Integer.parseInt(timeData[i][1]),
-					convertToIntArray(resourcesData[i]), ("P" + (i + 1)), ColorConstants.getColor(i)));
+					convertToIntArray(resourcesData[i]), ("P" + (i)), ColorConstants.getColor(i)));
 		}
 	}
 
