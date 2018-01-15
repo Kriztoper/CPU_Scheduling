@@ -283,7 +283,7 @@ public class InputTablePanel extends JPanel {
 		Random random = new Random();
 		for (int i = 0; i < rowCount; i++) {
 			for (int j = 0; j < colCount; j++) {
-				diskTable.getModel().setValueAt(Integer.toString(random.nextInt(1000)), i, j);
+				diskTable.getModel().setValueAt(Integer.toString(random.nextInt(100)), i, j);
 			}
 		}
 	}

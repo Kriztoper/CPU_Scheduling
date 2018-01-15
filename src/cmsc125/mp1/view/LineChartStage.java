@@ -23,7 +23,7 @@ public class LineChartStage extends Stage {
         yAxis = new NumberAxis();
 
         this.setTitle("Disk Access");
-        xAxis.setLabel("Access Time");
+        xAxis.setLabel("Time Accessed");
         yAxis.setLabel("Cylinder");
 
         LineChart lineChart = new LineChart(xAxis, yAxis);
@@ -37,7 +37,7 @@ public class LineChartStage extends Stage {
 		}
 
         VBox vbox = new VBox(lineChart);    	
-    	Scene scene  = new Scene(vbox,ScreenConstants.WIDTH, ScreenConstants.HEIGHT-320);
+    	Scene scene  = new Scene(vbox);
         scene.setFill(Color.WHITESMOKE);
         this.setScene(scene);
         this.show();
