@@ -2,16 +2,30 @@ package cmsc125.mp1.view;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
 import java.awt.image.ColorModel;
+import java.util.EventObject;
 import java.util.Random;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.text.TableView.TableRow;
 
@@ -70,6 +84,11 @@ public class InputTablePanel extends JPanel {
 		allocatedTable.setRowSelectionAllowed(true);
 		allocatedTable.setColumnSelectionAllowed(true);
 		allocatedTable.setCellSelectionEnabled(true);
+		TableColumnModel allocTCM = allocatedTable.getColumnModel();	
+		for (int i = 0; i < 10; i++) {
+			TableColumn allocTC = allocTCM.getColumn(i);
+			allocTC.setCellEditor(new SpinnerEditor());
+		}
 		
 		// maximum table
 		String[][] maximumObjects = new String[20][10];
@@ -94,7 +113,12 @@ public class InputTablePanel extends JPanel {
 		maximumTable.setRowSelectionAllowed(true);
 		maximumTable.setColumnSelectionAllowed(true);
 		maximumTable.setCellSelectionEnabled(true);
-
+		TableColumnModel maxTCM = maximumTable.getColumnModel();	
+		for (int i = 0; i < 10; i++) {
+			TableColumn maxTC = maxTCM.getColumn(i);
+			maxTC.setCellEditor(new SpinnerEditor());
+		}
+		
 		
 		// available table
 		String[][] availableObjects = new String[1][10];
@@ -291,6 +315,11 @@ public class InputTablePanel extends JPanel {
 		((ResourcesTableModel) allocatedTable.getModel()).setColumnNames(newAllocatedColumns);
 
 		allocatedTable.setModel(new ResourcesTableModel(currentAllocatedModel.getColumnNames(), newAllocatedTableData));
+		TableColumnModel allocTCM = allocatedTable.getColumnModel();	
+		for (int i = 0; i < numColumns; i++) {
+			TableColumn allocTC = allocTCM.getColumn(i);
+			allocTC.setCellEditor(new SpinnerEditor());
+		}
 		
 
 		// maximum table
@@ -333,6 +362,11 @@ public class InputTablePanel extends JPanel {
 		});*/
 //		TableColumn tm = maximumTable.getColumnModel().getColumn(0);
 //		tm.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.GRAY));
+		TableColumnModel maxTCM = maximumTable.getColumnModel();	
+		for (int i = 0; i < numColumns; i++) {
+			TableColumn maxTC = maxTCM.getColumn(i);
+			maxTC.setCellEditor(new SpinnerEditor());
+		}
 		
 		
 		// available table
@@ -393,7 +427,12 @@ public class InputTablePanel extends JPanel {
 		}
 
 		allocatedTable.setModel(new ResourcesTableModel(currentAllocatedModel.getColumnNames(), newAllocatedTableData));
-
+		TableColumnModel allocTCM = allocatedTable.getColumnModel();	
+		for (int i = 0; i < newAllocatedTableData[0].length; i++) {
+			TableColumn allocTC = allocTCM.getColumn(i);
+			allocTC.setCellEditor(new SpinnerEditor());
+		}
+		
 		
 		// maximum table
 		ResourcesTableModel currentMaximumModel = ((ResourcesTableModel) maximumTable.getModel());
@@ -428,6 +467,11 @@ public class InputTablePanel extends JPanel {
 		});*/
 //		TableColumn tm = maximumTable.getColumnModel().getColumn(0);
 //		tm.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.GRAY));
+		TableColumnModel maxTCM = maximumTable.getColumnModel();	
+		for (int i = 0; i < newMaximumTableData[0].length; i++) {
+			TableColumn maxTC = maxTCM.getColumn(i);
+			maxTC.setCellEditor(new SpinnerEditor());
+		}
 		
 		
 		// available table
@@ -576,4 +620,91 @@ public class InputTablePanel extends JPanel {
 			return this;
 		}
 	}
+	
+	public static class SpinnerEditor extends DefaultCellEditor
+    {
+        JSpinner spinner;
+        JSpinner.DefaultEditor editor;
+        JTextField textField;
+        boolean valueSet;
+
+        // Initializes the spinner.
+        public SpinnerEditor() {
+            super(new JTextField());
+            SpinnerModel sm = new SpinnerNumberModel(0, 0, 9, 1);
+            spinner = new JSpinner(sm);
+            editor = ((JSpinner.DefaultEditor)spinner.getEditor());
+            textField = editor.getTextField();
+            textField.addFocusListener( new FocusListener() {
+                public void focusGained( FocusEvent fe ) {
+//                    System.err.println("Got focus");
+                    //textField.setSelectionStart(0);
+                    //textField.setSelectionEnd(1);
+                    SwingUtilities.invokeLater( new Runnable() {
+                        public void run() {
+                            if ( valueSet ) {
+                                textField.setCaretPosition(1);
+                            }
+                        }
+                    });
+                }
+                public void focusLost( FocusEvent fe ) {
+                }
+            });
+            textField.addActionListener( new ActionListener() {
+                public void actionPerformed( ActionEvent ae ) {
+                    stopCellEditing();
+                }
+            });
+        }
+
+        // Prepares the spinner component and returns it.
+        public Component getTableCellEditorComponent(
+            JTable table, Object value, boolean isSelected, int row, int column
+        ) {
+            if ( !valueSet ) {
+//            	System.out.println("value = "value+", value's class = "+value.getClass());
+                spinner.setValue(Integer.parseInt((String) value));
+            }
+            SwingUtilities.invokeLater( new Runnable() {
+                public void run() {
+                    textField.requestFocus();
+                }
+            });
+            return spinner;
+        }
+
+        public boolean isCellEditable( EventObject eo ) {
+//            System.err.println("isCellEditable");
+            if ( eo instanceof KeyEvent ) {
+                KeyEvent ke = (KeyEvent)eo;
+                System.err.println("key event: "+ke.getKeyChar());
+                textField.setText(String.valueOf(ke.getKeyChar()));
+                //textField.select(1,1);
+                //textField.setCaretPosition(1);
+                //textField.moveCaretPosition(1);
+                valueSet = true;
+            } else {
+                valueSet = false;
+            }
+            return true;
+        }
+
+        // Returns the spinners current value.
+        public Object getCellEditorValue() {
+            return spinner.getValue();
+        }
+
+        public boolean stopCellEditing() {
+//            System.err.println("Stopping edit");
+            try {
+                editor.commitEdit();
+                spinner.commitEdit();
+            } catch ( java.text.ParseException e ) {
+                JOptionPane.showMessageDialog(null,
+                    "Invalid value, discarding.");
+            }
+            return super.stopCellEditing();
+        }
+    }
 }
