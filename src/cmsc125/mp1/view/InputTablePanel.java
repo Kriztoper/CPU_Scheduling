@@ -53,6 +53,8 @@ public class InputTablePanel extends JPanel {
 
 		// Resources table
 		String[] columnResources = { "R0", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9" };
+
+		// allocated table
 		String[][] allocatedObjects = new String[20][10];
 		for (int i = 0; i < 20; i++) {
 			for (int j = 0; j < 10; j++) {
@@ -63,43 +65,46 @@ public class InputTablePanel extends JPanel {
 //				}
 			}
 		}
-		allocatedTable = new JTable(new ResourcesTableModel(columnResources, allocatedObjects) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return column != 0 ? true : false;
-			}
-		});
+		allocatedTable = new JTable(new ResourcesTableModel(columnResources, allocatedObjects));
 		allocatedTable.setBackground(Color.WHITE);
-		TableColumn tm = allocatedTable.getColumnModel().getColumn(0);
-		tm.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.GRAY));
-//		allocatedTable.setRowSelectionAllowed(true);
-//		allocatedTable.setColumnSelectionAllowed(true);
-//		allocatedTable.setCellSelectionEnabled(true);
-
+		allocatedTable.setRowSelectionAllowed(true);
+		allocatedTable.setColumnSelectionAllowed(true);
+		allocatedTable.setCellSelectionEnabled(true);
+		
+		// maximum table
 		String[][] maximumObjects = new String[20][10];
 		for (int i = 0; i < 20; i++) {
 			for (int j = 0; j < 10; j++) {
 				if (j == 0) {
-					maximumObjects[i][j] = "1";
+					maximumObjects[i][j] = "9";
 				} else {
 					maximumObjects[i][j] = "0";
 				}
 			}
 		}
-		maximumTable = new JTable(new ResourcesTableModel(columnResources, maximumObjects));
+		maximumTable = new JTable(new ResourcesTableModel(columnResources, maximumObjects));/* {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return column != 0 ? true : false;
+			}
+		});*/
 		maximumTable.setBackground(Color.WHITE);
+//		TableColumn tm = maximumTable.getColumnModel().getColumn(0);
+//		tm.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.GRAY));
 		maximumTable.setRowSelectionAllowed(true);
 		maximumTable.setColumnSelectionAllowed(true);
 		maximumTable.setCellSelectionEnabled(true);
 
+		
+		// available table
 		String[][] availableObjects = new String[1][10];
 		for (int i = 0; i < 1; i++) {
 			for (int j = 0; j < 10; j++) {
-				if (j == 0) {
-					availableObjects[i][j] = "1";
-				} else {
+//				if (j == 0) {
+//					availableObjects[i][j] = "1";
+//				} else {
 					availableObjects[i][j] = "0";
-				}
+//				}
 			}
 		}
 		availableTable = new JTable(new ResourcesTableModel(columnResources, availableObjects));
@@ -138,7 +143,7 @@ public class InputTablePanel extends JPanel {
 		
 		// resources table
 		allocatedTableLabel.setSize(150, 10);
-		allocatedTableLabel.setLocation(0, 0);
+		allocatedTableLabel.setLocation(50, 0);
 		add(allocatedTableLabel);
 		
 		String[] processHeader = { "P#" };
@@ -167,40 +172,41 @@ public class InputTablePanel extends JPanel {
 
 		// maximum allocated table
 		maximumTableLabel.setSize(150, 10);
-		maximumTableLabel.setLocation(300, 0);
+		maximumTableLabel.setLocation(350, 0);
 		add(maximumTableLabel);
 		JScrollPane maximumTablePane = new JScrollPane(maximumTable);
 		maximumTablePane.setSize(300, 342);
-		maximumTablePane.setLocation(300, 10);
+		maximumTablePane.setLocation(350, 10);
 		add(maximumTablePane);
 
 		//available allocated table
 		availableTableLabel.setSize(150, 10);
-		availableTableLabel.setLocation(600, 0);
+		availableTableLabel.setLocation(650, 0);
 		add(availableTableLabel);
 		JScrollPane availableTablePane = new JScrollPane(availableTable);
 		availableTablePane.setSize(300, 342);
-		availableTablePane.setLocation(600, 10);
+		availableTablePane.setLocation(650, 10);
 		add(availableTablePane);
 
 		// table for arrival time, priority
 		JScrollPane timeTablePane = new JScrollPane(timeTable);
 		timeTablePane.setSize(105, 342);
-		timeTablePane.setLocation(905, 10);
+		timeTablePane.setLocation(955, 10);
 		add(timeTablePane);
 
 	}
 
 	public void randAllocatedTable() {
+		TableModel maximumTableModel = maximumTable.getModel();
 		int rowCount = allocatedTable.getModel().getRowCount();
 		int colCount = allocatedTable.getModel().getColumnCount();
 		Random random = new Random();
 		for (int i = 0; i < rowCount; i++) {
-			for (int j = 1; j < colCount; j++) {
+			for (int j = 0; j < colCount; j++) {
 //				if (j == 0) {
 //					allocatedTable.getModel().setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
 //				} else {
-					allocatedTable.getModel().setValueAt(Integer.toString(random.nextInt(10)), i, j);
+					allocatedTable.getModel().setValueAt(Integer.toString(random.nextInt(Integer.parseInt((String) maximumTableModel.getValueAt(i, j)) + 1)), i, j);
 //				}
 			}
 		}
@@ -227,11 +233,11 @@ public class InputTablePanel extends JPanel {
 		Random random = new Random();
 		for (int i = 0; i < rowCount; i++) {
 			for (int j = 0; j < colCount; j++) {
-				if (j == 0) {
-					availableTable.getModel().setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
-				} else {
+//				if (j == 0) {
+//					availableTable.getModel().setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
+//				} else {
 					availableTable.getModel().setValueAt(Integer.toString(random.nextInt(10)), i, j);
-				}
+//				}
 			}
 		}
 	}
@@ -242,11 +248,11 @@ public class InputTablePanel extends JPanel {
 		Random random = new Random();
 		for (int i = 0; i < rowCount; i++) {
 			for (int j = 0; j < colCount; j++) {
-				if (j == 0) {
-					timeTable.getModel().setValueAt(Integer.toString(random.nextInt(rowCount) + 1), i, j);
-				} else {
+//				if (j == 0) {
+//					timeTable.getModel().setValueAt(Integer.toString(random.nextInt(rowCount) + 1), i, j);
+//				} else {
 					timeTable.getModel().setValueAt(Integer.toString(random.nextInt(rowCount)), i, j);
-				}
+//				}
 			}
 		}
 	}
@@ -258,7 +264,7 @@ public class InputTablePanel extends JPanel {
 		String[][] newAllocatedTableData = new String[currentAllocatedTableData.length][numColumns];
 
 		for (int i = 0; i < currentAllocatedTableData.length; i++) {
-			for (int j = 1; j < currentAllocatedTableData[i].length; j++) {
+			for (int j = 0; j < currentAllocatedTableData[i].length; j++) {
 				if (currentAllocatedTableData[i][j] != null && j < numColumns) {
 					newAllocatedTableData[i][j] = currentAllocatedTableData[i][j];
 				}
@@ -268,7 +274,11 @@ public class InputTablePanel extends JPanel {
 		for (int i = 0; i < newAllocatedTableData.length; i++) {
 			for (int j = 0; j < newAllocatedTableData[i].length; j++) {
 				if (newAllocatedTableData[i][j] == null) {
-					newAllocatedTableData[i][j] = "0";
+//					if (j == 0) {
+//						newAllocatedTableData[i][j] = "1";								
+//					} else {
+						newAllocatedTableData[i][j] = "0";						
+//					}
 				}
 			}
 		}
@@ -280,14 +290,7 @@ public class InputTablePanel extends JPanel {
 
 		((ResourcesTableModel) allocatedTable.getModel()).setColumnNames(newAllocatedColumns);
 
-		allocatedTable.setModel(new ResourcesTableModel(currentAllocatedModel.getColumnNames(), newAllocatedTableData) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return column != 0 ? true : false;
-			}
-		});
-		TableColumn tm = allocatedTable.getColumnModel().getColumn(0);
-		tm.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.GRAY));
+		allocatedTable.setModel(new ResourcesTableModel(currentAllocatedModel.getColumnNames(), newAllocatedTableData));
 		
 
 		// maximum table
@@ -296,7 +299,7 @@ public class InputTablePanel extends JPanel {
 		String[][] newMaximumTableData = new String[currentMaximumTableData.length][numColumns];
 
 		for (int i = 0; i < currentMaximumTableData.length; i++) {
-			for (int j = 0; j < currentMaximumTableData[i].length; j++) {
+			for (int j = 1; j < currentMaximumTableData[i].length; j++) {
 				if (currentMaximumTableData[i][j] != null && j < numColumns) {
 					newMaximumTableData[i][j] = currentMaximumTableData[i][j];
 				}
@@ -306,7 +309,11 @@ public class InputTablePanel extends JPanel {
 		for (int i = 0; i < newMaximumTableData.length; i++) {
 			for (int j = 0; j < newMaximumTableData[i].length; j++) {
 				if (newMaximumTableData[i][j] == null) {
-					newMaximumTableData[i][j] = "0";
+					if (j == 0) {
+						newMaximumTableData[i][j] = "9";
+					} else {
+						newMaximumTableData[i][j] = "0";
+					}
 				}
 			}
 		}
@@ -318,8 +325,15 @@ public class InputTablePanel extends JPanel {
 
 		((ResourcesTableModel) maximumTable.getModel()).setColumnNames(newMaximumColumns);
 
-		maximumTable.setModel(new ResourcesTableModel(currentMaximumModel.getColumnNames(), newMaximumTableData));
-
+		maximumTable.setModel(new ResourcesTableModel(currentMaximumModel.getColumnNames(), newMaximumTableData));/* {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return column != 0 ? true : false;
+			}
+		});*/
+//		TableColumn tm = maximumTable.getColumnModel().getColumn(0);
+//		tm.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.GRAY));
+		
 		
 		// available table
 		ResourcesTableModel currentAvailableModel = ((ResourcesTableModel) availableTable.getModel());
@@ -359,7 +373,7 @@ public class InputTablePanel extends JPanel {
 		String[][] newAllocatedTableData = new String[numRows][currentAllocatedTableData[0].length];
 
 		for (int i = 0; i < currentAllocatedTableData.length; i++) {
-			for (int j = 1; j < currentAllocatedTableData[i].length; j++) {
+			for (int j = 0; j < currentAllocatedTableData[i].length; j++) {
 				if (currentAllocatedTableData[i][j] != null && i < numRows) {
 					newAllocatedTableData[i][j] = currentAllocatedTableData[i][j];
 				}
@@ -369,19 +383,16 @@ public class InputTablePanel extends JPanel {
 		for (int i = 0; i < newAllocatedTableData.length; i++) {
 			for (int j = 0; j < newAllocatedTableData[i].length; j++) {
 				if (newAllocatedTableData[i][j] == null) {
-					newAllocatedTableData[i][j] = "0";
+//					if (j == 0) {
+//						newAllocatedTableData[i][j] = "1";
+//					} else {
+						newAllocatedTableData[i][j] = "0";
+//					}
 				}
 			}
 		}
 
-		allocatedTable.setModel(new ResourcesTableModel(currentAllocatedModel.getColumnNames(), newAllocatedTableData) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return column != 0 ? true : false;
-			}
-		});
-		TableColumn tm = allocatedTable.getColumnModel().getColumn(0);
-		tm.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.GRAY));
+		allocatedTable.setModel(new ResourcesTableModel(currentAllocatedModel.getColumnNames(), newAllocatedTableData));
 
 		
 		// maximum table
@@ -390,7 +401,7 @@ public class InputTablePanel extends JPanel {
 		String[][] newMaximumTableData = new String[numRows][currentMaximumTableData[0].length];
 
 		for (int i = 0; i < currentMaximumTableData.length; i++) {
-			for (int j = 0; j < currentMaximumTableData[i].length; j++) {
+			for (int j = 1; j < currentMaximumTableData[i].length; j++) {
 				if (currentMaximumTableData[i][j] != null && i < numRows) {
 					newMaximumTableData[i][j] = currentMaximumTableData[i][j];
 				}
@@ -400,13 +411,24 @@ public class InputTablePanel extends JPanel {
 		for (int i = 0; i < newMaximumTableData.length; i++) {
 			for (int j = 0; j < newMaximumTableData[i].length; j++) {
 				if (newMaximumTableData[i][j] == null) {
-					newMaximumTableData[i][j] = "0";
+					if (j == 0) {
+						newMaximumTableData[i][j] = "9";
+					} else {
+						newMaximumTableData[i][j] = "0";
+					}
 				}
 			}
 		}
 
-		maximumTable.setModel(new ResourcesTableModel(currentMaximumModel.getColumnNames(), newMaximumTableData));
-
+		maximumTable.setModel(new ResourcesTableModel(currentMaximumModel.getColumnNames(), newMaximumTableData));/* {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return column != 0 ? true : false;
+			}
+		});*/
+//		TableColumn tm = maximumTable.getColumnModel().getColumn(0);
+//		tm.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.GRAY));
+		
 		
 		// available table
 		/*ResourcesTableModel currentAvailableModel = ((ResourcesTableModel) availableTable.getModel());

@@ -280,7 +280,7 @@ public class Bankers {
 						currentAvailableTableData[i] -= neededData[i];
 						allocatedTableData[index][i] += neededData[i];
 					}
-					jobQueue.enqueue(new Process(arrivalTimes[index], priorityNum[index], allocatedTableData[index], ("P" + processCount), ColorConstants.getColor(processCount)));
+					jobQueue.enqueue(new Process(arrivalTimes[index], priorityNum[index], allocatedTableData[index][0], allocatedTableData[index], ("P" + processCount), ColorConstants.getColor(processCount)));
 				}
 			}
 			

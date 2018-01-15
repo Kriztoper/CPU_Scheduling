@@ -185,12 +185,11 @@ public class RRManager extends Thread {
 	public void initProcessesInVector() {
 		processesVector = new Vector<Process>();
 		String[][] resourcesData = ((ResourcesTableModel) allocatedTable.getModel()).getData();
-		String[][] burstData = ((ResourcesTableModel) maximumTable.getModel()).getData();
+		String[][] maximumTableData = ((ResourcesTableModel) maximumTable.getModel()).getData();
 		String[][] timeData = ((ResourcesTableModel) timeTable.getModel()).getData();
 
-		for (int i = 0; i < timeData.length; i++) {		
-			resourcesData[i][0] = burstData[i][0];
-			processesVector.add(new Process(Integer.parseInt(timeData[i][0]), Integer.parseInt(timeData[i][1]),
+		for (int i = 0; i < timeData.length; i++) {
+			processesVector.add(new Process(Integer.parseInt(timeData[i][0]), Integer.parseInt(timeData[i][1]), Integer.parseInt(maximumTableData[i][0]),
 					convertToIntArray(resourcesData[i]), ("P" + (i)), ColorConstants.getColor(i)));
 		}
 	}
