@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.paint.*?>
@@ -7,6 +9,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.collections.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
@@ -19,7 +22,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="376.0" prefWidth="423.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cmsc125.mp1.controller.Controller">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="361.0" prefWidth="423.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cmsc125.mp1.controller.Controller">
    <children>
       <Pane layoutX="11.0" layoutY="30.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
          <children>
@@ -34,17 +37,17 @@
       <Pane layoutX="11.0" layoutY="107.0" prefHeight="91.0" prefWidth="400.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="85.0">
          <children>
             <Button fx:id="randResBtn" layoutX="196.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#randResourcesTable" text="Randomize" />
-            <Button fx:id="randProcessInfoBtn" layoutX="196.0" layoutY="31.0" mnemonicParsing="false" onMouseClicked="#randProcessInfo" text="Randomize" />
+            <Button fx:id="randProcessInfoBtn" layoutX="196.0" layoutY="60.0" mnemonicParsing="false" onMouseClicked="#randProcessInfo" text="Randomize" />
             <Button fx:id="showResBtn" layoutX="280.0" layoutY="1.0" mnemonicParsing="false" onMouseClicked="#showResourcesTable" prefHeight="83.0" prefWidth="114.0" text="Show and Edit" />
-            <Label focusTraversable="false" layoutY="35.0" prefHeight="17.0" prefWidth="169.0" text="Process Arrival Time &amp; Priority:" />
+            <Label focusTraversable="false" layoutY="64.0" prefHeight="17.0" prefWidth="169.0" text="Process Arrival Time &amp; Priority:" />
             <Label focusTraversable="false" layoutY="5.0" prefHeight="18.0" prefWidth="211.0" text="Resources held by each Process:" />
-            <Label focusTraversable="false" layoutY="64.0" prefHeight="17.0" prefWidth="169.0" text="Disk Cylinder Positions:" />
-            <Button fx:id="randDiskBtn" layoutX="196.0" layoutY="60.0" mnemonicParsing="false" onMouseClicked="#randDiskTable" text="Randomize" />
+            <Label focusTraversable="false" layoutY="35.0" prefHeight="17.0" prefWidth="169.0" text="Disk Cylinder Positions:" />
+            <Button fx:id="randDiskBtn" layoutX="196.0" layoutY="31.0" mnemonicParsing="false" onMouseClicked="#randDiskTable" text="Randomize" />
          </children>
       </Pane>
-      <Pane layoutX="15.0" layoutY="176.0" prefHeight="59.0" prefWidth="400.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="176.0">
+      <Pane layoutX="15.0" layoutY="177.0" prefHeight="59.0" prefWidth="400.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="177.0">
          <children>
-            <Label focusTraversable="false" prefHeight="45.0" prefWidth="97.0" text="Select CPU Sched Algorithm:" wrapText="true" />
+            <Label focusTraversable="false" layoutY="7.0" prefHeight="45.0" prefWidth="97.0" text="Select CPU Sched Algorithm:" wrapText="true" />
             <Button fx:id="randSelectAlgoBtn" layoutX="104.0" layoutY="3.0" mnemonicParsing="false" onMouseClicked="#randCPUSchedAlgos" text="Randomize" />
             <CheckBox fx:id="fcfsCB" layoutX="195.0" layoutY="6.0" mnemonicParsing="false" text="FCFS" />
             <CheckBox fx:id="srtfCB" layoutX="262.0" layoutY="6.0" mnemonicParsing="false" text="SRTF" />
@@ -55,13 +58,31 @@
             <Button fx:id="allSelectAlgoBtn" layoutX="104.0" layoutY="31.0" mnemonicParsing="false" onMouseClicked="#selectAllCPUSchedAlgos" prefHeight="25.0" prefWidth="75.0" text="All" />
          </children>
       </Pane>
-      <Pane layoutX="15.0" layoutY="307.0" prefHeight="55.0" prefWidth="179.0" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="307.0">
+      <Pane layoutX="12.0" layoutY="236.0" prefHeight="50.0" prefWidth="400.0">
+         <children>
+            <Label focusTraversable="false" layoutY="5.0" prefHeight="39.0" prefWidth="114.0" text="Select Disk Sched Algorithm:" wrapText="true" />
+            <ComboBox fx:id="diskCombo" layoutX="199.0" layoutY="12.0" prefHeight="25.0" prefWidth="202.0" promptText="Choose Algorithm">
+		      <items>
+		        <FXCollections fx:factory="observableArrayList">
+		          <String fx:value="FCFS" />
+		          <String fx:value="SSTF" />
+		          <String fx:value="LOOK" />
+		          <String fx:value="CLOOK" />
+		          <String fx:value="SCAN" />
+		          <String fx:value="CSCAN" />
+		        </FXCollections>
+		      </items>
+		    </ComboBox>
+            <Button fx:id="randSelectDiskBtn" layoutX="107.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#randDiskSchedAlgos" text="Randomize" />
+         </children>
+      </Pane>
+      <Pane layoutX="13.0" layoutY="288.0" prefHeight="55.0" prefWidth="393.0">
          <children>
             <TextField fx:id="quantumField" layoutX="113.0" onKeyReleased="#setQuantumValue" prefHeight="25.0" prefWidth="66.0" text="5" />
             <TextField fx:id="visualizationSpeed" layoutX="113.0" layoutY="30.0" onKeyReleased="#updateVisualizationSpeed" prefHeight="25.0" prefWidth="66.0" promptText="seconds" text="1000" />
             <Label focusTraversable="false" layoutY="6.0" prefHeight="17.0" prefWidth="74.0" text="RR Quantum:" />
             <Label focusTraversable="false" layoutY="34.0" prefHeight="17.0" prefWidth="108.0" text="Visuals Speed (ms):" />
-            <Button fx:id="startSimulationBtn" layoutX="200.0" mnemonicParsing="false" onMouseClicked="#startSimulation" prefHeight="55.0" prefWidth="195.0" text="Start Simulation">
+            <Button fx:id="startSimulationBtn" layoutX="198.0" mnemonicParsing="false" onMouseClicked="#startSimulation" prefHeight="55.0" prefWidth="202.0" text="Start Simulation">
                <effect>
                   <Lighting bumpInput="$null" diffuseConstant="1.91" specularConstant="2.0" specularExponent="40.0" surfaceScale="0.0">
                      <light>
@@ -70,19 +91,6 @@
                   </Lighting>
                </effect>
             </Button>
-         </children>
-      </Pane>
-      <Pane layoutX="15.0" layoutY="242.0" prefHeight="59.0" prefWidth="400.0">
-         <children>
-            <Label focusTraversable="false" prefHeight="45.0" prefWidth="97.0" text="Select Disk Sched Algorithm:" wrapText="true" />
-            <Button fx:id="randSelectDiskAlgoBtn" layoutX="104.0" layoutY="3.0" mnemonicParsing="false" onMouseClicked="#randDiskSchedAlgos" text="Randomize" />
-            <CheckBox fx:id="fcfsDiskCB" layoutX="195.0" layoutY="6.0" mnemonicParsing="false" text="FCFS" />
-            <CheckBox fx:id="lookDiskCB" layoutX="262.0" layoutY="6.0" mnemonicParsing="false" text="LOOK" />
-            <CheckBox fx:id="scanDiskCB" layoutX="338.0" layoutY="6.0" mnemonicParsing="false" text="SCAN" />
-            <CheckBox fx:id="sstfDiskCB" layoutX="195.0" layoutY="34.0" mnemonicParsing="false" text="SSTF" />
-            <CheckBox fx:id="clookDiskCB" layoutX="262.0" layoutY="34.0" mnemonicParsing="false" text="CLOOK" />
-            <CheckBox fx:id="cscanDiskCB" layoutX="338.0" layoutY="34.0" mnemonicParsing="false" text="CSCAN" />
-            <Button fx:id="allSelectDiskAlgoBtn" layoutX="104.0" layoutY="31.0" mnemonicParsing="false" onMouseClicked="#selectAllDiskSchedAlgos" prefHeight="25.0" prefWidth="75.0" text="All" />
          </children>
       </Pane>
    </children>
