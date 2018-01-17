@@ -257,11 +257,9 @@ public class InputTablePanel extends JPanel {
 		Random random = new Random();
 		for (int i = 0; i < rowCount; i++) {
 			for (int j = 0; j < colCount; j++) {
-//				if (j == 0) {
-//					availableTable.getModel().setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
-//				} else {
-					availableTable.getModel().setValueAt(Integer.toString(random.nextInt(10)), i, j);
-//				}
+				int maxResource = Integer.parseInt(((ResourcesTableModel) maximumTable.getModel()).getData()[i][j]);
+				int availableResource = Integer.parseInt(((ResourcesTableModel) allocatedTable.getModel()).getData()[i][j]);
+				availableTable.getModel().setValueAt(Integer.toString(random.nextInt(10) + maxResource-availableResource), i, j);
 			}
 		}
 	}
