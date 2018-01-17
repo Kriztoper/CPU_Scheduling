@@ -32,7 +32,7 @@ public class GanttChartStage extends Stage {
         yAxis = new CategoryAxis();
         chart = new GanttChart<Number,String>(xAxis,yAxis);
         chart.setTitle("FCFS Visualization");
-        chart.setBlockHeight(15);
+        chart.setBlockHeight(30);
         chart.getStylesheets().add(getClass().getResource("ganttchart.css").toExternalForm());
         
         xAxis.setLabel("Time");
@@ -47,11 +47,16 @@ public class GanttChartStage extends Stage {
     	procNames = new ArrayList<String>();
     	procSeries = new ArrayList<XYChart.Series>();
     	
-        for (int i=1; i<=numProcess; i++){
-			procNames.add("P"+Integer.toString(i-1));
-			procSeries.add(new XYChart.Series<>());
-	        chart.getData().add(procSeries.get(i-1));
-		}
+    	
+    	procNames.add("Processes");
+    	procSeries.add(new XYChart.Series<>());
+    	chart.getData().add(procSeries.get(0));
+    	
+//        for (int i=1; i<=numProcess; i++){
+//			procNames.add("P"+Integer.toString(i-1));
+//			procSeries.add(new XYChart.Series<>());
+//	        chart.getData().add(procSeries.get(i-1));
+//		}
     	yAxis.setCategories(FXCollections.<String>observableArrayList(procNames));
 
         StackPane rootPane = new StackPane();
@@ -68,7 +73,7 @@ public class GanttChartStage extends Stage {
 	public void updateGantt(int startTime, String name){
 		int processNumber = Integer.parseInt(name.substring(1));
 		System.out.println("processNumber = " + processNumber + " name = " + name);
-		Platform.runLater(() -> procSeries.get(processNumber).getData().add(new XYChart.Data(startTime, name, new ExtraData( 1, name))));// Update on JavaFX Application Thread
+		Platform.runLater(() -> procSeries.get(0).getData().add(new XYChart.Data(startTime, "Processes", new ExtraData( 1, name))));// Update on JavaFX Application Thread
 	}
 	
 	public void displayUpdatedJobQueue(ProcessesQueue jobQueue) {
