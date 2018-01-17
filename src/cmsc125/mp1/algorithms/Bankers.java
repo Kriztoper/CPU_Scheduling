@@ -1,6 +1,7 @@
 package cmsc125.mp1.algorithms;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.JTable;
 
@@ -29,6 +30,7 @@ public class Bankers {
 	private double avgCompletionTime;
 	private double avgTurnaroundTime;
 	private double avgWaitingTime;
+	private boolean penaltyForDeadlock;
 	
 	public Bankers(JTable allocatedTable, JTable maximumTable,
 			JTable availableTable, int[] arrivalTimes, 
@@ -44,6 +46,7 @@ public class Bankers {
 		processCount = 0;
 		currentJobQueueIndex = 0;
 		currentJobQueueSize = 0;
+		penaltyForDeadlock = false;
 	}
 
 	public void initCurrentAvailableTableData() {
@@ -158,7 +161,8 @@ public class Bankers {
 		printAllProcessesInQueue(jobQueue);
 		System.out.print("Processes Queue: ");
 		printAllProcessesInQueue(processesQueue);
-		
+		System.out.print("Available Resources: ");
+		printAvailableResources();
 		
 		return processesQueue;
 	}
@@ -170,24 +174,33 @@ public class Bankers {
 		System.out.println();
 	}
 	
-	public void releaseResourcesForProcess(Process currentProcess) {
-		System.out.print("Releasing resources = [");
-		int processIndex = currentProcess.getProcessNumber();
+	private void printAvailableResources() {
+		System.out.print("Current Available Data = ");
 		for (int i = 0; i < currentAvailableTableData.length; i++) {
-			System.out.println(", n[" + i + "] = " + maximumTableData[processIndex][i] + " ");
+			System.out.print(currentAvailableTableData[i] + ", ");
+		}
+		System.out.println();
+	}
+	
+	public void releaseResourcesForProcess(Process currentProcess) {
+		System.out.println("Releasing resources = [");
+		int processIndex = currentProcess.getProcessNumber();
+		for (int i = 0; i < numResources; i++) {
+			System.out.println("n[" + i + "] = " + needTableData[processIndex][i] + " -> " + currentAvailableTableData[i]);
 			currentAvailableTableData[i] += maximumTableData[processIndex][i];
 			allocatedTableData[processIndex][i] = 0;
-			System.out.print(currentAvailableTableData[i] + ", ");
+//			System.out.print(currentAvailableTableData[i] + ", ");
 		}
 		System.out.println("]\n");
 	}
 	
 	public void returnProcessToJobQueue(Process process) {
-		for (int i = 0; i < jobQueue.getSize(); i++) {
-			if (process.getName().equals(jobQueue.get(i).getName())) {
-				jobQueue.get(i).setAllocated(false);
-			}
-		}
+//		for (int i = 0; i < jobQueue.getSize(); i++) {
+//			if (process.getName().equals(jobQueue.get(i).getName())) {
+//				jobQueue.get(i).setAllocated(false);
+//			}
+//		}
+		process.setAllocated(false);
 	}
 	
 	public boolean hasAllProcessesInJobQueueAllocated() {
@@ -213,14 +226,15 @@ public class Bankers {
 //			if (jobQueue.get(currentJobQueueIndex).getArrivalTime() == t) {
 				boolean canAllocate = true;
 
-				//int processIndex = jobQueue.get(currentJobQueueIndex).getProcessNumber();
+				int processIndex = jobQueue.get(currentJobQueueIndex).getProcessNumber();
 				
 				if (!jobQueue.get(currentJobQueueIndex).isAllocated()) {					
-//					int[] neededData = new int[maximumTableData[currentJobQueueIndex].length];
-					for (int i = 0; i < maximumTableData[currentJobQueueIndex].length; i++) {
-						needTableData[currentJobQueueIndex][i] = maximumTableData[currentJobQueueIndex][i] - allocatedTableData[currentJobQueueIndex][i];
-						System.out.println("n[" + i + "] = " + needTableData[currentJobQueueIndex][i] + " a[" + i + "] = " + currentAvailableTableData[i]);
-						if (needTableData[currentJobQueueIndex][i] > currentAvailableTableData[i]) {
+					int[] neededData = new int[numResources];
+					for (int i = 0; i < numResources; i++) {
+						neededData[i] = maximumTableData[processIndex][i] - allocatedTableData[processIndex][i];
+						System.out.println("n[" + i + "] = " + neededData[i] + " a[" + i + "] = " + currentAvailableTableData[i]);
+						if (neededData[i] > currentAvailableTableData[i]) {
+							System.out.println("Can't allocate");
 							canAllocate = false;
 							break;
 						}
@@ -228,16 +242,19 @@ public class Bankers {
 					System.out.println();
 
 					if (canAllocate) {
-						for (int i = 0; i < currentAvailableTableData.length; i++) {
-							currentAvailableTableData[i] -= needTableData[currentJobQueueIndex][i];
+						for (int i = 0; i < numResources; i++) {
+							needTableData[processIndex][i] = maximumTableData[processIndex][i] - allocatedTableData[processIndex][i];
+							currentAvailableTableData[i] -= needTableData[processIndex][i];
+							allocatedTableData[processIndex][i] += needTableData[processIndex][i];
 						}
 						readyQueue.enqueue(jobQueue.get(currentJobQueueIndex));
 						jobQueue.get(currentJobQueueIndex).setAllocated(true);
+						penaltyForDeadlock = false;
 						
 						/* I will print all the necessary informations in this part */
 						/*******************************************/
 						System.out.print(jobQueue.get(currentJobQueueIndex).getName() + ", isAllocated = " + jobQueue.get(currentJobQueueIndex).isAllocated() + " currAvailable = [");
-						for (int i = 0; i < currentAvailableTableData.length; i++) {
+						for (int i = 0; i < numResources; i++) {
 							System.out.print(currentAvailableTableData[i] + ", ");
 						}
 						System.out.print("]\nJob Queue = ");
@@ -246,6 +263,15 @@ public class Bankers {
 						/*******************************************/
 					}
 				}
+				
+				// set penalty if last of job queue is not allocated then if it is encountered again as not allocated then it is in a deadlock
+//				if (currentJobQueueIndex == currentJobQueueSize - 1 && !hasAllProcessesInJobQueueAllocated() && penaltyForDeadlock) {
+//					System.err.println("Penalty 2: DEADLOCK!");
+//					System.exit(0);
+//				} else if (currentJobQueueIndex == currentJobQueueSize - 1 && !hasAllProcessesInJobQueueAllocated() && !penaltyForDeadlock) {
+//					System.err.println("Penalty 1");
+//					penaltyForDeadlock = true;
+//				}
 				
 //			}
 			
@@ -263,7 +289,7 @@ public class Bankers {
 		return readyQueue;
 	}
 	
-	public void allocateResource(int t) {
+	/*public void allocateResource(int t) {
 		while (index < arrivalTimes.length) {
 			if (arrivalTimes[index] == t) {
 				boolean canAllocate = true;
@@ -290,7 +316,7 @@ public class Bankers {
 			
 			index++;
 		}
-	}
+	}*/
 	
 	public ProcessesQueue getJobQueue() {
 		return jobQueue;
@@ -319,4 +345,40 @@ public class Bankers {
 	public void setAvgWaitingTime(double avgWaitingTime) {
 		this.avgWaitingTime = avgWaitingTime;
 	}
+	
+	public int[] getCurrentAvailableTableData() {
+		return currentAvailableTableData;
+	}
+	
+	public int[][] getAllocatedTableData() {
+		return allocatedTableData;
+	}
+
+//	public void displayStats(JTable statsTable, Vector<Process> processesVector) {
+//		ResourcesTableModel statsTableModel = (ResourcesTableModel) statsTable.getModel();
+//		String[][] statsTableData = statsTableModel.getData();
+//		
+//		setAvgCompletionTime(0.0);
+//		setAvgTurnaroundTime(0.0);
+//		setAvgWaitingTime(0.0);
+//		for (int i = 0; i < processesVector.size(); i++) {
+//			Process process = processesVector.get(i);
+//			
+//			statsTableData[i][0] = process.getCompletionTime() + "";
+//			statsTableData[i][1] = process.getTurnaroundTime() + "";
+//			statsTableData[i][2] = process.getWaitingTime() + "";
+//			statsTable.setModel(new ResourcesTableModel(statsTableModel.getColumnNames(), statsTableData));
+//			
+//			System.out.println(process.getName() + " CT=" + process.getCompletionTime() + ", TAT=" + process.getTurnaroundTime() + ", WT=" + process.getWaitingTime());
+//			setAvgCompletionTime(getAvgCompletionTime() + ((double) process.getCompletionTime()));
+//			setAvgTurnaroundTime(getAvgTurnaroundTime() + ((double) process.getTurnaroundTime()));
+//			setAvgWaitingTime(getAvgWaitingTime() + ((double) process.getWaitingTime()));
+//		}
+//		
+//		setAvgCompletionTime((getAvgCompletionTime()) / ((double) processesVector.size()));
+//		setAvgTurnaroundTime(getAvgTurnaroundTime() / ((double) processesVector.size()));
+//		setAvgWaitingTime(getAvgWaitingTime() / ((double) processesVector.size()));
+//		
+//		System.out.printf("Avg CT = %.5f, Avg TAT = %.5f, Avg WT = %.5f \n", getAvgCompletionTime(), getAvgTurnaroundTime(), getAvgWaitingTime());
+//	}
 }
