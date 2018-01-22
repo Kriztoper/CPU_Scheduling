@@ -31,11 +31,11 @@ public class AlgoSimulator {
 	public void startSimulation() {
 		if (algos.contains("FCFS")) {
 			ganttFCFS = new GanttChartStage(numProcess);
-			ganttFCFS.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			ganttFCFS.setHeight(ScreenConstants.HEIGHT/4 - 10);
 			ganttFCFS.setWidth(ScreenConstants.WIDTH/3);
 			ganttFCFS.setX(0);
 			ganttFCFS.setY(0);
-			ganttFCFS.chart.setTitle("FCFS Simulation");
+			ganttFCFS.chart.setTitle("");
 			ganttFCFS.setTitle("CPU Scheduling: FCFS Simulation");
 
 			FCFSManager fcfsManager = new FCFSManager(allocatedTable, maximumTable, availableTable, timeTable, ganttFCFS);
@@ -44,11 +44,11 @@ public class AlgoSimulator {
 		
 		if (algos.contains("SRTF")) {
 			ganttSRTF = new GanttChartStage(numProcess);
-			ganttSRTF.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			ganttSRTF.setHeight(ScreenConstants.HEIGHT/4 - 10);
 			ganttSRTF.setWidth(ScreenConstants.WIDTH/3);
-			ganttSRTF.setX(ScreenConstants.WIDTH/3);
-			ganttSRTF.setY(0);
-			ganttSRTF.chart.setTitle("SRTF Simulation");
+			ganttSRTF.setX(0);
+			ganttSRTF.setY(ScreenConstants.HEIGHT/4);
+			ganttSRTF.chart.setTitle("");
 			ganttSRTF.setTitle("CPU Scheduling: SRTF Simulation");
 
 			SRTFManager srtfManager = new SRTFManager(allocatedTable, maximumTable, availableTable, timeTable, ganttSRTF);
@@ -57,11 +57,11 @@ public class AlgoSimulator {
 		
 		if (algos.contains("SJF")) {
 			ganttSJF = new GanttChartStage(numProcess);
-			ganttSJF.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			ganttSJF.setHeight(ScreenConstants.HEIGHT/4 - 10);
 			ganttSJF.setWidth(ScreenConstants.WIDTH/3);
-			ganttSJF.setX(ScreenConstants.WIDTH*2/3);
-			ganttSJF.setY(0);
-			ganttSJF.chart.setTitle("SJF Simulation");
+			ganttSJF.setX(0);
+			ganttSJF.setY(ScreenConstants.HEIGHT*2/4);
+			ganttSJF.chart.setTitle("");
 			ganttSJF.setTitle("CPU Scheduling: SJF Simulation");
 
 			SJFManager sjfManager = new SJFManager(allocatedTable, maximumTable, availableTable, timeTable, ganttSJF);
@@ -70,11 +70,11 @@ public class AlgoSimulator {
 		
 		if (algos.contains("PRIO")) {
 			ganttPRIO = new GanttChartStage(numProcess);
-			ganttPRIO.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			ganttPRIO.setHeight(ScreenConstants.HEIGHT/4 - 10);
 			ganttPRIO.setWidth(ScreenConstants.WIDTH/3);
-			ganttPRIO.setX(0);
-			ganttPRIO.setY(ScreenConstants.HEIGHT/2 - 10);
-			ganttPRIO.chart.setTitle("PRIO Simulation");
+			ganttPRIO.setX(ScreenConstants.WIDTH*2/3);
+			ganttPRIO.setY(0);
+			ganttPRIO.chart.setTitle("");
 			ganttPRIO.setTitle("CPU Scheduling: PRIO Simulation");
 
 			PRIOManager prioManager = new PRIOManager(allocatedTable, maximumTable, availableTable, timeTable, ganttPRIO);
@@ -83,11 +83,11 @@ public class AlgoSimulator {
 
 		if (algos.contains("NP PRIO")) {
 			ganttNPPRIO = new GanttChartStage(numProcess);
-			ganttNPPRIO.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			ganttNPPRIO.setHeight(ScreenConstants.HEIGHT/4 - 10);
 			ganttNPPRIO.setWidth(ScreenConstants.WIDTH/3);
-			ganttNPPRIO.setX(ScreenConstants.WIDTH/3);
-			ganttNPPRIO.setY(ScreenConstants.HEIGHT/2 - 10);
-			ganttNPPRIO.chart.setTitle("NP PRIO Simulation");
+			ganttNPPRIO.setX(ScreenConstants.WIDTH*2/3);
+			ganttNPPRIO.setY(ScreenConstants.HEIGHT/4 - 10);
+			ganttNPPRIO.chart.setTitle("");
 			ganttNPPRIO.setTitle("CPU Scheduling: NP PRIO Simulation");
 
 			NP_PRIOManager np_prioManager = new NP_PRIOManager(allocatedTable, maximumTable, availableTable, timeTable, ganttNPPRIO);
@@ -96,11 +96,11 @@ public class AlgoSimulator {
 		
 		if (algos.contains("RR")) {
 			ganttRR = new GanttChartStage(numProcess);
-			ganttRR.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			ganttRR.setHeight(ScreenConstants.HEIGHT/4 - 10);
 			ganttRR.setWidth(ScreenConstants.WIDTH/3);
 			ganttRR.setX(ScreenConstants.WIDTH*2/3);
-			ganttRR.setY(ScreenConstants.HEIGHT/2 - 10);
-			ganttRR.chart.setTitle("RR Simulation");
+			ganttRR.setY(ScreenConstants.HEIGHT*2/4 - 10);
+			ganttRR.chart.setTitle("");
 			ganttRR.setTitle("CPU Scheduling: RR Simulation");
 
 			RRManager rrManager = new RRManager(allocatedTable, maximumTable, availableTable, timeTable,
