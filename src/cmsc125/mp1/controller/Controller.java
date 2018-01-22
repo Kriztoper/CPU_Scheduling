@@ -32,7 +32,7 @@ public class Controller {
 		frame1.setTitle("Resources Table");
 		frame1.setLocation(0, 330);
 		frame1.setResizable(false);
-		frame1.setSize(1015,380);
+		frame1.setSize(1065,380);
 		frame1.setVisible(false);
 		frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame1.add(itp);
@@ -93,9 +93,9 @@ public class Controller {
 	}
 
 	@FXML public void randResourcesTable(MouseEvent event) {
+		itp.randMaximumTable();
 		itp.randAllocatedTable();
 		itp.randAvailableTable();
-		itp.randMaximumTable();
 	}
 	
 	@FXML public void randProcessInfo(MouseEvent event){

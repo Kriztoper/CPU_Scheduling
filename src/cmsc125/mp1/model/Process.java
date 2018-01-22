@@ -7,6 +7,7 @@ public class Process {
 	private String name;
 	private int arrivalTime;
 	private int priorityNum;
+	private int burstTime;
 	private int[] resources;
 	private Color color;
 	private boolean allocated;
@@ -14,13 +15,13 @@ public class Process {
 	private int completionTime;
 	private int turnaroundTime;
 	private int waitingTime;
-	private int contextSwitch;
 	private int totalCylinders;
 	
-	public Process(int arrivalTime, int priorityNum, int[] resources,
+	public Process(int arrivalTime, int priorityNum, int burstTime, int[] resources,
 			String name, Color color) {
 		setArrivalTime(arrivalTime);
 		setPriorityNum(priorityNum);
+		setBurstTime(burstTime);
 		setResources(resources);
 		setName(name);
 		setColor(color);
@@ -34,11 +35,15 @@ public class Process {
 	}
 
 	public int getBurstTime() {
-		return resources[0];
+		return burstTime;
+	}
+	
+	public void setBurstTime(int burstTime) {
+		this.burstTime = burstTime;
 	}
 	
 	public void decBurstTime() {
-		resources[0] = resources[0] - 1;
+		this.burstTime--;
 	}
 	
 	public int getArrivalTime() {
@@ -131,13 +136,5 @@ public class Process {
 
 	public void setTotalCylinders(int totalCylinders) {
 		this.totalCylinders = totalCylinders;
-	}
-
-	public int getContextSwitch() {
-		return contextSwitch;
-	}
-
-	public void setContextSwitch(int contextSwitch) {
-		this.contextSwitch = contextSwitch;
 	}
 }
