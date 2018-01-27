@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.JTable;
 
+import cmsc125.mp1.algorithms.disk.DiskSimulator;
 import cmsc125.mp1.constants.ScreenConstants;
 import cmsc125.mp1.view.GanttChartStage;
 
@@ -15,9 +16,10 @@ public class AlgoSimulator {
 	private String quantumFieldText;
 	private int numProcess;
 	public static int visualizationSpeed;
+	private DiskSimulator ds;
 
 	public AlgoSimulator(int numProcess, ArrayList<String> algos, JTable allocatedTable, JTable maximumTable,
-			JTable availableTable, JTable timeTable, String quantumFieldText, int visualizationSpeed) {
+			JTable availableTable, JTable timeTable, String quantumFieldText, int visualizationSpeed, DiskSimulator ds) {
 		this.numProcess = numProcess;
 		this.algos = algos;
 		this.allocatedTable = allocatedTable;
@@ -26,6 +28,7 @@ public class AlgoSimulator {
 		this.timeTable = timeTable;
 		this.quantumFieldText = quantumFieldText;
 		AlgoSimulator.visualizationSpeed = visualizationSpeed;
+		this.ds = ds;
 	}
 
 	public void startSimulation() {
@@ -38,7 +41,7 @@ public class AlgoSimulator {
 			ganttFCFS.chart.setTitle("");
 			ganttFCFS.setTitle("CPU Scheduling: FCFS Simulation");
 
-			FCFSManager fcfsManager = new FCFSManager(allocatedTable, maximumTable, availableTable, timeTable, ganttFCFS);
+			FCFSManager fcfsManager = new FCFSManager(allocatedTable, maximumTable, availableTable, timeTable, ganttFCFS, ds);
 			fcfsManager.startSimulation();
 		}
 		
@@ -51,7 +54,7 @@ public class AlgoSimulator {
 			ganttSRTF.chart.setTitle("");
 			ganttSRTF.setTitle("CPU Scheduling: SRTF Simulation");
 
-			SRTFManager srtfManager = new SRTFManager(allocatedTable, maximumTable, availableTable, timeTable, ganttSRTF);
+			SRTFManager srtfManager = new SRTFManager(allocatedTable, maximumTable, availableTable, timeTable, ganttSRTF, ds);
 			srtfManager.startSimulation();
 		}
 		
@@ -64,7 +67,7 @@ public class AlgoSimulator {
 			ganttSJF.chart.setTitle("");
 			ganttSJF.setTitle("CPU Scheduling: SJF Simulation");
 
-			SJFManager sjfManager = new SJFManager(allocatedTable, maximumTable, availableTable, timeTable, ganttSJF);
+			SJFManager sjfManager = new SJFManager(allocatedTable, maximumTable, availableTable, timeTable, ganttSJF, ds);
 			sjfManager.startSimulation();
 		}
 		
@@ -77,7 +80,7 @@ public class AlgoSimulator {
 			ganttPRIO.chart.setTitle("");
 			ganttPRIO.setTitle("CPU Scheduling: PRIO Simulation");
 
-			PRIOManager prioManager = new PRIOManager(allocatedTable, maximumTable, availableTable, timeTable, ganttPRIO);
+			PRIOManager prioManager = new PRIOManager(allocatedTable, maximumTable, availableTable, timeTable, ganttPRIO, ds);
 			prioManager.startSimulation();
 		}
 
@@ -90,7 +93,7 @@ public class AlgoSimulator {
 			ganttNPPRIO.chart.setTitle("");
 			ganttNPPRIO.setTitle("CPU Scheduling: NP PRIO Simulation");
 
-			NP_PRIOManager np_prioManager = new NP_PRIOManager(allocatedTable, maximumTable, availableTable, timeTable, ganttNPPRIO);
+			NP_PRIOManager np_prioManager = new NP_PRIOManager(allocatedTable, maximumTable, availableTable, timeTable, ganttNPPRIO, ds);
 			np_prioManager.startSimulation();
 		}
 		
@@ -103,8 +106,7 @@ public class AlgoSimulator {
 			ganttRR.chart.setTitle("");
 			ganttRR.setTitle("CPU Scheduling: RR Simulation");
 
-			RRManager rrManager = new RRManager(allocatedTable, maximumTable, availableTable, timeTable,
-					quantumFieldText, ganttRR);
+			RRManager rrManager = new RRManager(allocatedTable, maximumTable, availableTable, timeTable, quantumFieldText, ganttRR, ds);
 			rrManager.startSimulation();
 		}
 	}

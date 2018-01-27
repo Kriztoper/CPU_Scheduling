@@ -24,7 +24,7 @@ public class Controller {
 	@FXML private ComboBox<String> diskCombo;
 	
 	private InputTablePanel itp;
-	private ArrayList<String> selectedCPUAlgos, selectedDiskAlgos;
+	private ArrayList<String> selectedCPUAlgos;
 	private JFrame frame1;
 	private ArrayList<CheckBox> CPUcheckBoxList;
 	private boolean allTick = true;
@@ -125,15 +125,13 @@ public class Controller {
 			if (cb.isSelected())
 				selectedCPUAlgos.add(cb.getText());
 		}
+			
+		String selectedDiskAlgo = diskCombo.getValue();
+		DiskSimulator diskSimulator = new DiskSimulator(itp.numProcess, itp.numResource, selectedCPUAlgos, selectedDiskAlgo, itp.getDiskTable(), Integer.parseInt(visualizationSpeed.getText()));
+		diskSimulator.setupSimulation();
 		
-		AlgoSimulator algoSimulator = new AlgoSimulator(itp.numProcess, selectedCPUAlgos, itp.getAllocatedTable(), itp.getMaximumTable(), itp.getAvailableTable(), itp.getTimeTable(), quantumField.getText(), Integer.parseInt(visualizationSpeed.getText()));
+		AlgoSimulator algoSimulator = new AlgoSimulator(itp.numProcess, selectedCPUAlgos, itp.getAllocatedTable(), itp.getMaximumTable(), itp.getAvailableTable(), itp.getTimeTable(), quantumField.getText(), Integer.parseInt(visualizationSpeed.getText()), diskSimulator);
 		algoSimulator.startSimulation();
-		
-		selectedDiskAlgos = new ArrayList<String>();
-		selectedDiskAlgos.add(diskCombo.getSelectionModel().selectedItemProperty().getValue());
-		
-		DiskSimulator diskSimulator = new DiskSimulator(itp.numProcess, itp.numResource, selectedDiskAlgos, itp.getDiskTable(), Integer.parseInt(visualizationSpeed.getText()));
-		diskSimulator.startSimulation();
 	}
 	
 	@FXML public void showResourcesTable(MouseEvent event){

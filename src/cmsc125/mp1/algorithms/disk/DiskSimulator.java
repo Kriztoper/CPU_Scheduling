@@ -10,130 +10,105 @@ import cmsc125.mp1.view.LineChartStage;
 
 public class DiskSimulator {
 
-	private ArrayList<String> algos;
+	private ArrayList<String> cpuAlgos;
+	private String diskAlgo;
 	private int numProcess, numResource;
 	private JTable diskTable;
 	public static int visualizationSpeed;
-	private LineChartStage CSCANdisk, CLOOKdisk, FCFSdisk, LOOKdisk, SCANdisk, SSTFdisk;
-	private ArrayList<Queue> resultCSCAN, resultCLOOK, resultFCFS, resultLOOK, resultSCAN, resultSSTF;
+	private LineChartStage FCFSProcDisk, SRTFProcDisk, RRProcDisk, PRIOProcDisk, NPPRIOProcDisk, SJFProcDisk;
+	private ArrayList<Queue<Integer>> resultDiskQueue, FCFSqueue, SRTFqueue, RRqueue, PRIOqueue, NPPRIOqueue, SJFqueue;
+	private DiskScheduling ds;
 
-	public DiskSimulator(int numProcess, int numResource, ArrayList<String> algos, JTable diskTable, int visualizationSpeed) {
+	public DiskSimulator(int numProcess, int numResource, ArrayList<String> cpuAlgos, String diskAlgo, JTable diskTable, int visualizationSpeed) {
 		this.numProcess = numProcess;
 		this.numResource = numResource;
-		this.algos = algos;
+		this.cpuAlgos = cpuAlgos;
+		this.diskAlgo = diskAlgo;
 		this.diskTable = diskTable;
 		DiskSimulator.visualizationSpeed = visualizationSpeed;
 	}
 
-	public void startSimulation() {
+	public void invokeChartUpdate(String procDisk, int accessTime, String name) {
+		int processNumber = Integer.parseInt(name.substring(1));
 		
-		if (algos.contains("CSCAN")) {
-			resultCSCAN = prepareData("CSCAN");
-			CSCANdisk = new LineChartStage(numProcess);
-			CSCANdisk.setTitle("CSCAN");
-			
-			for (int accessTime=0; accessTime<numResource+2 ; accessTime++) {
-				for(int i=1; i<=resultCSCAN.size(); i++){
-					try {
-						CSCANdisk.updateChart("P"+Integer.toString(i), accessTime, (int) resultCSCAN.get(i-1).poll());
-					} catch (Exception e) {
-					}
-				}
-			}
-		}
-		if (algos.contains("SCAN")) {
-			resultSCAN = prepareData("SCAN");
-			SCANdisk = new LineChartStage(numProcess);
-			SCANdisk.setTitle("SCAN");
-			
-			for (int accessTime=0; accessTime<numResource+2 ; accessTime++) {
-				for(int i=1; i<=resultSCAN.size(); i++){
-					try {
-						SCANdisk.updateChart("P"+Integer.toString(i), accessTime, (int) resultSCAN.get(i-1).poll());
-					} catch (Exception e) {
-					}
-				}
-			}
-		}
-		if (algos.contains("LOOK")) {
-			resultLOOK = prepareData("LOOK");
-			
-			LOOKdisk = new LineChartStage(numProcess);
-			LOOKdisk.setTitle("LOOK");
-			
-			for (int accessTime=0; accessTime<numResource ; accessTime++) {
-				for(int i=1; i<=resultLOOK.size(); i++){
-					LOOKdisk.updateChart("P"+Integer.toString(i), accessTime, (int) resultLOOK.get(i-1).poll());
-				}
-			}
-		}
-		if (algos.contains("CLOOK")) {
-			resultCLOOK = prepareData("CLOOK");
-			
-			CLOOKdisk = new LineChartStage(numProcess);
-			CLOOKdisk.setTitle("CLOOK");
-			
-			for (int accessTime=0; accessTime<numResource ; accessTime++) {
-				for(int i=1; i<=resultCLOOK.size(); i++){
-					CLOOKdisk.updateChart("P"+Integer.toString(i), accessTime, (int) resultCLOOK.get(i-1).poll());
-				}
-			}
-		}
-		if (algos.contains("FCFS")) {
-			resultFCFS = prepareData("FCFS");
-			
-			FCFSdisk = new LineChartStage(numProcess);
-			FCFSdisk.setTitle("FCFS");
-			
-			for (int accessTime=0; accessTime<numResource ; accessTime++) {
-				for(int i=1; i<=resultFCFS.size(); i++){
-					FCFSdisk.updateChart("P"+Integer.toString(i), accessTime, (int) resultFCFS.get(i-1).poll());
-				}
-			}
-		}
-		if (algos.contains("SSTF")) {
-			resultSSTF = prepareData("SSTF");
-			
-			SSTFdisk = new LineChartStage(numProcess);
-			SSTFdisk.setTitle("SSTF");
-			
-			for (int accessTime=0; accessTime<numResource ; accessTime++) {
-				for(int i=1; i<=resultSSTF.size(); i++){
-					SSTFdisk.updateChart("P"+Integer.toString(i), accessTime, (int) resultSSTF.get(i-1).poll());
-				}
-			}
-		}
-		
+		try {
+			if (procDisk == "FCFS")
+				FCFSProcDisk.updateChart("P"+Integer.toString(processNumber), accessTime, (int) FCFSqueue.get(processNumber-1).poll());
+			else if (procDisk == "SRTF")
+				SRTFProcDisk.updateChart("P"+Integer.toString(processNumber), accessTime, (int) SRTFqueue.get(processNumber-1).poll());
+			else if (procDisk == "RR")
+				RRProcDisk.updateChart("P"+Integer.toString(processNumber), accessTime, (int) RRqueue.get(processNumber-1).poll());
+			else if (procDisk == "PRIO")
+				PRIOProcDisk.updateChart("P"+Integer.toString(processNumber), accessTime, (int) PRIOqueue.get(processNumber-1).poll());
+			else if (procDisk == "NPPRIO")
+				NPPRIOProcDisk.updateChart("P"+Integer.toString(processNumber), accessTime, (int) NPPRIOqueue.get(processNumber-1).poll());
+			else if (procDisk == "SJF")
+				SJFProcDisk.updateChart("P"+Integer.toString(processNumber), accessTime, (int) SJFqueue.get(processNumber-1).poll());
+		} catch (Exception e) {}
 	}
 	
-	private ArrayList<Queue> prepareData(String algoType) {
-		String[][] diskData = ((ResourcesTableModel) diskTable.getModel()).getData();
-		ArrayList<Queue> result = new ArrayList<Queue>();
+	@SuppressWarnings("unchecked")
+	public void setupSimulation() {
+		prepareData(0,100);
 		
-		DiskScheduling ds = null;
-		if (algoType == "CSCAN")
-			ds = new CSCAN(0,100);
-		else if (algoType == "SCAN")
-			ds = new SCAN(0,100);
-		else if (algoType == "LOOK")
-			ds = new LOOK(0,100);
-		else if (algoType == "CLOOK")
-			ds = new CLOOK(0,100);
-		else if (algoType == "FCFS")
-			ds = new FCFS(0,100);
-		else if (algoType == "SSTF")
-			ds = new SSTF(0,100);
+		if (cpuAlgos.contains("FCFS")) {
+			FCFSProcDisk = new LineChartStage(numProcess);
+			FCFSProcDisk.setTitle(diskAlgo+" Visualization for FCFS");
+			FCFSqueue = (ArrayList<Queue<Integer>>) resultDiskQueue.clone();
+		}
+		if (cpuAlgos.contains("SJF")) {
+			SJFProcDisk = new LineChartStage(numProcess);
+			SJFProcDisk.setTitle(diskAlgo+" Visualization for SJF");
+			SJFqueue = (ArrayList<Queue<Integer>>) resultDiskQueue.clone();
+		}
+		if (cpuAlgos.contains("SRTF")) {
+			SRTFProcDisk = new LineChartStage(numProcess);
+			SRTFProcDisk.setTitle(diskAlgo+" Visualization for SRTF");
+			SRTFqueue = (ArrayList<Queue<Integer>>) resultDiskQueue.clone();
+		}
+		if (cpuAlgos.contains("RR")) {
+			RRProcDisk = new LineChartStage(numProcess);
+			RRProcDisk.setTitle(diskAlgo+" Visualization for RR");
+			RRqueue = (ArrayList<Queue<Integer>>) resultDiskQueue.clone();
+		}
+		if (cpuAlgos.contains("PRIO")) {
+			PRIOProcDisk = new LineChartStage(numProcess);
+			PRIOProcDisk.setTitle(diskAlgo+" Visualization for PRIO");
+			PRIOqueue = (ArrayList<Queue<Integer>>) resultDiskQueue.clone();
+		}
+		if (cpuAlgos.contains("NPPRIO")) {
+			NPPRIOProcDisk = new LineChartStage(numProcess);
+			NPPRIOProcDisk.setTitle(diskAlgo+" Visualization for NPPRIO");
+			NPPRIOqueue = (ArrayList<Queue<Integer>>) resultDiskQueue.clone();
+		}
+	}
+	
+	private void prepareData(int start, int end) {
+		String[][] diskData = ((ResourcesTableModel) diskTable.getModel()).getData();
+		resultDiskQueue = new ArrayList<Queue<Integer>>();
+		if (diskAlgo.equals("CLOOK"))
+			ds = new CLOOK(start,end);
+		else if (diskAlgo.equals("LOOK"))
+			ds = new LOOK(start,end);
+		else if (diskAlgo.equals("CSCAN"))
+			ds = new CSCAN(start,end);
+		else if (diskAlgo.equals("SCAN"))
+			ds = new SCAN(start,end);
+		else if (diskAlgo.equals("FCFS"))
+			ds = new FCFS(start,end);
+		else if (diskAlgo.equals("SSTF"))
+			ds = new SSTF(start,end);
+		
+		System.out.println(diskAlgo);
 		
 		for (int i=0; i<numProcess; i++) {
-			//loop cylinders needed per process
 			for (int j = 0; j < numResource; j++) {
 				ds.addPieces(Integer.parseInt(diskData[i][j]));
 			}
 			ds.process();
-			result.add(ds.getResult());
 			ds.printResult();
+			resultDiskQueue.add(ds.getResult());
 			ds.clear();
 		}
-		return result;
 	}
 }
