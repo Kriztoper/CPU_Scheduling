@@ -5,10 +5,12 @@ import java.util.Random;
 import javax.swing.JFrame;
 
 import cmsc125.mp1.algorithms.AlgoSimulator;
+import cmsc125.mp1.algorithms.disk.DiskSimulator;
 import cmsc125.mp1.view.InputTablePanel;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -17,30 +19,29 @@ import javafx.scene.input.MouseEvent;
 public class Controller {	
 	
 	@FXML private TextField numProcessField, numResourceField, quantumField, visualizationSpeed;
-	@FXML private Button randProcNumBtn, randResNumBtn, randSelectAlgoBtn, randResBtn, showResBtn, startSimulationBtn, randProcessInfoBtn, allSelectAlgoBtn;
+	@FXML private Button randProcNumBtn, randResNumBtn, randSelectAlgoBtn, randResBtn, showResBtn, startSimulationBtn, randProcessInfoBtn, allSelectAlgoBtn, randSelectDiskInfoBtn, randDiskBtn;
 	@FXML private CheckBox fcfsCB, sjfCB, srtfCB, rrCB, npprioCB, prioCB;
+	@FXML private ComboBox<String> diskCombo;
 	
 	private InputTablePanel itp;
-	private ArrayList<String> selectedAlgos;
+	private ArrayList<String> selectedCPUAlgos, selectedDiskAlgos;
 	private JFrame frame1;
-	private ArrayList<CheckBox> checkBoxList;
-	private boolean allTick = false;
+	private ArrayList<CheckBox> CPUcheckBoxList;
+	private boolean allTick = true;
+	private Random random; 
 
 	public Controller(){
 		itp = new InputTablePanel();
 		frame1 = new JFrame();
 		frame1.setTitle("Resources Table");
-		frame1.setLocation(0, 330);
 		frame1.setResizable(false);
-		frame1.setSize(1065,380);
+		frame1.setSize(1065,450);
 		frame1.setVisible(false);
-		frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame1.add(itp);
-
+		random = new Random();
 	}
 	
 	@FXML public void randNumProcesses(MouseEvent event) {
-		Random random = new Random();
 		int randomIndex = random.nextInt(20)+1;
 		numProcessField.setText(Integer.toString(randomIndex));
 		itp.numProcess = randomIndex;
@@ -48,7 +49,6 @@ public class Controller {
 	}
 
 	@FXML public void randNumResources(MouseEvent event) {
-		Random random = new Random();
 		int randomIndex = random.nextInt(10)+1;
 		numResourceField.setText(Integer.toString(randomIndex));
 		itp.numResource = randomIndex;
@@ -56,46 +56,53 @@ public class Controller {
 	}
 
 	@FXML public void randCPUSchedAlgos(MouseEvent event) {
-		Random random = new Random();
+		CPUcheckBoxList = new ArrayList<CheckBox>();
+		CPUcheckBoxList.add(fcfsCB);
+		CPUcheckBoxList.add(sjfCB);
+		CPUcheckBoxList.add(rrCB);
+		CPUcheckBoxList.add(prioCB);
+		CPUcheckBoxList.add(npprioCB);
+		CPUcheckBoxList.add(srtfCB);
 		
-		checkBoxList = new ArrayList<CheckBox>();
-		checkBoxList.add(fcfsCB);
-		checkBoxList.add(sjfCB);
-		checkBoxList.add(rrCB);
-		checkBoxList.add(prioCB);
-		checkBoxList.add(npprioCB);
-		checkBoxList.add(srtfCB);
-		
-		selectedAlgos = new ArrayList<String>();
-		for (CheckBox cb: checkBoxList){
+		selectedCPUAlgos = new ArrayList<String>();
+		for (CheckBox cb: CPUcheckBoxList){
 			int randomIndex = random.nextInt(100) + 1;
 			boolean randomBool = ((randomIndex <= 50) ? (false) : (true));
 			cb.setSelected(randomBool);
 			if (randomBool)
-				selectedAlgos.add(cb.getText());
+				selectedCPUAlgos.add(cb.getText());
 		}
 	}
 	
 	@FXML public void selectAllCPUSchedAlgos(MouseEvent event) {
-		checkBoxList = new ArrayList<CheckBox>();
-		checkBoxList.add(fcfsCB);
-		checkBoxList.add(sjfCB);
-		checkBoxList.add(rrCB);
-		checkBoxList.add(prioCB);
-		checkBoxList.add(npprioCB);
-		checkBoxList.add(srtfCB);
-		selectedAlgos = new ArrayList<String>();
-		for (CheckBox cb: checkBoxList){
+		CPUcheckBoxList = new ArrayList<CheckBox>();
+		CPUcheckBoxList.add(fcfsCB);
+		CPUcheckBoxList.add(sjfCB);
+		CPUcheckBoxList.add(rrCB);
+		CPUcheckBoxList.add(prioCB);
+		CPUcheckBoxList.add(npprioCB);
+		CPUcheckBoxList.add(srtfCB);
+		selectedCPUAlgos = new ArrayList<String>();
+		for (CheckBox cb: CPUcheckBoxList){
 			cb.setSelected(allTick);
-			selectedAlgos.add(cb.getText());
+			selectedCPUAlgos.add(cb.getText());
 		}
 		allTick = !allTick;
+		
 	}
-
+	
+	@FXML public void randDiskSchedAlgos(MouseEvent event) {
+		diskCombo.getSelectionModel().select(random.nextInt(6));	
+	}
+	
 	@FXML public void randResourcesTable(MouseEvent event) {
 		itp.randMaximumTable();
 		itp.randAllocatedTable();
 		itp.randAvailableTable();
+	}
+	
+	@FXML public void randDiskTable(MouseEvent event) {
+		itp.randDiskTable();
 	}
 	
 	@FXML public void randProcessInfo(MouseEvent event){
@@ -106,21 +113,27 @@ public class Controller {
 		if(numProcessField.getText() == "" || numResourceField.getText() == "")
 			return;
 		
-		checkBoxList = new ArrayList<CheckBox>();
-		checkBoxList.add(fcfsCB);
-		checkBoxList.add(sjfCB);
-		checkBoxList.add(rrCB);
-		checkBoxList.add(prioCB);
-		checkBoxList.add(npprioCB);
-		checkBoxList.add(srtfCB);
-		selectedAlgos = new ArrayList<String>();
-		for (CheckBox cb: checkBoxList){
+		CPUcheckBoxList = new ArrayList<CheckBox>();
+		CPUcheckBoxList.add(fcfsCB);
+		CPUcheckBoxList.add(sjfCB);
+		CPUcheckBoxList.add(rrCB);
+		CPUcheckBoxList.add(prioCB);
+		CPUcheckBoxList.add(npprioCB);
+		CPUcheckBoxList.add(srtfCB);
+		selectedCPUAlgos = new ArrayList<String>();
+		for (CheckBox cb: CPUcheckBoxList){
 			if (cb.isSelected())
-				selectedAlgos.add(cb.getText());
+				selectedCPUAlgos.add(cb.getText());
 		}
 		
-		AlgoSimulator algoSimulator = new AlgoSimulator(itp.numProcess, selectedAlgos, itp.getAllocatedTable(), itp.getMaximumTable(), itp.getAvailableTable(), itp.getTimeTable(), quantumField.getText(), Integer.parseInt(visualizationSpeed.getText()));
+		AlgoSimulator algoSimulator = new AlgoSimulator(itp.numProcess, selectedCPUAlgos, itp.getAllocatedTable(), itp.getMaximumTable(), itp.getAvailableTable(), itp.getTimeTable(), quantumField.getText(), Integer.parseInt(visualizationSpeed.getText()));
 		algoSimulator.startSimulation();
+		
+		selectedDiskAlgos = new ArrayList<String>();
+		selectedDiskAlgos.add(diskCombo.getSelectionModel().selectedItemProperty().getValue());
+		
+		DiskSimulator diskSimulator = new DiskSimulator(itp.numProcess, itp.numResource, selectedDiskAlgos, itp.getDiskTable(), Integer.parseInt(visualizationSpeed.getText()));
+		diskSimulator.startSimulation();
 	}
 	
 	@FXML public void showResourcesTable(MouseEvent event){
