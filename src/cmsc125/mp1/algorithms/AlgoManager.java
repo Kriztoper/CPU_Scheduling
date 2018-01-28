@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import javax.swing.JTable;
 
+import cmsc125.mp1.algorithms.disk.DiskSimulator;
 import cmsc125.mp1.constants.ColorConstants;
 import cmsc125.mp1.model.Process;
 import cmsc125.mp1.model.ProcessesQueue;
@@ -23,13 +24,15 @@ public abstract class AlgoManager extends Thread {
 	protected ProcessesQueue readyQueue;
 	protected Bankers bankers;
 	protected GanttChartStage ganttChart;
+	protected DiskSimulator ds;
 	
-	public AlgoManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable, GanttChartStage ganttChart) {
+	public AlgoManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable, GanttChartStage ganttChart, DiskSimulator ds) {
 		this.allocatedTable = allocatedTable;
 		this.maximumTable = maximumTable;
 		this.availableTable = availableTable;
 		this.timeTable = timeTable;
 		this.ganttChart = ganttChart;
+		this.ds = ds;
 	}
 	
 	public int[] convertToIntArray(String[] resourcesData) {

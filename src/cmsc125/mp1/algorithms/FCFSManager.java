@@ -1,19 +1,14 @@
 package cmsc125.mp1.algorithms;
 
-import java.util.Vector;
-
 import javax.swing.JTable;
-
-import cmsc125.mp1.constants.ColorConstants;
+import cmsc125.mp1.algorithms.disk.DiskSimulator;
 import cmsc125.mp1.model.Process;
-import cmsc125.mp1.model.ProcessesQueue;
-import cmsc125.mp1.model.ResourcesTableModel;
 import cmsc125.mp1.view.GanttChartStage;
 
 public class FCFSManager extends AlgoManager {
 
-	public FCFSManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable, GanttChartStage ganttChart) {
-		super(allocatedTable, maximumTable, availableTable, timeTable, ganttChart);
+	public FCFSManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable, GanttChartStage ganttChart, DiskSimulator ds) {
+		super(allocatedTable, maximumTable, availableTable, timeTable, ganttChart, ds);
 	}
 
 	@Override
@@ -52,6 +47,7 @@ public class FCFSManager extends AlgoManager {
 					// +processNum);
 	
 					ganttChart.updateGantt(t, currentProcess.getName());
+					ds.invokeChartUpdate("FCFS", t, currentProcess.getName());
 	
 					System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]\n");
 				} else if (currentProcess != null && currentBurstTime < currentProcess.getBurstTime()) {
@@ -60,6 +56,7 @@ public class FCFSManager extends AlgoManager {
 					currentBurstTime++;
 	
 					ganttChart.updateGantt(t, currentProcess.getName());
+					ds.invokeChartUpdate("FCFS", t, currentProcess.getName());
 	
 					System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
 				}
