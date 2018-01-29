@@ -14,8 +14,8 @@ import javafx.stage.Stage;
 
 public class LineChartStage extends Stage {
 
-	public ArrayList<String> procNames;
 	public ArrayList<XYChart.Series> procSeries;
+	private LineChart lineChart;
     NumberAxis xAxis, yAxis;
 	
     public LineChartStage(int numProcess) {
@@ -26,19 +26,21 @@ public class LineChartStage extends Stage {
         xAxis.setLabel("Time Accessed");
         yAxis.setLabel("Cylinder");
 
-        LineChart lineChart = new LineChart(xAxis, yAxis);
+        lineChart = new LineChart(xAxis, yAxis);
+        lineChart.getStylesheets().add(getClass().getResource("ganttchart.css").toExternalForm());
 
         procSeries = new ArrayList<XYChart.Series>();
         
-        for (int i=1; i<=numProcess; i++){
+        for (int i=0; i<=numProcess; i++){
 			procSeries.add(new XYChart.Series<>());
-			procSeries.get(i-1).setName("P"+Integer.toString(i));
-			lineChart.getData().add(procSeries.get(i-1));
+			procSeries.get(i).setName("P"+Integer.toString(i));
+			lineChart.getData().add(procSeries.get(i));
 		}
 
         VBox vbox = new VBox(lineChart);    	
     	Scene scene  = new Scene(vbox);
         scene.setFill(Color.WHITESMOKE);
+        scene.getStylesheets().add(getClass().getResource("ganttchart.css").toExternalForm());
         this.setScene(scene);
         this.show();
     }
@@ -46,6 +48,12 @@ public class LineChartStage extends Stage {
     @SuppressWarnings({ "unchecked"})
     public void updateChart(String name, int accessTime, int cylinder) {
     	int processNumber = Integer.parseInt(name.substring(1));
-    	Platform.runLater(() -> procSeries.get(processNumber-1).getData().add(new XYChart.Data<Integer, Integer>(accessTime, cylinder)));// Update on JavaFX Application Thread
+    	Platform.runLater(() -> procSeries.get(processNumber).getData().add(new XYChart.Data<Integer, Integer>(accessTime, cylinder)));// Update on JavaFX Application Thread
+    }
+    
+    public void renewSeries(String name) {
+    	int processNumber = Integer.parseInt(name.substring(1));
+    	procSeries.set(processNumber, new XYChart.Series<>());
+    	procSeries.get(processNumber).setName("P"+Integer.toString(processNumber));
     }
 }

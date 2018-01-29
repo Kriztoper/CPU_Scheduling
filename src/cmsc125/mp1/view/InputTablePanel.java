@@ -279,12 +279,16 @@ public class InputTablePanel extends JPanel {
 	
 	public void randDiskTable() {
 		int rowCount = diskTable.getModel().getRowCount();
-		int colCount = diskTable.getModel().getColumnCount();
 		Random random = new Random();
-		for (int i = 0; i < rowCount; i++) {
-			for (int j = 0; j < colCount; j++) {
+		for (int i = 0, j; i < rowCount; i++) {
+			int colCount = Integer.parseInt((String) maximumTable.getModel().getValueAt(i, 0));
+			for ( j=0 ; j < colCount; j++) {
 				diskTable.getModel().setValueAt(Integer.toString(random.nextInt(100)), i, j);
 			}
+			for ( ; j < diskTable.getModel().getColumnCount(); j++) {
+				diskTable.getModel().setValueAt("-", i, j);
+			}
+				
 		}
 	}
 
