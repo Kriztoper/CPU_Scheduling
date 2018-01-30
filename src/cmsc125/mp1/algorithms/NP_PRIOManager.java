@@ -29,6 +29,7 @@ public class NP_PRIOManager extends AlgoManager {
 				bankers.updateJobQueue(t, processesQueue);
 				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
 				bankers.requestResources(t, readyQueue);
+				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
 				ganttChart.displayUpdatedReadyQueue(readyQueue);
 
 				// fillReadyQueue(t);
@@ -38,13 +39,14 @@ public class NP_PRIOManager extends AlgoManager {
 				if (processesQueue.isEmpty() && readyQueue.isEmpty() && currentProcess == null) {
 					System.out.println("Ready Queue is empty!");
 					break;
-				} else if (!readyQueue.isEmpty() && currentProcess == null && readyQueue.get(0).getArrivalTime() <= t) {
+				} else if (!readyQueue.isEmpty() && currentProcess == null && readyQueue.peek().getArrivalTime() <= t) {
 					// there is a process waiting in ready queue available for execution and there
 					// is no current process running
 
 					currentProcess = readyQueue.dequeue();
 					currentBurstTime++;
 
+					ganttChart.displayUpdatedReadyQueue(readyQueue);
 					ganttChart.updateGantt(t, currentProcess.getName());
 					ds.invokeChartUpdate("NPPRIO", t, currentProcess.getName());
 
@@ -54,6 +56,7 @@ public class NP_PRIOManager extends AlgoManager {
 
 					currentBurstTime++;
 
+					ganttChart.displayUpdatedReadyQueue(readyQueue);
 					ganttChart.updateGantt(t, currentProcess.getName());
 					ds.invokeChartUpdate("NPPRIO", t, currentProcess.getName());
 
@@ -79,6 +82,8 @@ public class NP_PRIOManager extends AlgoManager {
 
 				t++;
 				ganttChart.displayTimeAndAvailableData(t, bankers.getCurrentAvailableTableData());
+				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
+				ganttChart.displayUpdatedReadyQueue(readyQueue);
 			}
 			System.out.println("Done executing NP PRIO!");
 

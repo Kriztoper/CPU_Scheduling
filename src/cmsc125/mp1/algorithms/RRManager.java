@@ -32,6 +32,7 @@ public class RRManager extends AlgoManager {
 				bankers.updateJobQueue(t, processesQueue);
 				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
 				bankers.requestResources(t, readyQueue);
+				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
 				ganttChart.displayUpdatedReadyQueue(readyQueue);
 
 				// If ready queue is empty and there is no current process running
@@ -47,6 +48,7 @@ public class RRManager extends AlgoManager {
 					currentProcess.decBurstTime();
 					currentBurstTime++;
 
+					ganttChart.displayUpdatedReadyQueue(readyQueue);
 					ganttChart.updateGantt(t, currentProcess.getName());
 					ds.invokeChartUpdate("RR", t, currentProcess.getName());
 
@@ -57,6 +59,7 @@ public class RRManager extends AlgoManager {
 					currentProcess.decBurstTime();// currentBurstTime++;
 					currentBurstTime++;
 
+					ganttChart.displayUpdatedReadyQueue(readyQueue);
 					ganttChart.updateGantt(t, currentProcess.getName());
 					ds.invokeChartUpdate("RR", t, currentProcess.getName());
 
@@ -86,6 +89,8 @@ public class RRManager extends AlgoManager {
 
 				t++;
 				ganttChart.displayTimeAndAvailableData(t, bankers.getCurrentAvailableTableData());
+				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
+				ganttChart.displayUpdatedReadyQueue(readyQueue);
 			}
 			System.out.println("Done executing RR!");
 

@@ -32,6 +32,7 @@ public class SRTFManager extends AlgoManager {
 				bankers.updateJobQueue(t, processesQueue);
 				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
 				bankers.requestResources(t, readyQueue);
+				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
 				ganttChart.displayUpdatedReadyQueue(readyQueue);
 				
 //				fillReadyQueue(t);
@@ -41,13 +42,14 @@ public class SRTFManager extends AlgoManager {
 				if (processesQueue.isEmpty() && readyQueue.isEmpty() && currentProcess == null) {
 					System.out.println("Ready Queue is empty!");
 					break;
-				} else if (!readyQueue.isEmpty() && currentProcess == null && readyQueue.get(0).getArrivalTime() <= t) {
+				} else if (!readyQueue.isEmpty() && currentProcess == null && readyQueue.peek().getArrivalTime() <= t) {
 					// there is a process waiting in ready queue available for execution and there
 					// is no current process running
 					
-					currentProcess = readyQueue.get(0);
+					currentProcess = readyQueue.dequeue();
 					currentProcess.decBurstTime();
 					
+					ganttChart.displayUpdatedReadyQueue(readyQueue);
 					ganttChart.updateGantt(t, currentProcess.getName());
 					ds.invokeChartUpdate("SRTF", t, currentProcess.getName());
 	
@@ -59,7 +61,9 @@ public class SRTFManager extends AlgoManager {
 					currentProcess.setTurnaroundTime(currentProcess.getCompletionTime() - currentProcess.getArrivalTime());
 					currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
 					bankers.releaseResourcesForProcess(currentProcess);
-					readyQueue.dequeue();
+//					readyQueue.dequeue();
+				} else if (currentProcess != null && currentProcess.getBurstTime() != 0) {
+					readyQueue.insert(0, currentProcess);
 				}
 	
 				currentProcess = null;
@@ -72,6 +76,8 @@ public class SRTFManager extends AlgoManager {
 	
 				t++;
 				ganttChart.displayTimeAndAvailableData(t, bankers.getCurrentAvailableTableData());
+				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
+				ganttChart.displayUpdatedReadyQueue(readyQueue);
 			}
 			System.out.println("Done executing SRTF!");
 			

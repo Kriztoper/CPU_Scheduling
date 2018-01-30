@@ -27,7 +27,11 @@ public class ColorConstants {
 			new Color(51, 68, 49)
 	};
 	
-	public static Color getColor(int index) {
+	public static java.awt.Color getColor(int index) {
 		return colors[index];
+	}
+	
+	public static javafx.scene.paint.Color getColorFX(int index) {
+		return new javafx.scene.paint.Color(colors[index].getRed()/255.0, colors[index].getGreen()/255.0, colors[index].getBlue()/255.0, 1.0);
 	}
 }

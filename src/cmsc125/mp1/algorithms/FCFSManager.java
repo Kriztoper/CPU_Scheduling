@@ -26,6 +26,7 @@ public class FCFSManager extends AlgoManager {
 				bankers.updateJobQueue(t, processesQueue);
 				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
 				bankers.requestResources(t, readyQueue);
+				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
 				ganttChart.displayUpdatedReadyQueue(readyQueue);
 				
 //				bankers.allocateResource(t);
@@ -46,6 +47,7 @@ public class FCFSManager extends AlgoManager {
 					// System.out.println("processNum increased to "
 					// +processNum);
 	
+//					ganttChart.displayUpdatedReadyQueue(readyQueue);
 					ganttChart.updateGantt(t, currentProcess.getName());
 					ds.invokeChartUpdate("FCFS", t, currentProcess.getName());
 	
@@ -55,6 +57,7 @@ public class FCFSManager extends AlgoManager {
 	
 					currentBurstTime++;
 	
+//					ganttChart.displayUpdatedReadyQueue(readyQueue);
 					ganttChart.updateGantt(t, currentProcess.getName());
 					ds.invokeChartUpdate("FCFS", t, currentProcess.getName());
 	
@@ -79,6 +82,8 @@ public class FCFSManager extends AlgoManager {
 				
 				t++;
 				ganttChart.displayTimeAndAvailableData(t, bankers.getCurrentAvailableTableData());
+				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
+				ganttChart.displayUpdatedReadyQueue(readyQueue);
 			}
 			System.out.println("Done executing FCFS!");
 			
