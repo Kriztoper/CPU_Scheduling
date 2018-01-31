@@ -44,8 +44,9 @@ public abstract class DiskScheduling {
 	/**
 	 * Clears all the listed pieces in the queue.
 	 */
-	public void removeAllPieces(){
+	public void clear(){
 		pieces.clear();
+		result = new LinkedList<Integer>();	
 	}
 	
 	/**
