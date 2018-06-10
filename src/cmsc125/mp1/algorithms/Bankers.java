@@ -16,6 +16,7 @@ public class Bankers {
 	private int[][] maximumTableData;
 	private int[][] needTableData;
 	private int[][] availableTableData;
+	private String[][] statsTableData;
 	private int[] currentAvailableTableData;
 	private int[][] need;
 	private int[] arrivalTimes;
@@ -30,6 +31,7 @@ public class Bankers {
 	private double avgCompletionTime;
 	private double avgTurnaroundTime;
 	private double avgWaitingTime;
+	private double avgResponseTime;
 	private boolean penaltyForDeadlock;
 	
 	public Bankers(JTable allocatedTable, JTable maximumTable,
@@ -124,6 +126,8 @@ public class Bankers {
 		needTableData = new int[allocatedData.length][allocatedData[0].length];
 		need = new int[allocatedData.length][allocatedData[0].length];
 		
+		statsTableData = new String[maximumData.length + 2][4];
+
 		
 		for (int i = 0; i < allocatedData.length; i++) {
 			for (int j = 0; j < allocatedData[0].length; j++) {
@@ -134,6 +138,9 @@ public class Bankers {
 				if (i == 0) {
 					availableTableData[i][j] = 
 							Integer.parseInt(availableData[i][j]);
+				}
+				if (j < 4) {
+					statsTableData[i][j] = "";
 				}
 			}
 		}
@@ -346,6 +353,14 @@ public class Bankers {
 		this.avgWaitingTime = avgWaitingTime;
 	}
 	
+	public double getAvgResponseTime() {
+		return avgResponseTime;
+	}
+
+	public void setAvgResponseTime(double avgResponseTime) {
+		this.avgResponseTime = avgResponseTime;
+	}
+
 	public int[] getCurrentAvailableTableData() {
 		return currentAvailableTableData;
 	}
@@ -354,31 +369,45 @@ public class Bankers {
 		return allocatedTableData;
 	}
 
-//	public void displayStats(JTable statsTable, Vector<Process> processesVector) {
-//		ResourcesTableModel statsTableModel = (ResourcesTableModel) statsTable.getModel();
-//		String[][] statsTableData = statsTableModel.getData();
-//		
-//		setAvgCompletionTime(0.0);
-//		setAvgTurnaroundTime(0.0);
-//		setAvgWaitingTime(0.0);
-//		for (int i = 0; i < processesVector.size(); i++) {
-//			Process process = processesVector.get(i);
-//			
-//			statsTableData[i][0] = process.getCompletionTime() + "";
-//			statsTableData[i][1] = process.getTurnaroundTime() + "";
-//			statsTableData[i][2] = process.getWaitingTime() + "";
-//			statsTable.setModel(new ResourcesTableModel(statsTableModel.getColumnNames(), statsTableData));
-//			
-//			System.out.println(process.getName() + " CT=" + process.getCompletionTime() + ", TAT=" + process.getTurnaroundTime() + ", WT=" + process.getWaitingTime());
-//			setAvgCompletionTime(getAvgCompletionTime() + ((double) process.getCompletionTime()));
-//			setAvgTurnaroundTime(getAvgTurnaroundTime() + ((double) process.getTurnaroundTime()));
-//			setAvgWaitingTime(getAvgWaitingTime() + ((double) process.getWaitingTime()));
-//		}
-//		
-//		setAvgCompletionTime((getAvgCompletionTime()) / ((double) processesVector.size()));
-//		setAvgTurnaroundTime(getAvgTurnaroundTime() / ((double) processesVector.size()));
-//		setAvgWaitingTime(getAvgWaitingTime() / ((double) processesVector.size()));
-//		
-//		System.out.printf("Avg CT = %.5f, Avg TAT = %.5f, Avg WT = %.5f \n", getAvgCompletionTime(), getAvgTurnaroundTime(), getAvgWaitingTime());
-//	}
+	public String[][] computeStats(Vector<Process> processesVector) {
+		setAvgCompletionTime(0.0);
+		setAvgTurnaroundTime(0.0);
+		setAvgWaitingTime(0.0);
+		setAvgResponseTime(0.0);
+		int size = processesVector.size();
+		for (int i = 0; i < size; i++) {
+			Process process = processesVector.get(i);
+
+			statsTableData[i][0] = process.getCompletionTime() + "";
+			statsTableData[i][1] = process.getTurnaroundTime() + "";
+			statsTableData[i][2] = process.getWaitingTime() + "";
+			statsTableData[i][3] = process.getResponseTime() + "";
+
+			System.out.println(process.getName() + " CT=" + process.getCompletionTime() + ", TAT=" + process.getTurnaroundTime() + ", WT=" + process.getWaitingTime() + ", RT=" + process.getResponseTime());
+			setAvgCompletionTime(getAvgCompletionTime() + ((double) process.getCompletionTime()));
+			setAvgTurnaroundTime(getAvgTurnaroundTime() + ((double) process.getTurnaroundTime()));
+			setAvgWaitingTime(getAvgWaitingTime() + ((double) process.getWaitingTime()));
+			setAvgResponseTime(getAvgResponseTime() + ((double) process.getResponseTime()));
+		}
+
+		setAvgCompletionTime((getAvgCompletionTime()) / ((double) processesVector.size()));
+		setAvgTurnaroundTime(getAvgTurnaroundTime() / ((double) processesVector.size()));
+		setAvgWaitingTime(getAvgWaitingTime() / ((double) processesVector.size()));
+		setAvgResponseTime(getAvgResponseTime() / ((double) processesVector.size()));
+
+		// insert to statsTableData Avg data labels and values
+		size = statsTableData.length;
+		statsTableData[size-2][0] = "Avg CT";
+		statsTableData[size-2][1] = "Avg TAT";
+		statsTableData[size-2][2] = "Avg WT";
+		statsTableData[size-2][3] = "Avg RT";
+		statsTableData[size-1][0] = String.format("%.5f", getAvgCompletionTime());
+		statsTableData[size-1][1] = String.format("%.5f", getAvgTurnaroundTime());
+		statsTableData[size-1][2] = String.format("%.5f", getAvgWaitingTime());
+		statsTableData[size-1][3] = String.format("%.5f", getAvgResponseTime());
+
+		System.out.printf("Avg CT = %.5f, Avg TAT = %.5f, Avg WT = %.5f, Avg RT = %.5f \n", getAvgCompletionTime(), getAvgTurnaroundTime(), getAvgWaitingTime(), getAvgResponseTime());
+
+		return statsTableData;
+	}
 }

@@ -43,7 +43,12 @@ public class NP_PRIOManager extends AlgoManager {
 					// there is a process waiting in ready queue available for execution and there
 					// is no current process running
 
-					currentProcess = readyQueue.dequeue();
+					currentProcess = readyQueue.get(0);
+
+					// set 1st response time
+					if (currentProcess.getFirstResponseTime() == -1) {
+						currentProcess.setFirstResponseTime(t);
+					}
 					currentBurstTime++;
 
 					ganttChart.displayUpdatedReadyQueue(readyQueue);
@@ -54,6 +59,10 @@ public class NP_PRIOManager extends AlgoManager {
 				} else if (currentProcess != null && currentBurstTime < currentProcess.getBurstTime()) {
 					// there is still a current process executing
 
+					// set 1st response time
+					if (currentProcess.getFirstResponseTime() == -1) {
+						currentProcess.setFirstResponseTime(t);
+					}
 					currentBurstTime++;
 
 					ganttChart.displayUpdatedReadyQueue(readyQueue);
@@ -69,7 +78,9 @@ public class NP_PRIOManager extends AlgoManager {
 					currentProcess
 							.setTurnaroundTime(currentProcess.getCompletionTime() - currentProcess.getArrivalTime());
 					currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
+					currentProcess.setResponseTime(Math.abs(currentProcess.getFirstResponseTime() - currentProcess.getArrivalTime()));
 					bankers.releaseResourcesForProcess(currentProcess);
+					readyQueue.dequeue();
 					currentProcess = null;
 					currentBurstTime = 0;
 				}
@@ -88,40 +99,11 @@ public class NP_PRIOManager extends AlgoManager {
 			System.out.println("Done executing NP PRIO!");
 
 			sortProcessesVectorByProcessNumber();
-			displayStats();
-			// bankers.setAvgCompletionTime(0.0);
-			// bankers.setAvgTurnaroundTime(0.0);
-			// bankers.setAvgWaitingTime(0.0);
-			// for (int i = 0; i < processesVector.size(); i++) {
-			// Process process = processesVector.get(i);
-			// System.out.println(process.getName() + " CT=" + process.getCompletionTime() +
-			// ", TAT=" + process.getTurnaroundTime() + ", WT=" + process.getWaitingTime());
-			// bankers.setAvgCompletionTime(bankers.getAvgCompletionTime() + ((double)
-			// process.getCompletionTime()));
-			// bankers.setAvgTurnaroundTime(bankers.getAvgTurnaroundTime() + ((double)
-			// process.getTurnaroundTime()));
-			// bankers.setAvgWaitingTime(bankers.getAvgWaitingTime() + ((double)
-			// process.getWaitingTime()));
-			// }
-			//
-			// bankers.setAvgCompletionTime((bankers.getAvgCompletionTime()) / ((double)
-			// processesVector.size()));
-			// bankers.setAvgTurnaroundTime(bankers.getAvgTurnaroundTime() / ((double)
-			// processesVector.size()));
-			// bankers.setAvgWaitingTime(bankers.getAvgWaitingTime() / ((double)
-			// processesVector.size()));
-			//
-			// System.out.printf("Avg CT = %.5f, Avg TAT = %.5f, Avg WT = %.5f \n",
-			// bankers.getAvgCompletionTime(), bankers.getAvgTurnaroundTime(),
-			// bankers.getAvgWaitingTime());
+			String[][] statsTableData = bankers.computeStats(processesVector);
+			ganttChart.displayStats(statsTableData);
 		} else {
 			System.exit(0);
 		}
-	}
-
-	public void displayStats() {
-		System.out.println("Hi!");
-		// ganttChart.displayTotalResourcesUsed();
 	}
 
 	public void sortReadyQueue() {

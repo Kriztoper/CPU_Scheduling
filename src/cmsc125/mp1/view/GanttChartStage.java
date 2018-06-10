@@ -4,9 +4,6 @@ import java.util.ArrayList;
 
 import javax.swing.JTable;
 
-import com.sun.prism.ps.Shader;
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
-
 import cmsc125.mp1.constants.ColorConstants;
 import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.model.ResourcesTableModel;
@@ -15,7 +12,6 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -25,7 +21,6 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -41,12 +36,16 @@ public class GanttChartStage extends Stage {
     NumberAxis xAxis;
     CategoryAxis yAxis;
     
+    StackPane rootPane;
     private Text time;
     private Text jobQueue;
     private Text readyQueue;
     ArrayList<Rectangle> jqProcesses;
     ArrayList<Rectangle> rqProcesses;
-    
+
+    // stats field types
+    private Text statsTableText;
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	public GanttChartStage(int numProcess){    	
         xAxis = new NumberAxis();
@@ -80,10 +79,13 @@ public class GanttChartStage extends Stage {
 //		}
     	yAxis.setCategories(FXCollections.<String>observableArrayList(procNames));
 
-        StackPane rootPane = new StackPane();
+        rootPane = new StackPane();
         StackPane.setAlignment(chart, Pos.BOTTOM_CENTER);
 //        StackPane.setMargin(chart, new Insets(10, 10, 10, 10));
         rootPane.getChildren().addAll(chart);
+
+        // init stats table
+        initStats(rootPane);
 
         // time t label
         time = new Text(0, 0, "t = 0");
@@ -222,6 +224,7 @@ public class GanttChartStage extends Stage {
 			if (i < jobQueue.getSize() && !jobQueue.get(i).isAllocated()) {
 				java.awt.Color color = jobQueue.get(i).getColor();
 				((Rectangle) jqProcesses.get(j)).setFill(new javafx.scene.paint.Color(color.getRed()/255.0, color.getGreen()/255.0, color.getBlue()/255.0, 1.0));
+				//TODO: Display process number inside rectangle
 				((Node) jqProcesses.get(j)).setVisible(true);
 				j++;
 			}
@@ -247,6 +250,7 @@ public class GanttChartStage extends Stage {
 			if (i < readyQueue.getSize()) {
 				java.awt.Color color = readyQueue.get(i).getColor();
 				((Rectangle) rqProcesses.get(i)).setFill(new javafx.scene.paint.Color(color.getRed()/255.0, color.getGreen()/255.0, color.getBlue()/255.0, 1.0));
+				//TODO: Display process number inside rectangle
 				((Node) rqProcesses.get(i)).setVisible(true);
 			} else {
 				((Node) rqProcesses.get(i)).setVisible(false);
@@ -294,5 +298,98 @@ public class GanttChartStage extends Stage {
 		 *    | 0    5    10                   |
 		 *    ----------------------------------
 		 * */
+	}
+
+	private void initStats(StackPane rootPane) {
+        statsTableText = new Text(0, 0, "");
+        statsTableText.setFill(Color.WHITESMOKE);
+        statsTableText.setFont(Font.font(java.awt.Font.SANS_SERIF, 12));
+        StackPane.setAlignment(statsTableText, Pos.TOP_LEFT);
+        StackPane.setMargin(statsTableText, new Insets(40, 20, 60, 5));
+        rootPane.getChildren().add(statsTableText);
+	}
+
+	public void displayStats(String[][] statsTableData) {
+		jobQueue.setText("");
+		readyQueue.setText("");
+		statsTableText.setFill(Color.CHOCOLATE);
+
+		String stats = "";
+		int height = statsTableData.length;
+		int width = statsTableData[0].length;
+		String[] statsColumnNames = {"CT","TAT","WT","RT"};
+		if (height - 2 <= 10) {								// if num process <= 10 display in one line
+			// display P{#} as column names
+			for (int i = 0; i < height - 1; i++) {
+				if (i == 0) {
+					stats += "\t";
+				} else {
+					if (i < height - 2) {
+						stats += "P" + (i-1) + "\t";
+					} else {
+						stats += "P" + (i-1) + "\n";
+					}
+				}
+			}
+			// display values of processes in CT, TAT, WT, RT
+			for (int j = 0; j < width; j++) {
+				stats += statsColumnNames[j] + "\t";
+				for (int i = 0; i < height - 1; i++) {
+					if (i == height - 2) {
+						stats += statsTableData[i][j] + " = " + statsTableData[i+1][j] + "\n";
+					} else {
+						stats += statsTableData[i][j] + "\t";
+					}
+				}
+			}
+		} else {											// if num process > 10 display in two lines
+			// display P{#} as column names for 1st line. Range:[0-10]
+			for (int i = 0; i < height/2 + 1; i++) {
+				if (i == 0) {
+					stats += "\t";
+				} else {
+					if (i < height/2) {
+						stats += "P" + (i-1) + "\t";
+					} else {
+						stats += "P" + (i-1) + "\n";
+					}
+				}
+			}
+			// display values of processes in CT, TAT, WT, RT for 1st line. Range:[0-10]
+			for (int j = 0; j < width; j++) {
+				stats += statsColumnNames[j] + "\t";
+				for (int i = 0; i < height/2; i++) {
+					if (i < height/2 - 1) {
+						stats += statsTableData[i][j] + "\t";
+					} else {
+						stats += statsTableData[i][j] + "\n";
+					}
+				}
+			}
+			// display P{#} as column names for 2nd line. Range:[11-19]
+			for (int i = height/2; i < height - 1; i++) {
+				if (i == height/2) {
+					stats += "\t";
+				} else {
+					if (i < height - 2) {
+						stats += "P" + (i-1) + "\t";
+					} else {
+						stats += "P" + (i-1) + "\n";
+					}
+				}
+			}
+			// display values of processes in CT, TAT, WT, RT for 1st line. Range:[11-19]
+			for (int j = 0; j < width; j++) {
+				stats += statsColumnNames[j] + "\t";
+				for (int i = height/2; i < height - 1; i++) {
+					if (i == height - 2) {
+						stats += statsTableData[i][j] + "=" + statsTableData[i+1][j] + "\n";
+					} else {
+						stats += statsTableData[i][j] + "\t";
+					}
+				}
+			}
+		}
+		statsTableText.setText(stats);
 	}
 }
