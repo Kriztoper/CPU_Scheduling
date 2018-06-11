@@ -32,6 +32,7 @@ public class RRManager extends AlgoManager {
 				bankers.updateJobQueue(t, processesQueue);
 				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
 				bankers.requestResources(t, readyQueue);
+				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
 				ganttChart.displayUpdatedReadyQueue(readyQueue);
 
 				// If ready queue is empty and there is no current process running
@@ -43,10 +44,16 @@ public class RRManager extends AlgoManager {
 					// there is a process waiting in ready queue available for execution and there
 					// is no current process running
 
-					currentProcess = readyQueue.dequeue();
+					currentProcess = readyQueue.get(0);
+
+					// set 1st response time
+					if (currentProcess.getFirstResponseTime() == -1) {
+						currentProcess.setFirstResponseTime(t);
+					}
 					currentProcess.decBurstTime();
 					currentBurstTime++;
 
+					ganttChart.displayUpdatedReadyQueue(readyQueue);
 					ganttChart.updateGantt(t, currentProcess.getName());
 					ds.invokeChartUpdate("RR", t, currentProcess.getName());
 
@@ -55,8 +62,14 @@ public class RRManager extends AlgoManager {
 					// there is still a current process executing
 
 					currentProcess.decBurstTime();// currentBurstTime++;
+
+					// set 1st response time
+					if (currentProcess.getFirstResponseTime() == -1) {
+						currentProcess.setFirstResponseTime(t);
+					}
 					currentBurstTime++;
 
+					ganttChart.displayUpdatedReadyQueue(readyQueue);
 					ganttChart.updateGantt(t, currentProcess.getName());
 					ds.invokeChartUpdate("RR", t, currentProcess.getName());
 
@@ -66,6 +79,7 @@ public class RRManager extends AlgoManager {
 				if (currentProcess != null && currentBurstTime == quantum && currentProcess.getBurstTime() != 0) {
 					bankers.releaseResourcesForProcess(currentProcess);
 					bankers.returnProcessToJobQueue(currentProcess);
+					readyQueue.dequeue();
 					currentProcess = null;
 					currentBurstTime = 0;
 				} else if (currentProcess != null && currentProcess.getBurstTime() == 0) {
@@ -73,7 +87,9 @@ public class RRManager extends AlgoManager {
 					currentProcess
 							.setTurnaroundTime(currentProcess.getCompletionTime() - currentProcess.getArrivalTime());
 					currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
+					currentProcess.setResponseTime(Math.abs(currentProcess.getFirstResponseTime() - currentProcess.getArrivalTime()));
 					bankers.releaseResourcesForProcess(currentProcess);
+					readyQueue.dequeue();
 					currentBurstTime = 0;
 					currentProcess = null;
 				}
@@ -86,43 +102,16 @@ public class RRManager extends AlgoManager {
 
 				t++;
 				ganttChart.displayTimeAndAvailableData(t, bankers.getCurrentAvailableTableData());
+				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
+				ganttChart.displayUpdatedReadyQueue(readyQueue);
 			}
 			System.out.println("Done executing RR!");
 
 			sortProcessesVectorByProcessNumber();
-			displayStats();
-			// bankers.setAvgCompletionTime(0.0);
-			// bankers.setAvgTurnaroundTime(0.0);
-			// bankers.setAvgWaitingTime(0.0);
-			// for (int i = 0; i < processesVector.size(); i++) {
-			// Process process = processesVector.get(i);
-			// System.out.println(process.getName() + " CT=" + process.getCompletionTime() +
-			// ", TAT=" + process.getTurnaroundTime() + ", WT=" + process.getWaitingTime());
-			// bankers.setAvgCompletionTime(bankers.getAvgCompletionTime() + ((double)
-			// process.getCompletionTime()));
-			// bankers.setAvgTurnaroundTime(bankers.getAvgTurnaroundTime() + ((double)
-			// process.getTurnaroundTime()));
-			// bankers.setAvgWaitingTime(bankers.getAvgWaitingTime() + ((double)
-			// process.getWaitingTime()));
-			// }
-			//
-			// bankers.setAvgCompletionTime((bankers.getAvgCompletionTime()) / ((double)
-			// processesVector.size()));
-			// bankers.setAvgTurnaroundTime(bankers.getAvgTurnaroundTime() / ((double)
-			// processesVector.size()));
-			// bankers.setAvgWaitingTime(bankers.getAvgWaitingTime() / ((double)
-			// processesVector.size()));
-			//
-			// System.out.printf("Avg CT = %.5f, Avg TAT = %.5f, Avg WT = %.5f \n",
-			// bankers.getAvgCompletionTime(), bankers.getAvgTurnaroundTime(),
-			// bankers.getAvgWaitingTime());
+			String[][] statsTableData = bankers.computeStats(processesVector);
+			ganttChart.displayStats(statsTableData);
 		} else {
 			System.exit(0);
 		}
-	}
-
-	public void displayStats() {
-		System.out.println("Hi!");
-		// ganttChart.displayTotalResourcesUsed();
 	}
 }

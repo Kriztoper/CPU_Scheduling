@@ -12,6 +12,7 @@ import java.util.Random;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;

@@ -15,6 +15,8 @@ public class Process {
 	private int completionTime;
 	private int turnaroundTime;
 	private int waitingTime;
+	private int firstResponseTime;
+	private int responseTime;
 	private int totalCylinders;
 	
 	public Process(int arrivalTime, int priorityNum, int burstTime, int[] resources,
@@ -27,6 +29,7 @@ public class Process {
 		setColor(color);
 		setAllocated(false);
 		setArrived(false);
+		setFirstResponseTime(-1);
 	}
 	
 	@Override
@@ -130,6 +133,22 @@ public class Process {
 		this.waitingTime = waitingTime;
 	}
 	
+	public int getFirstResponseTime() {
+		return firstResponseTime;
+	}
+
+	public void setFirstResponseTime(int firstResponseTime) {
+		this.firstResponseTime = firstResponseTime;
+	}
+
+	public int getResponseTime() {
+		return responseTime;
+	}
+
+	public void setResponseTime(int responseTime) {
+		this.responseTime = responseTime;
+	}
+
 	public int getTotalCylinders() {
 		return totalCylinders;
 	}
