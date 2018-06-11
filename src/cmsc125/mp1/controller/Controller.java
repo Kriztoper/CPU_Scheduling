@@ -125,13 +125,18 @@ public class Controller {
 			if (cb.isSelected())
 				selectedCPUAlgos.add(cb.getText());
 		}
-			
-		String selectedDiskAlgo = diskCombo.getValue();
-		DiskSimulator diskSimulator = new DiskSimulator(itp.numProcess, itp.numResource, selectedCPUAlgos, selectedDiskAlgo, itp.getDiskTable(), Integer.parseInt(visualizationSpeed.getText()));
-		diskSimulator.setupSimulation();
 		
-		AlgoSimulator algoSimulator = new AlgoSimulator(itp.numProcess, selectedCPUAlgos, itp.getAllocatedTable(), itp.getMaximumTable(), itp.getAvailableTable(), itp.getTimeTable(), quantumField.getText(), Integer.parseInt(visualizationSpeed.getText()), diskSimulator);
-		algoSimulator.startSimulation();
+		for (String selectedCPUalgo: selectedCPUAlgos) {
+			String selectedDiskAlgo = diskCombo.getValue();
+			DiskSimulator diskSimulator = null;
+			try {
+			diskSimulator = new DiskSimulator(itp.numProcess, itp.numResource, selectedCPUalgo, selectedDiskAlgo, itp.getDiskTable(), Integer.parseInt(visualizationSpeed.getText()));
+			diskSimulator.setupSimulation();
+			} catch (NullPointerException npe) {}
+			
+			AlgoSimulator algoSimulator = new AlgoSimulator(itp.numProcess, selectedCPUalgo, itp.getAllocatedTable(), itp.getMaximumTable(), itp.getAvailableTable(), itp.getTimeTable(), quantumField.getText(), Integer.parseInt(visualizationSpeed.getText()), diskSimulator);
+			algoSimulator.startSimulation();
+		}
 	}
 	
 	@FXML public void showResourcesTable(MouseEvent event){

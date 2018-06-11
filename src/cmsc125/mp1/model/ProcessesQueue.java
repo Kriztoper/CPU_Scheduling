@@ -30,7 +30,7 @@ public class ProcessesQueue {
 	public void enqueue(Process process) {
 		processes.add(process);
 	}
-	
+
 	public void insert(int index, Process process) {
 		processes.add(index, process);
 	}

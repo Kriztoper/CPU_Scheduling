@@ -31,11 +31,11 @@ public class GanttChartStage extends Stage {
     public ArrayList<String> procNames;
     @SuppressWarnings("rawtypes")
 	public ArrayList<XYChart.Series> procSeries;
-    
+
     public GanttChart<Number,String> chart;
     NumberAxis xAxis;
     CategoryAxis yAxis;
-    
+
     StackPane rootPane;
     private Text time;
     private Text jobQueue;
@@ -55,7 +55,7 @@ public class GanttChartStage extends Stage {
         chart.setMaxHeight(50.0);
         chart.setBlockHeight(50);
         chart.getStylesheets().add(getClass().getResource("ganttchart.css").toExternalForm());
-        
+
         xAxis.setLabel("Time");
         xAxis.setTickLabelFill(Color.CHOCOLATE);
         xAxis.setMinorTickCount(4);
@@ -64,14 +64,14 @@ public class GanttChartStage extends Stage {
         yAxis.setTickLabelFill(Color.CHOCOLATE);
         yAxis.setTickLabelGap(10);
 
-    	
+
     	procNames = new ArrayList<String>();
     	procSeries = new ArrayList<XYChart.Series>();
-    	
+
     	procNames.add("P");
     	procSeries.add(new XYChart.Series<>());
     	chart.getData().add(procSeries.get(0));
-    	
+
 //        for (int i=1; i<=numProcess; i++){
 //			procNames.add("P"+Integer.toString(i-1));
 //			procSeries.add(new XYChart.Series<>());
@@ -94,7 +94,7 @@ public class GanttChartStage extends Stage {
         StackPane.setAlignment(time, Pos.TOP_LEFT);
         StackPane.setMargin(time, new Insets(10, 20, 60, 5));
         rootPane.getChildren().add(time);
-        
+
         // job queue label
         jobQueue = new Text(0, 0, "Job Queue");
         jobQueue.setFill(Color.CHOCOLATE);
@@ -102,7 +102,7 @@ public class GanttChartStage extends Stage {
         StackPane.setAlignment(jobQueue, Pos.TOP_LEFT);
         StackPane.setMargin(jobQueue, new Insets(30, 20, 60, 5));
         rootPane.getChildren().add(jobQueue);
-        
+
         // ready queue label
         readyQueue = new Text(0, 0, "Ready Queue");
         readyQueue.setFill(Color.CHOCOLATE);
@@ -110,7 +110,7 @@ public class GanttChartStage extends Stage {
         StackPane.setAlignment(readyQueue, Pos.TOP_LEFT);
         StackPane.setMargin(readyQueue, new Insets(120, 20, 60, 5));
         rootPane.getChildren().add(readyQueue);
-        
+
         // gantt chart label
         Text ganttChartLbl = new Text(0, 0, "Gantt Chart");
         ganttChartLbl.setFill(Color.CHOCOLATE);
@@ -118,29 +118,29 @@ public class GanttChartStage extends Stage {
         StackPane.setAlignment(ganttChartLbl, Pos.TOP_LEFT);
         StackPane.setMargin(ganttChartLbl, new Insets(210, 20, 60, 5));
         rootPane.getChildren().add(ganttChartLbl);
-        
+
         // Job Queue Rectangles
         jqProcesses = new ArrayList<Rectangle>();
 
         for (int i = 0; i < 20; i++) {
         	//Drawing a Rectangle
-        	Rectangle rectangle = new Rectangle();  
+        	Rectangle rectangle = new Rectangle();
 
-        	//Setting the properties of the rectangle 
+        	//Setting the properties of the rectangle
         	rectangle.setX(0);
         	rectangle.setY(0);
-        	rectangle.setWidth(15.0f); 
+        	rectangle.setWidth(15.0f);
         	rectangle.setHeight(50.0f);
 //        	rectangle.setFill(ColorConstants.getColorFX(i));
         	rectangle.setFill(Color.WHITESMOKE);
-        	
+
         	// Add rectangle to list
         	jqProcesses.add(rectangle);
         	StackPane.setAlignment(rectangle, Pos.TOP_LEFT);
         	StackPane.setMargin(rectangle, new Insets(60, 10, 10, 10 + i * 15));
         	rootPane.getChildren().add(rectangle);
         }
-        
+
         // Ready Queue Rectangles
         rqProcesses = new ArrayList<Rectangle>();
 
@@ -148,26 +148,26 @@ public class GanttChartStage extends Stage {
         	//Drawing a Rectangle
         	Rectangle rectangle = new Rectangle();
 
-        	//Setting the properties of the rectangle 
+        	//Setting the properties of the rectangle
         	rectangle.setX(0);
         	rectangle.setY(0);
-        	rectangle.setWidth(15.0f); 
+        	rectangle.setWidth(15.0f);
         	rectangle.setHeight(50.0f);
 //        	rectangle.setFill(ColorConstants.getColorFX(i));
         	rectangle.setFill(Color.WHITESMOKE);
-        	
+
         	// Add rectangle to list
         	rqProcesses.add(rectangle);
         	StackPane.setAlignment(rectangle, Pos.CENTER_LEFT);
         	StackPane.setMargin(rectangle, new Insets(10, 10, 10, 10 + i * 15));
         	rootPane.getChildren().add(rectangle);
         }
-        
+
     	Scene scene  = new Scene(rootPane);
         scene.setFill(Color.WHITESMOKE);
         this.setScene(scene);
         this.show();
-        
+
     }
 
 	public void displayTimeAndAvailableData(int t, int[] currentAvailableTableData){
@@ -229,7 +229,7 @@ public class GanttChartStage extends Stage {
 				j++;
 			}
 		}
-		
+
 		//TODO: display all the current processes in the job queue, NOTE: The color of the square for the process is the color it is assigned in the ganttchart
 		// Design:
 		/**
@@ -256,7 +256,7 @@ public class GanttChartStage extends Stage {
 				((Node) rqProcesses.get(i)).setVisible(false);
 			}
 		}
-		
+
 		//TODO: display all the current processes in the ready queue, NOTE: The color of the square for the process is the color it is assigned in the ganttchart
 		// Design:
 		/**
