@@ -284,7 +284,10 @@ public class InputTablePanel extends JPanel {
 		for (int i = 0, j; i < rowCount; i++) {
 			int colCount = Integer.parseInt((String) maximumTable.getModel().getValueAt(i, 0));
 			for ( j=0 ; j < colCount; j++) {
-				diskTable.getModel().setValueAt(Integer.toString(random.nextInt(100)), i, j);
+				try {
+					diskTable.getModel().setValueAt(Integer.toString(random.nextInt(100)), i, j);
+				} catch (ArrayIndexOutOfBoundsException e) {
+				}
 			}
 			for ( ; j < diskTable.getModel().getColumnCount(); j++) {
 				diskTable.getModel().setValueAt("-", i, j);
