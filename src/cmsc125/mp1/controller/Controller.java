@@ -42,14 +42,14 @@ public class Controller {
 	}
 	
 	@FXML public void randNumProcesses(MouseEvent event) {
-		int randomIndex = random.nextInt(20)+1;
+		int randomIndex = random.nextInt(19)+1;
 		numProcessField.setText(Integer.toString(randomIndex));
 		itp.numProcess = randomIndex;
 		itp.setResourcesTableRowSize(itp.numProcess);
 	}
 
 	@FXML public void randNumResources(MouseEvent event) {
-		int randomIndex = random.nextInt(10)+1;
+		int randomIndex = random.nextInt(9)+1;
 		numResourceField.setText(Integer.toString(randomIndex));
 		itp.numResource = randomIndex;
 		itp.setResourcesTableColumnSize(itp.numResource);

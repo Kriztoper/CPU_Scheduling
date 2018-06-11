@@ -1,7 +1,5 @@
 package cmsc125.mp1.algorithms;
 
-import java.util.ArrayList;
-
 import javax.swing.JTable;
 
 import cmsc125.mp1.algorithms.disk.DiskSimulator;
