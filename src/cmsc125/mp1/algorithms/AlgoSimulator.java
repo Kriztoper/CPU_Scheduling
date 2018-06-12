@@ -42,9 +42,7 @@ public class AlgoSimulator {
 
 			FCFSManager fcfsManager = new FCFSManager(allocatedTable, maximumTable, availableTable, timeTable, ganttChart, ds);
 			fcfsManager.startSimulation();
-		}
-		
-		if (CPUalgo.contains("SRTF")) {
+		} else if (CPUalgo.contains("SRTF")) {
 			ganttChart.setHeight(ScreenConstants.HEIGHT/2 - 10);
 			ganttChart.setWidth(ScreenConstants.WIDTH/3);
 			ganttChart.setX(ScreenConstants.WIDTH/3);
@@ -53,9 +51,7 @@ public class AlgoSimulator {
 
 			SRTFManager srtfManager = new SRTFManager(allocatedTable, maximumTable, availableTable, timeTable, ganttChart, ds);
 			srtfManager.startSimulation();
-		}
-		
-		if (CPUalgo.contains("SJF")) {
+		} else if (CPUalgo.contains("SJF")) {
 			ganttChart.setHeight(ScreenConstants.HEIGHT/2 - 10);
 			ganttChart.setWidth(ScreenConstants.WIDTH/3);
 			ganttChart.setX(ScreenConstants.WIDTH*2/3);
@@ -64,20 +60,7 @@ public class AlgoSimulator {
 
 			SJFManager sjfManager = new SJFManager(allocatedTable, maximumTable, availableTable, timeTable, ganttChart, ds);
 			sjfManager.startSimulation();
-		}
-		
-		if (CPUalgo.contains("PRIO")) {
-			ganttChart.setHeight(ScreenConstants.HEIGHT/2 - 10);
-			ganttChart.setWidth(ScreenConstants.WIDTH/3);
-			ganttChart.setX(0);
-			ganttChart.setY(ScreenConstants.HEIGHT/2 - 10);
-			ganttChart.setTitle("CPU Scheduling: PRIO Simulation");
-
-			PRIOManager prioManager = new PRIOManager(allocatedTable, maximumTable, availableTable, timeTable, ganttChart, ds);
-			prioManager.startSimulation();
-		}
-
-		if (CPUalgo.contains("NP PRIO")) {
+		} else if (CPUalgo.contains("NP PRIO")) {
 			ganttChart.setHeight(ScreenConstants.HEIGHT/2 - 10);
 			ganttChart.setWidth(ScreenConstants.WIDTH/3);
 			ganttChart.setX(ScreenConstants.WIDTH/3);
@@ -86,6 +69,15 @@ public class AlgoSimulator {
 
 			NP_PRIOManager np_prioManager = new NP_PRIOManager(allocatedTable, maximumTable, availableTable, timeTable, ganttChart, ds);
 			np_prioManager.startSimulation();
+		} else if (CPUalgo.contains("PRIO")) {
+			ganttChart.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			ganttChart.setWidth(ScreenConstants.WIDTH/3);
+			ganttChart.setX(0);
+			ganttChart.setY(ScreenConstants.HEIGHT/2 - 10);
+			ganttChart.setTitle("CPU Scheduling: PRIO Simulation");
+
+			PRIOManager prioManager = new PRIOManager(allocatedTable, maximumTable, availableTable, timeTable, ganttChart, ds);
+			prioManager.startSimulation();
 		}
 		
 		if (CPUalgo.contains("RR")) {

@@ -102,10 +102,10 @@ public class DiskSimulator {
 			lineChartStage.setTitle(diskAlgo + "Disk Visualization for SRTF CPU");
 		} else if (cpuAlgo.contains("RR")) {
 			lineChartStage.setTitle(diskAlgo + "Disk Visualization for RR CPU");
+		} else if (cpuAlgo.contains("NP PRIO")) {
+			lineChartStage.setTitle(diskAlgo + "Disk Visualization for NP PRIO CPU");
 		} else if (cpuAlgo.contains("PRIO")) {
 			lineChartStage.setTitle(diskAlgo + "Disk Visualization for PRIO CPU");
-		} else if (cpuAlgo.contains("NPPRIO")) {
-			lineChartStage.setTitle(diskAlgo + "Disk Visualization for NPPRIO CPU");
 		}
 	}
 }

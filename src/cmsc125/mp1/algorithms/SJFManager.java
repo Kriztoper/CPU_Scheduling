@@ -78,7 +78,7 @@ public class SJFManager extends AlgoManager {
 					currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
 					currentProcess.setResponseTime(Math.abs(currentProcess.getFirstResponseTime() - currentProcess.getArrivalTime()));
 					bankers.releaseResourcesForProcess(currentProcess);
-					readyQueue.dequeue();
+					removeProcessFromReadyQueue(currentProcess);
 					currentProcess = null;
 					currentBurstTime = 0;
 				}
@@ -101,6 +101,16 @@ public class SJFManager extends AlgoManager {
 			ganttChart.displayStats(statsTableData);
 		} else {
 			System.exit(0);
+		}
+	}
+
+	public void removeProcessFromReadyQueue(Process currentProcess) {
+		int size = readyQueue.getSize();
+		for (int i = 0; i < size; i++) {
+			if (readyQueue.get(i) == currentProcess) {
+				readyQueue.remove(i);
+				break;
+			}
 		}
 	}
 
