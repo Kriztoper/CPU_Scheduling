@@ -12,7 +12,6 @@ import java.util.Random;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -90,21 +89,14 @@ public class InputTablePanel extends JPanel {
 		for (int i = 0; i < 20; i++) {
 			for (int j = 0; j < 10; j++) {
 				if (j == 0) {
-					maximumObjects[i][j] = "9";
+					maximumObjects[i][j] = "10";
 				} else {
 					maximumObjects[i][j] = "0";
 				}
 			}
 		}
-		maximumTable = new JTable(new ResourcesTableModel(columnResources, maximumObjects));/* {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return column != 0 ? true : false;
-			}
-		});*/
+		maximumTable = new JTable(new ResourcesTableModel(columnResources, maximumObjects));
 		maximumTable.setBackground(Color.WHITE);
-//		TableColumn tm = maximumTable.getColumnModel().getColumn(0);
-//		tm.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.GRAY));
 		maximumTable.setRowSelectionAllowed(true);
 		maximumTable.setColumnSelectionAllowed(true);
 		maximumTable.setCellSelectionEnabled(true);
@@ -112,7 +104,7 @@ public class InputTablePanel extends JPanel {
 		for (int i = 0; i < 10; i++) {
 			TableColumn maxTC = maxTCM.getColumn(i);
 			if (i == 0) {
-				maxTC.setCellEditor(new SpinnerEditor(1, 9));
+				maxTC.setCellEditor(new SpinnerEditor(1, 10));
 			} else {
 				maxTC.setCellEditor(new SpinnerEditor(0, 9));
 			}		}
@@ -122,11 +114,7 @@ public class InputTablePanel extends JPanel {
 		String[][] availableObjects = new String[1][10];
 		for (int i = 0; i < 1; i++) {
 			for (int j = 0; j < 10; j++) {
-//				if (j == 0) {
-//					availableObjects[i][j] = "1";
-//				} else {
-					availableObjects[i][j] = "0";
-//				}
+				availableObjects[i][j] = "0";
 			}
 		}
 		availableTable = new JTable(new ResourcesTableModel(columnResources, availableObjects));
@@ -134,12 +122,6 @@ public class InputTablePanel extends JPanel {
 		availableTable.setRowSelectionAllowed(true);
 		availableTable.setColumnSelectionAllowed(true);
 		availableTable.setCellSelectionEnabled(true);
-		/*
-		 * DefaultTableCellRenderer centerRenderer = new
-		 * DefaultTableCellRenderer(); centerRenderer.setHorizontalAlignment(
-		 * JLabel.CENTER); resourcesTable.setDefaultRenderer(String.class,
-		 * centerRenderer);
-		 */
 
 		// Table for arrival time, priority
 		String[] columnTime = { "AT", "Priority" };
@@ -155,9 +137,15 @@ public class InputTablePanel extends JPanel {
 		timeTable.setColumnSelectionAllowed(true);
 		timeTable.setCellSelectionEnabled(true);
 		
-
+		// disk table
+		String[][] diskObjects = new String[20][10];
+		for (int i = 0; i < 20; i++) {
+			for (int j = 0; j < 10; j++) {
+				diskObjects[i][j] = "0";
+			}
+		}
 		String[] columnCylinders = { "C0", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9" };
-		diskTable = new JTable(new ResourcesTableModel(columnCylinders, allocatedObjects));
+		diskTable = new JTable(new ResourcesTableModel(columnCylinders, diskObjects));
 		diskTable.setBackground(Color.WHITE);
 		diskTable.setRowSelectionAllowed(true);
 		diskTable.setColumnSelectionAllowed(true);
@@ -236,30 +224,28 @@ public class InputTablePanel extends JPanel {
 
 	public void randAllocatedTable() {
 		TableModel maximumTableModel = maximumTable.getModel();
-		int rowCount = allocatedTable.getModel().getRowCount();
-		int colCount = allocatedTable.getModel().getColumnCount();
+		TableModel allocatedTableModel = allocatedTable.getModel();
+		int rowCount = allocatedTableModel.getRowCount();
+		int colCount = allocatedTableModel.getColumnCount();
 		Random random = new Random();
 		for (int i = 0; i < rowCount; i++) {
 			for (int j = 0; j < colCount; j++) {
-//				if (j == 0) {
-//					allocatedTable.getModel().setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
-//				} else {
-					allocatedTable.getModel().setValueAt(Integer.toString(random.nextInt(Integer.parseInt((String) maximumTableModel.getValueAt(i, j)) + 1)), i, j);
-//				}
+				allocatedTableModel.setValueAt(Integer.toString(random.nextInt(Integer.parseInt((String) maximumTableModel.getValueAt(i, j)) + 1)), i, j);
 			}
 		}
 	}
 
 	public void randMaximumTable() {
-		int rowCount = maximumTable.getModel().getRowCount();
-		int colCount = maximumTable.getModel().getColumnCount();
+		TableModel maximumTableModel = maximumTable.getModel();
+		int rowCount = maximumTableModel.getRowCount();
+		int colCount = maximumTableModel.getColumnCount();
 		Random random = new Random();
 		for (int i = 0; i < rowCount; i++) {
 			for (int j = 0; j < colCount; j++) {
 				if (j == 0) {
-					maximumTable.getModel().setValueAt(Integer.toString(random.nextInt(9) + 1), i, j);
+					maximumTableModel.setValueAt(Integer.toString(random.nextInt(10) + 1), i, j);
 				} else {
-					maximumTable.getModel().setValueAt(Integer.toString(random.nextInt(10)), i, j);
+					maximumTableModel.setValueAt(Integer.toString(random.nextInt(10)), i, j);
 				}
 			}
 		}
@@ -302,11 +288,7 @@ public class InputTablePanel extends JPanel {
 		Random random = new Random();
 		for (int i = 0; i < rowCount; i++) {
 			for (int j = 0; j < colCount; j++) {
-//				if (j == 0) {
-//					timeTable.getModel().setValueAt(Integer.toString(random.nextInt(rowCount) + 1), i, j);
-//				} else {
-					timeTable.getModel().setValueAt(Integer.toString(random.nextInt(rowCount)), i, j);
-//				}
+				timeTable.getModel().setValueAt(Integer.toString(random.nextInt(rowCount)), i, j);
 			}
 		}
 	}
@@ -369,7 +351,7 @@ public class InputTablePanel extends JPanel {
 			for (int j = 0; j < newMaximumTableData[i].length; j++) {
 				if (newMaximumTableData[i][j] == null) {
 					if (j == 0) {
-						newMaximumTableData[i][j] = "9";
+						newMaximumTableData[i][j] = "10";
 					} else {
 						newMaximumTableData[i][j] = "0";
 					}
@@ -384,19 +366,12 @@ public class InputTablePanel extends JPanel {
 
 		((ResourcesTableModel) maximumTable.getModel()).setColumnNames(newMaximumColumns);
 
-		maximumTable.setModel(new ResourcesTableModel(currentMaximumModel.getColumnNames(), newMaximumTableData));/* {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return column != 0 ? true : false;
-			}
-		});*/
-//		TableColumn tm = maximumTable.getColumnModel().getColumn(0);
-//		tm.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.GRAY));
+		maximumTable.setModel(new ResourcesTableModel(currentMaximumModel.getColumnNames(), newMaximumTableData));
 		TableColumnModel maxTCM = maximumTable.getColumnModel();	
 		for (int i = 0; i < numCols; i++) {
 			TableColumn maxTC = maxTCM.getColumn(i);
 			if (i == 0) {
-				maxTC.setCellEditor(new SpinnerEditor(1, 9));
+				maxTC.setCellEditor(new SpinnerEditor(1, 10));
 			} else {
 				maxTC.setCellEditor(new SpinnerEditor(0, 9));
 			}
@@ -432,37 +407,6 @@ public class InputTablePanel extends JPanel {
 		((ResourcesTableModel) availableTable.getModel()).setColumnNames(newAvailableColumns);
 
 		availableTable.setModel(new ResourcesTableModel(currentAvailableModel.getColumnNames(), newAvailableTableData));
-		
-		
-		// disk table
-		ResourcesTableModel currentDiskModel = ((ResourcesTableModel) diskTable.getModel());
-		String[][] currentDiskTableData = currentDiskModel.getData();
-		String[][] newDiskTableData = new String[currentDiskTableData.length][numCols];
-
-		for (int i = 0; i < currentDiskTableData.length; i++) {
-			for (int j = 0; j < currentDiskTableData[i].length; j++) {
-				if (currentDiskTableData[i][j] != null && j < numCols) {
-					newDiskTableData[i][j] = currentDiskTableData[i][j];
-				}
-			}
-		}
-
-		for (int i = 0; i < newDiskTableData.length; i++) {
-			for (int j = 0; j < newDiskTableData[i].length; j++) {
-				if (newDiskTableData[i][j] == null) {
-					newDiskTableData[i][j] = "0";
-				}
-			}
-		}
-
-		String[] newDiskColumns = new String[numCols];
-		for (int i = 0; i < numCols; i++) {
-			newDiskColumns[i] = "C" + (i);
-		}
-
-		((ResourcesTableModel) diskTable.getModel()).setColumnNames(newDiskColumns);
-
-		diskTable.setModel(new ResourcesTableModel(currentDiskModel.getColumnNames(), newDiskTableData));
 	}
 
 	public void setResourcesTableRowSize(int numRows) {
@@ -482,11 +426,7 @@ public class InputTablePanel extends JPanel {
 		for (int i = 0; i < newAllocatedTableData.length; i++) {
 			for (int j = 0; j < newAllocatedTableData[i].length; j++) {
 				if (newAllocatedTableData[i][j] == null) {
-//					if (j == 0) {
-//						newAllocatedTableData[i][j] = "1";
-//					} else {
-						newAllocatedTableData[i][j] = "0";
-//					}
+					newAllocatedTableData[i][j] = "0";
 				}
 			}
 		}
@@ -516,7 +456,7 @@ public class InputTablePanel extends JPanel {
 			for (int j = 0; j < newMaximumTableData[i].length; j++) {
 				if (newMaximumTableData[i][j] == null) {
 					if (j == 0) {
-						newMaximumTableData[i][j] = "9";
+						newMaximumTableData[i][j] = "10";
 					} else {
 						newMaximumTableData[i][j] = "0";
 					}
@@ -524,77 +464,24 @@ public class InputTablePanel extends JPanel {
 			}
 		}
 
-		maximumTable.setModel(new ResourcesTableModel(currentMaximumModel.getColumnNames(), newMaximumTableData));/* {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return column != 0 ? true : false;
-			}
-		});*/
-//		TableColumn tm = maximumTable.getColumnModel().getColumn(0);
-//		tm.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.GRAY));
+		maximumTable.setModel(new ResourcesTableModel(currentMaximumModel.getColumnNames(), newMaximumTableData));
 		TableColumnModel maxTCM = maximumTable.getColumnModel();	
 		for (int i = 0; i < newMaximumTableData[0].length; i++) {
 			TableColumn maxTC = maxTCM.getColumn(i);
 			if (i == 0) {
-				maxTC.setCellEditor(new SpinnerEditor(1, 9));
+				maxTC.setCellEditor(new SpinnerEditor(1, 10));
 			} else {
 				maxTC.setCellEditor(new SpinnerEditor(0, 9));
 			}
 		}
 		
-		
-		// available table
-		/*ResourcesTableModel currentAvailableModel = ((ResourcesTableModel) availableTable.getModel());
-		String[][] currentAvailableTableData = currentAvailableModel.getData();
-		String[][] newAvailableTableData = new String[numRows][currentAvailableTableData[0].length];
-
-		for (int i = 0; i < currentAvailableTableData.length; i++) {
-			for (int j = 0; j < currentAvailableTableData[i].length; j++) {
-				if (currentAvailableTableData[i][j] != null && i < numRows) {
-					newAvailableTableData[i][j] = currentAvailableTableData[i][j];
-				}
-			}
-		}
-
-		for (int i = 0; i < newAvailableTableData.length; i++) {
-			for (int j = 0; j < newAvailableTableData[i].length; j++) {
-				if (newAvailableTableData[i][j] == null) {
-					newAvailableTableData[i][j] = "0";
-				}
-			}
-		}
-
-		availableTable.setModel(new ResourcesTableModel(currentAvailableModel.getColumnNames(), newAvailableTableData));*/
-
-		/*
-		 * currentModel = ((ResourcesTableModel) allocatedTable.getModel());
-		 * currentTableData = currentModel.getData(); for (int i = 0; i <
-		 * currentTableData.length; i++) { for (int j = 0; j <
-		 * currentTableData[i].length; j++) {
-		 * System.out.print(currentTableData[i][j] + " "); }
-		 * System.out.println(); }
-		 * 
-		 * currentModel = ((ResourcesTableModel) maximumTable.getModel());
-		 * currentTableData = currentModel.getData(); for (int i = 0; i <
-		 * currentTableData.length; i++) { for (int j = 0; j <
-		 * currentTableData[i].length; j++) {
-		 * System.out.print(currentTableData[i][j] + " "); }
-		 * System.out.println(); }
-		 * 
-		 * currentModel = ((ResourcesTableModel) availableTable.getModel());
-		 * currentTableData = currentModel.getData(); for (int i = 0; i <
-		 * currentTableData.length; i++) { for (int j = 0; j <
-		 * currentTableData[i].length; j++) {
-		 * System.out.print(currentTableData[i][j] + " "); }
-		 * System.out.println(); }
-		 */
 
 		// System.exit(1);
 		resizeTimeTable(numRows);
 		
 		// disk table
 		ResourcesTableModel currentDiskModel = ((ResourcesTableModel) diskTable.getModel());
-		String[][] currentDiskTableData = currentMaximumModel.getData();
+		String[][] currentDiskTableData = currentDiskModel.getData();
 		String[][] newDiskTableData = new String[numRows][currentDiskTableData[0].length];
 
 		for (int i = 0; i < currentDiskTableData.length; i++) {
@@ -733,9 +620,6 @@ public class InputTablePanel extends JPanel {
             textField = editor.getTextField();
             textField.addFocusListener( new FocusListener() {
                 public void focusGained( FocusEvent fe ) {
-//                    System.err.println("Got focus");
-                    //textField.setSelectionStart(0);
-                    //textField.setSelectionEnd(1);
                     SwingUtilities.invokeLater( new Runnable() {
                         public void run() {
                             if ( valueSet ) {
@@ -759,7 +643,6 @@ public class InputTablePanel extends JPanel {
             JTable table, Object value, boolean isSelected, int row, int column
         ) {
             if ( !valueSet ) {
-//            	System.out.println("value = "value+", value's class = "+value.getClass());
                 spinner.setValue(Integer.parseInt((String) value));
             }
             SwingUtilities.invokeLater( new Runnable() {
@@ -771,14 +654,10 @@ public class InputTablePanel extends JPanel {
         }
 
         public boolean isCellEditable( EventObject eo ) {
-//            System.err.println("isCellEditable");
             if ( eo instanceof KeyEvent ) {
                 KeyEvent ke = (KeyEvent)eo;
                 System.err.println("key event: "+ke.getKeyChar());
                 textField.setText(String.valueOf(ke.getKeyChar()));
-                //textField.select(1,1);
-                //textField.setCaretPosition(1);
-                //textField.moveCaretPosition(1);
                 valueSet = true;
             } else {
                 valueSet = false;

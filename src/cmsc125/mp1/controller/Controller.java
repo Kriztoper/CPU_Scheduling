@@ -99,6 +99,7 @@ public class Controller {
 		itp.randMaximumTable();
 		itp.randAllocatedTable();
 		itp.randAvailableTable();
+		itp.randDiskTable();
 	}
 	
 	@FXML public void randDiskTable(MouseEvent event) {
