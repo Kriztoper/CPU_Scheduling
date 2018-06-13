@@ -78,9 +78,7 @@ public class AlgoSimulator {
 
 			PRIOManager prioManager = new PRIOManager(allocatedTable, maximumTable, availableTable, timeTable, ganttChart, ds);
 			prioManager.startSimulation();
-		}
-		
-		if (CPUalgo.contains("RR")) {
+		} else if (CPUalgo.contains("RR")) {
 			ganttChart.setHeight(ScreenConstants.HEIGHT/2 - 10);
 			ganttChart.setWidth(ScreenConstants.WIDTH/3);
 			ganttChart.setX(ScreenConstants.WIDTH*2/3);

@@ -47,6 +47,10 @@ public class InputTablePanel extends JPanel {
 	}
 
 	public void initComponents() {
+		// init numProcess to 20 and numResource to 10 for the initial rows and col values in table
+		numProcess = 20;
+		numResource = 10;
+
 		// drop-down list to choose number of processes
 		String[] oneToTwenty = new String[20];
 		for (int i = 1; i <= oneToTwenty.length; i++) {
@@ -265,18 +269,20 @@ public class InputTablePanel extends JPanel {
 	}
 	
 	public void randDiskTable() {
-		int rowCount = diskTable.getModel().getRowCount();
+		TableModel diskTableModel = diskTable.getModel();
+		int rowCount = diskTableModel.getRowCount();
 		Random random = new Random();
 		for (int i = 0, j; i < rowCount; i++) {
 			int colCount = Integer.parseInt((String) maximumTable.getModel().getValueAt(i, 0));
 			for ( j=0 ; j < colCount; j++) {
 				try {
-					diskTable.getModel().setValueAt(Integer.toString(random.nextInt(100)), i, j);
+					diskTableModel.setValueAt(Integer.toString(random.nextInt(100)), i, j);
 				} catch (ArrayIndexOutOfBoundsException e) {
+					System.err.println(e);
 				}
 			}
-			for ( ; j < diskTable.getModel().getColumnCount(); j++) {
-				diskTable.getModel().setValueAt("-", i, j);
+			for ( ; j < diskTableModel.getColumnCount(); j++) {
+				diskTableModel.setValueAt("-", i, j);
 			}
 				
 		}

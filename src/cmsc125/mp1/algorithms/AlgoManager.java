@@ -25,6 +25,7 @@ public abstract class AlgoManager extends Thread {
 	protected Bankers bankers;
 	protected GanttChartStage ganttChart;
 	protected DiskSimulator ds;
+	public static boolean isDeadlock;
 	
 	public AlgoManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable, GanttChartStage ganttChart, DiskSimulator ds) {
 		this.allocatedTable = allocatedTable;

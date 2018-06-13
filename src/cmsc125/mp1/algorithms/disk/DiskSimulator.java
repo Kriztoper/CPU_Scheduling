@@ -108,4 +108,8 @@ public class DiskSimulator {
 			lineChartStage.setTitle(diskAlgo + "Disk Visualization for PRIO CPU");
 		}
 	}
+
+	public void hide() {
+		lineChartStage.hide();
+	}
 }
