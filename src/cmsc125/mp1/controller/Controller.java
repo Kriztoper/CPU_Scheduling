@@ -18,10 +18,10 @@ import javafx.scene.input.MouseEvent;
 
 public class Controller {	
 	
-	@FXML private TextField numProcessField, numResourceField, quantumField, visualizationSpeed;
+	@FXML private TextField quantumField, visualizationSpeed;
 	@FXML private Button randProcNumBtn, randResNumBtn, randSelectAlgoBtn, randResBtn, showResBtn, startSimulationBtn, randProcessInfoBtn, allSelectAlgoBtn, randSelectDiskInfoBtn, randDiskBtn;
 	@FXML private CheckBox fcfsCB, sjfCB, srtfCB, rrCB, npprioCB, prioCB;
-	@FXML private ComboBox<String> diskCombo;
+	@FXML private ComboBox<String> diskCombo, numProcessField, numResourceField;
 	
 	private InputTablePanel itp;
 	private ArrayList<String> selectedCPUAlgos;
@@ -43,14 +43,14 @@ public class Controller {
 	
 	@FXML public void randNumProcesses(MouseEvent event) {
 		int randomIndex = random.nextInt(20)+1;
-		numProcessField.setText(Integer.toString(randomIndex));
+		numProcessField.setValue(Integer.toString(randomIndex));
 		itp.numProcess = randomIndex;
 		itp.setResourcesTableRowSize(itp.numProcess);
 	}
 
 	@FXML public void randNumResources(MouseEvent event) {
 		int randomIndex = random.nextInt(10)+1;
-		numResourceField.setText(Integer.toString(randomIndex));
+		numResourceField.setValue(Integer.toString(randomIndex));
 		itp.numResource = randomIndex;
 		itp.setResourcesTableColumnSize(itp.numResource);
 	}
@@ -111,7 +111,7 @@ public class Controller {
 	}
 	
 	@FXML public void startSimulation(MouseEvent event){
-		if(numProcessField.getText() == "" || numResourceField.getText() == "")
+		if(numProcessField.getValue() == "" || numResourceField.getValue() == "")
 			return;
 		
 		CPUcheckBoxList = new ArrayList<CheckBox>();
@@ -166,31 +166,25 @@ public class Controller {
         }
 	}
 	
-	@FXML public void setNumProcesses(KeyEvent event){
-		if (event.getCode().equals(KeyCode.ENTER))
-        {
-			int val = Integer.parseInt(numProcessField.getText());
-			if (val > 20)
-				itp.numProcess = 20;
-			else if (val <0)
-				itp.numProcess = 1;
-			else				
-				itp.numProcess = val;
-			itp.setResourcesTableRowSize(itp.numProcess);
-        }
+	@FXML public void setNumProcesses(){
+		int val = Integer.parseInt(numProcessField.getValue());
+		if (val > 20)
+			itp.numProcess = 20;
+		else if (val < 0)
+			itp.numProcess = 1;
+		else
+			itp.numProcess = val;
+		itp.setResourcesTableRowSize(itp.numProcess);
 	}
 	
-	@FXML public void setNumResources(KeyEvent event){
-		if (event.getCode().equals(KeyCode.ENTER))
-        {
-			int val = Integer.parseInt(numResourceField.getText());
-			if (val > 10)
-				itp.numResource = 10;
-			else if (val < 0)
-				itp.numResource = 1;
-			else
-				itp.numResource = val;
-			itp.setResourcesTableColumnSize(itp.numResource);
-        }
+	@FXML public void setNumResources(){
+		int val = Integer.parseInt(numResourceField.getValue());
+		if (val > 10)
+			itp.numResource = 10;
+		else if (val < 0)
+			itp.numResource = 1;
+		else
+			itp.numResource = val;
+		itp.setResourcesTableColumnSize(itp.numResource);
 	}
 }
