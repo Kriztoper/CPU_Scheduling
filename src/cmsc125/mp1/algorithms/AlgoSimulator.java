@@ -35,7 +35,7 @@ public class AlgoSimulator {
 		
 		if (CPUalgo.contains("FCFS")) {
 			ganttChart.setHeight(ScreenConstants.HEIGHT/2 - 10);
-			ganttChart.setWidth(ScreenConstants.WIDTH/3);
+			ganttChart.setWidth(ScreenConstants.WIDTH/3 - 10);
 			ganttChart.setX(0);
 			ganttChart.setY(0);
 			ganttChart.setTitle("CPU Scheduling: FCFS Simulation");
@@ -71,7 +71,7 @@ public class AlgoSimulator {
 			np_prioManager.startSimulation();
 		} else if (CPUalgo.contains("PRIO")) {
 			ganttChart.setHeight(ScreenConstants.HEIGHT/2 - 10);
-			ganttChart.setWidth(ScreenConstants.WIDTH/3);
+			ganttChart.setWidth(ScreenConstants.WIDTH/3 - 10);
 			ganttChart.setX(0);
 			ganttChart.setY(ScreenConstants.HEIGHT/2 - 10);
 			ganttChart.setTitle("CPU Scheduling: PRIO Simulation");
