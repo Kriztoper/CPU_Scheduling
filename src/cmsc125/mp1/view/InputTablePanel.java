@@ -298,217 +298,229 @@ public class InputTablePanel extends JPanel {
 			}
 		}
 	}
-	
+
 	public void setResourcesTableColumnSize(int numCols) {
-		// allocated table
-		ResourcesTableModel currentAllocatedModel = ((ResourcesTableModel) allocatedTable.getModel());
-		String[][] currentAllocatedTableData = currentAllocatedModel.getData();
-		String[][] newAllocatedTableData = new String[currentAllocatedTableData.length][numCols];
+		Runnable setResources = new Runnable() {
+		     public void run() {
+				// allocated table
+				ResourcesTableModel currentAllocatedModel = ((ResourcesTableModel) allocatedTable.getModel());
+				String[][] currentAllocatedTableData = currentAllocatedModel.getData();
+				String[][] newAllocatedTableData = new String[currentAllocatedTableData.length][numCols];
 
-		for (int i = 0; i < currentAllocatedTableData.length; i++) {
-			for (int j = 1; j < currentAllocatedTableData[i].length; j++) {
-				if (currentAllocatedTableData[i][j] != null && j < numCols) {
-					newAllocatedTableData[i][j] = currentAllocatedTableData[i][j];
-				}
-			}
-		}
-
-		for (int i = 0; i < newAllocatedTableData.length; i++) {
-			for (int j = 0; j < newAllocatedTableData[i].length; j++) {
-				if (newAllocatedTableData[i][j] == null) {
-					if (j == 0) {
-						newAllocatedTableData[i][j] = "9";
-					} else {
-						newAllocatedTableData[i][j] = "0";						
+				for (int i = 0; i < currentAllocatedTableData.length; i++) {
+					for (int j = 1; j < currentAllocatedTableData[i].length; j++) {
+						if (currentAllocatedTableData[i][j] != null && j < numCols) {
+							newAllocatedTableData[i][j] = currentAllocatedTableData[i][j];
+						}
 					}
 				}
-			}
-		}
 
-		String[] newAllocatedColumns = new String[numCols];
-		for (int i = 0; i < numCols; i++) {
-			newAllocatedColumns[i] = "R" + (i);
-		}
-
-		((ResourcesTableModel) allocatedTable.getModel()).setColumnNames(newAllocatedColumns);
-
-		allocatedTable.setModel(new ResourcesTableModel(currentAllocatedModel.getColumnNames(), newAllocatedTableData));
-		TableColumnModel allocTCM = allocatedTable.getColumnModel();	
-		for (int i = 0; i < numCols; i++) {
-			TableColumn allocTC = allocTCM.getColumn(i);
-			allocTC.setCellEditor(new SpinnerEditor(0, 9));
-		}
-		
-
-		// maximum table
-		ResourcesTableModel currentMaximumModel = ((ResourcesTableModel) maximumTable.getModel());
-		String[][] currentMaximumTableData = currentMaximumModel.getData();
-		String[][] newMaximumTableData = new String[currentMaximumTableData.length][numCols];
-
-		for (int i = 0; i < currentMaximumTableData.length; i++) {
-			for (int j = 0; j < currentMaximumTableData[i].length; j++) {
-				if (currentMaximumTableData[i][j] != null && j < numCols) {
-					newMaximumTableData[i][j] = currentMaximumTableData[i][j];
-				}
-			}
-		}
-
-		for (int i = 0; i < newMaximumTableData.length; i++) {
-			for (int j = 0; j < newMaximumTableData[i].length; j++) {
-				if (newMaximumTableData[i][j] == null) {
-					if (j == 0) {
-						newMaximumTableData[i][j] = "10";
-					} else {
-						newMaximumTableData[i][j] = "0";
+				for (int i = 0; i < newAllocatedTableData.length; i++) {
+					for (int j = 0; j < newAllocatedTableData[i].length; j++) {
+						if (newAllocatedTableData[i][j] == null) {
+							if (j == 0) {
+								newAllocatedTableData[i][j] = "9";
+							} else {
+								newAllocatedTableData[i][j] = "0";
+							}
+						}
 					}
 				}
-			}
-		}
 
-		String[] newMaximumColumns = new String[numCols];
-		for (int i = 0; i < numCols; i++) {
-			newMaximumColumns[i] = "R" + (i);
-		}
-
-		((ResourcesTableModel) maximumTable.getModel()).setColumnNames(newMaximumColumns);
-
-		maximumTable.setModel(new ResourcesTableModel(currentMaximumModel.getColumnNames(), newMaximumTableData));
-		TableColumnModel maxTCM = maximumTable.getColumnModel();	
-		for (int i = 0; i < numCols; i++) {
-			TableColumn maxTC = maxTCM.getColumn(i);
-			if (i == 0) {
-				maxTC.setCellEditor(new SpinnerEditor(1, 10));
-			} else {
-				maxTC.setCellEditor(new SpinnerEditor(0, 9));
-			}
-		}
-		
-		
-		// available table
-		ResourcesTableModel currentAvailableModel = ((ResourcesTableModel) availableTable.getModel());
-		String[][] currentAvailableTableData = currentAvailableModel.getData();
-		String[][] newAvailableTableData = new String[currentAvailableTableData.length][numCols];
-
-		for (int i = 0; i < currentAvailableTableData.length; i++) {
-			for (int j = 0; j < currentAvailableTableData[i].length; j++) {
-				if (currentAvailableTableData[i][j] != null && j < numCols) {
-					newAvailableTableData[i][j] = currentAvailableTableData[i][j];
+				String[] newAllocatedColumns = new String[numCols];
+				for (int i = 0; i < numCols; i++) {
+					newAllocatedColumns[i] = "R" + (i);
 				}
-			}
-		}
 
-		for (int i = 0; i < newAvailableTableData.length; i++) {
-			for (int j = 0; j < newAvailableTableData[i].length; j++) {
-				if (newAvailableTableData[i][j] == null) {
-					newAvailableTableData[i][j] = "0";
+				((ResourcesTableModel) allocatedTable.getModel()).setColumnNames(newAllocatedColumns);
+
+				allocatedTable.setModel(new ResourcesTableModel(currentAllocatedModel.getColumnNames(), newAllocatedTableData));
+				TableColumnModel allocTCM = allocatedTable.getColumnModel();
+				for (int i = 0; i < numCols; i++) {
+					TableColumn allocTC = allocTCM.getColumn(i);
+					allocTC.setCellEditor(new SpinnerEditor(0, 9));
 				}
+
+
+				// maximum table
+				ResourcesTableModel currentMaximumModel = ((ResourcesTableModel) maximumTable.getModel());
+				String[][] currentMaximumTableData = currentMaximumModel.getData();
+				String[][] newMaximumTableData = new String[currentMaximumTableData.length][numCols];
+
+				for (int i = 0; i < currentMaximumTableData.length; i++) {
+					for (int j = 0; j < currentMaximumTableData[i].length; j++) {
+						if (currentMaximumTableData[i][j] != null && j < numCols) {
+							newMaximumTableData[i][j] = currentMaximumTableData[i][j];
+						}
+					}
+				}
+
+				for (int i = 0; i < newMaximumTableData.length; i++) {
+					for (int j = 0; j < newMaximumTableData[i].length; j++) {
+						if (newMaximumTableData[i][j] == null) {
+							if (j == 0) {
+								newMaximumTableData[i][j] = "10";
+							} else {
+								newMaximumTableData[i][j] = "0";
+							}
+						}
+					}
+				}
+
+				String[] newMaximumColumns = new String[numCols];
+				for (int i = 0; i < numCols; i++) {
+					newMaximumColumns[i] = "R" + (i);
+				}
+
+				((ResourcesTableModel) maximumTable.getModel()).setColumnNames(newMaximumColumns);
+
+				maximumTable.setModel(new ResourcesTableModel(currentMaximumModel.getColumnNames(), newMaximumTableData));
+				TableColumnModel maxTCM = maximumTable.getColumnModel();
+				for (int i = 0; i < numCols; i++) {
+					TableColumn maxTC = maxTCM.getColumn(i);
+					if (i == 0) {
+						maxTC.setCellEditor(new SpinnerEditor(1, 10));
+					} else {
+						maxTC.setCellEditor(new SpinnerEditor(0, 9));
+					}
+				}
+
+
+				// available table
+				ResourcesTableModel currentAvailableModel = ((ResourcesTableModel) availableTable.getModel());
+				String[][] currentAvailableTableData = currentAvailableModel.getData();
+				String[][] newAvailableTableData = new String[currentAvailableTableData.length][numCols];
+
+				for (int i = 0; i < currentAvailableTableData.length; i++) {
+					for (int j = 0; j < currentAvailableTableData[i].length; j++) {
+						if (currentAvailableTableData[i][j] != null && j < numCols) {
+							newAvailableTableData[i][j] = currentAvailableTableData[i][j];
+						}
+					}
+				}
+
+				for (int i = 0; i < newAvailableTableData.length; i++) {
+					for (int j = 0; j < newAvailableTableData[i].length; j++) {
+						if (newAvailableTableData[i][j] == null) {
+							newAvailableTableData[i][j] = "0";
+						}
+					}
+				}
+
+				String[] newAvailableColumns = new String[numCols];
+				for (int i = 0; i < numCols; i++) {
+					newAvailableColumns[i] = "R" + (i);
+				}
+
+				((ResourcesTableModel) availableTable.getModel()).setColumnNames(newAvailableColumns);
+
+				availableTable.setModel(new ResourcesTableModel(currentAvailableModel.getColumnNames(), newAvailableTableData));
 			}
-		}
+		};
 
-		String[] newAvailableColumns = new String[numCols];
-		for (int i = 0; i < numCols; i++) {
-			newAvailableColumns[i] = "R" + (i);
-		}
-
-		((ResourcesTableModel) availableTable.getModel()).setColumnNames(newAvailableColumns);
-
-		availableTable.setModel(new ResourcesTableModel(currentAvailableModel.getColumnNames(), newAvailableTableData));
+		SwingUtilities.invokeLater(setResources);
 	}
 
 	public void setResourcesTableRowSize(int numRows) {
-		// allocated table
-		ResourcesTableModel currentAllocatedModel = ((ResourcesTableModel) allocatedTable.getModel());
-		String[][] currentAllocatedTableData = currentAllocatedModel.getData();
-		String[][] newAllocatedTableData = new String[numRows][currentAllocatedTableData[0].length];
+		Runnable setResources = new Runnable() {
+			public void run() {
+				// allocated table
+				ResourcesTableModel currentAllocatedModel = ((ResourcesTableModel) allocatedTable.getModel());
+				String[][] currentAllocatedTableData = currentAllocatedModel.getData();
+				String[][] newAllocatedTableData = new String[numRows][currentAllocatedTableData[0].length];
 
-		for (int i = 0; i < currentAllocatedTableData.length; i++) {
-			for (int j = 0; j < currentAllocatedTableData[i].length; j++) {
-				if (currentAllocatedTableData[i][j] != null && i < numRows) {
-					newAllocatedTableData[i][j] = currentAllocatedTableData[i][j];
-				}
-			}
-		}
-
-		for (int i = 0; i < newAllocatedTableData.length; i++) {
-			for (int j = 0; j < newAllocatedTableData[i].length; j++) {
-				if (newAllocatedTableData[i][j] == null) {
-					newAllocatedTableData[i][j] = "0";
-				}
-			}
-		}
-
-		allocatedTable.setModel(new ResourcesTableModel(currentAllocatedModel.getColumnNames(), newAllocatedTableData));
-		TableColumnModel allocTCM = allocatedTable.getColumnModel();	
-		for (int i = 0; i < newAllocatedTableData[0].length; i++) {
-			TableColumn allocTC = allocTCM.getColumn(i);
-			allocTC.setCellEditor(new SpinnerEditor(0, 9));
-		}
-		
-		
-		// maximum table
-		ResourcesTableModel currentMaximumModel = ((ResourcesTableModel) maximumTable.getModel());
-		String[][] currentMaximumTableData = currentMaximumModel.getData();
-		String[][] newMaximumTableData = new String[numRows][currentMaximumTableData[0].length];
-
-		for (int i = 0; i < currentMaximumTableData.length; i++) {
-			for (int j = 1; j < currentMaximumTableData[i].length; j++) {
-				if (currentMaximumTableData[i][j] != null && i < numRows) {
-					newMaximumTableData[i][j] = currentMaximumTableData[i][j];
-				}
-			}
-		}
-
-		for (int i = 0; i < newMaximumTableData.length; i++) {
-			for (int j = 0; j < newMaximumTableData[i].length; j++) {
-				if (newMaximumTableData[i][j] == null) {
-					if (j == 0) {
-						newMaximumTableData[i][j] = "10";
-					} else {
-						newMaximumTableData[i][j] = "0";
+				for (int i = 0; i < currentAllocatedTableData.length; i++) {
+					for (int j = 0; j < currentAllocatedTableData[i].length; j++) {
+						if (currentAllocatedTableData[i][j] != null && i < numRows) {
+							newAllocatedTableData[i][j] = currentAllocatedTableData[i][j];
+						}
 					}
 				}
-			}
-		}
 
-		maximumTable.setModel(new ResourcesTableModel(currentMaximumModel.getColumnNames(), newMaximumTableData));
-		TableColumnModel maxTCM = maximumTable.getColumnModel();	
-		for (int i = 0; i < newMaximumTableData[0].length; i++) {
-			TableColumn maxTC = maxTCM.getColumn(i);
-			if (i == 0) {
-				maxTC.setCellEditor(new SpinnerEditor(1, 10));
-			} else {
-				maxTC.setCellEditor(new SpinnerEditor(0, 9));
-			}
-		}
-		
-
-		// System.exit(1);
-		resizeTimeTable(numRows);
-		
-		// disk table
-		ResourcesTableModel currentDiskModel = ((ResourcesTableModel) diskTable.getModel());
-		String[][] currentDiskTableData = currentDiskModel.getData();
-		String[][] newDiskTableData = new String[numRows][currentDiskTableData[0].length];
-
-		for (int i = 0; i < currentDiskTableData.length; i++) {
-			for (int j = 0; j < currentDiskTableData[i].length; j++) {
-				if (currentDiskTableData[i][j] != null && i < numRows) {
-					newDiskTableData[i][j] = currentDiskTableData[i][j];
+				for (int i = 0; i < newAllocatedTableData.length; i++) {
+					for (int j = 0; j < newAllocatedTableData[i].length; j++) {
+						if (newAllocatedTableData[i][j] == null) {
+							newAllocatedTableData[i][j] = "0";
+						}
+					}
 				}
-			}
-		}
 
-		for (int i = 0; i < newDiskTableData.length; i++) {
-			for (int j = 0; j < newDiskTableData[i].length; j++) {
-				if (newDiskTableData[i][j] == null) {
-					newDiskTableData[i][j] = "0";
+				allocatedTable.setModel(new ResourcesTableModel(currentAllocatedModel.getColumnNames(), newAllocatedTableData));
+				TableColumnModel allocTCM = allocatedTable.getColumnModel();
+				for (int i = 0; i < newAllocatedTableData[0].length; i++) {
+					TableColumn allocTC = allocTCM.getColumn(i);
+					allocTC.setCellEditor(new SpinnerEditor(0, 9));
 				}
-			}
-		}
 
-		diskTable.setModel(new ResourcesTableModel(currentDiskModel.getColumnNames(), newDiskTableData));
+
+				// maximum table
+				ResourcesTableModel currentMaximumModel = ((ResourcesTableModel) maximumTable.getModel());
+				String[][] currentMaximumTableData = currentMaximumModel.getData();
+				String[][] newMaximumTableData = new String[numRows][currentMaximumTableData[0].length];
+
+				for (int i = 0; i < currentMaximumTableData.length; i++) {
+					for (int j = 1; j < currentMaximumTableData[i].length; j++) {
+						if (currentMaximumTableData[i][j] != null && i < numRows) {
+							newMaximumTableData[i][j] = currentMaximumTableData[i][j];
+						}
+					}
+				}
+
+				for (int i = 0; i < newMaximumTableData.length; i++) {
+					for (int j = 0; j < newMaximumTableData[i].length; j++) {
+						if (newMaximumTableData[i][j] == null) {
+							if (j == 0) {
+								newMaximumTableData[i][j] = "10";
+							} else {
+								newMaximumTableData[i][j] = "0";
+							}
+						}
+					}
+				}
+
+				maximumTable.setModel(new ResourcesTableModel(currentMaximumModel.getColumnNames(), newMaximumTableData));
+				TableColumnModel maxTCM = maximumTable.getColumnModel();
+				for (int i = 0; i < newMaximumTableData[0].length; i++) {
+					TableColumn maxTC = maxTCM.getColumn(i);
+					if (i == 0) {
+						maxTC.setCellEditor(new SpinnerEditor(1, 10));
+					} else {
+						maxTC.setCellEditor(new SpinnerEditor(0, 9));
+					}
+				}
+
+
+				// System.exit(1);
+				resizeTimeTable(numRows);
+
+				// disk table
+				ResourcesTableModel currentDiskModel = ((ResourcesTableModel) diskTable.getModel());
+				String[][] currentDiskTableData = currentDiskModel.getData();
+				String[][] newDiskTableData = new String[numRows][currentDiskTableData[0].length];
+
+				for (int i = 0; i < currentDiskTableData.length; i++) {
+					for (int j = 0; j < currentDiskTableData[i].length; j++) {
+						if (currentDiskTableData[i][j] != null && i < numRows) {
+							newDiskTableData[i][j] = currentDiskTableData[i][j];
+						}
+					}
+				}
+
+				for (int i = 0; i < newDiskTableData.length; i++) {
+					for (int j = 0; j < newDiskTableData[i].length; j++) {
+						if (newDiskTableData[i][j] == null) {
+							newDiskTableData[i][j] = "0";
+						}
+					}
+				}
+
+				diskTable.setModel(new ResourcesTableModel(currentDiskModel.getColumnNames(), newDiskTableData));
+			}
+		};
+
+		SwingUtilities.invokeLater(setResources);
 	}
-	
+
 	public void resizeTimeTable(int numRows) {
 		ResourcesTableModel timeTableModel = ((ResourcesTableModel) timeTable.getModel());
 		String[][] objects = timeTableModel.getData();
