@@ -129,6 +129,9 @@ public class Controller {
 		
 		for (String selectedCPUalgo: selectedCPUAlgos) {
 			String selectedDiskAlgo = diskCombo.getValue();
+			if (selectedDiskAlgo == null) {
+				selectedDiskAlgo = "FCFS";
+			}
 			DiskSimulator diskSimulator = null;
 			try {
 				diskSimulator = new DiskSimulator(itp.numProcess, itp.numResource, selectedCPUalgo, selectedDiskAlgo, itp.getDiskTable(), Integer.parseInt(visualizationSpeed.getText()));

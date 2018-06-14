@@ -61,7 +61,7 @@
       <Pane layoutX="12.0" layoutY="236.0" prefHeight="50.0" prefWidth="400.0">
          <children>
             <Label focusTraversable="false" layoutY="5.0" prefHeight="39.0" prefWidth="114.0" text="Select Disk Sched Algorithm:" wrapText="true" />
-            <ComboBox fx:id="diskCombo" layoutX="199.0" layoutY="12.0" prefHeight="25.0" prefWidth="202.0" promptText="Choose Algorithm">
+            <ComboBox fx:id="diskCombo" layoutX="199.0" layoutY="12.0" prefHeight="25.0" prefWidth="202.0" promptText="FCFS">
 		      <items>
 		        <FXCollections fx:factory="observableArrayList">
 		          <String fx:value="FCFS" />
