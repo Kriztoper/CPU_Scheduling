@@ -15,7 +15,6 @@ import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -24,19 +23,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
-public class GanttChartStage extends Stage {
+public class CPUChart{
 
     public ArrayList<String> procNames;
     @SuppressWarnings("rawtypes")
 	public ArrayList<XYChart.Series> procSeries;
-
     public GanttChart<Number,String> chart;
     NumberAxis xAxis;
     CategoryAxis yAxis;
 
-    StackPane rootPane;
+    public StackPane rootPane;
     private Text time;
     private Text jobQueue;
     private Text readyQueue;
@@ -47,11 +44,10 @@ public class GanttChartStage extends Stage {
     private Text statsTableText;
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-	public GanttChartStage(int numProcess){    	
+	public CPUChart(int numProcess){    	
         xAxis = new NumberAxis();
         yAxis = new CategoryAxis();
         chart = new GanttChart<Number,String>(xAxis,yAxis);
-        chart.setTitle("");
         chart.setMaxHeight(50.0);
         chart.setBlockHeight(50);
         chart.getStylesheets().add(getClass().getResource("ganttchart.css").toExternalForm());
@@ -60,7 +56,7 @@ public class GanttChartStage extends Stage {
         xAxis.setTickLabelFill(Color.CHOCOLATE);
         xAxis.setMinorTickCount(4);
 
-        yAxis.setLabel("");
+//        yAxis.setLabel("");
         yAxis.setTickLabelFill(Color.CHOCOLATE);
         yAxis.setTickLabelGap(10);
 
@@ -80,9 +76,9 @@ public class GanttChartStage extends Stage {
     	yAxis.setCategories(FXCollections.<String>observableArrayList(procNames));
 
         rootPane = new StackPane();
-        StackPane.setAlignment(chart, Pos.BOTTOM_CENTER);
+//        StackPane.setAlignment(chart, Pos.BOTTOM_CENTER);
 //        StackPane.setMargin(chart, new Insets(10, 10, 10, 10));
-        rootPane.getChildren().addAll(chart);
+        //rootPane.getChildren().addAll(chart);
 
         // init stats table
         initStats(rootPane);
@@ -108,7 +104,7 @@ public class GanttChartStage extends Stage {
         readyQueue.setFill(Color.CHOCOLATE);
         readyQueue.setFont(Font.font(java.awt.Font.SANS_SERIF, 14));
         StackPane.setAlignment(readyQueue, Pos.TOP_LEFT);
-        StackPane.setMargin(readyQueue, new Insets(120, 20, 60, 5));
+        StackPane.setMargin(readyQueue, new Insets(110, 20, 30, 5));
         rootPane.getChildren().add(readyQueue);
 
         // gantt chart label
@@ -116,7 +112,7 @@ public class GanttChartStage extends Stage {
         ganttChartLbl.setFill(Color.CHOCOLATE);
         ganttChartLbl.setFont(Font.font(java.awt.Font.SANS_SERIF, 14));
         StackPane.setAlignment(ganttChartLbl, Pos.TOP_LEFT);
-        StackPane.setMargin(ganttChartLbl, new Insets(210, 20, 60, 5));
+        StackPane.setMargin(ganttChartLbl, new Insets(190, 10, 10, 5));
         rootPane.getChildren().add(ganttChartLbl);
 
         // Job Queue Rectangles
@@ -136,7 +132,7 @@ public class GanttChartStage extends Stage {
         	// Add rectangle to list
         	jqProcesses.add(rectangle);
         	StackPane.setAlignment(rectangle, Pos.TOP_LEFT);
-        	StackPane.setMargin(rectangle, new Insets(60, 10, 10, 10 + i * 15));
+        	StackPane.setMargin(rectangle, new Insets(55, 10, 10, 10 + i * 15));
         	rootPane.getChildren().add(rectangle);
         }
 
@@ -157,15 +153,9 @@ public class GanttChartStage extends Stage {
         	// Add rectangle to list
         	rqProcesses.add(rectangle);
         	StackPane.setAlignment(rectangle, Pos.CENTER_LEFT);
-        	StackPane.setMargin(rectangle, new Insets(10, 10, 10, 10 + i * 15));
+        	StackPane.setMargin(rectangle, new Insets(105, 10, 10, 10 + i * 15));
         	rootPane.getChildren().add(rectangle);
         }
-
-    	Scene scene  = new Scene(rootPane);
-        scene.setFill(Color.WHITESMOKE);
-        this.setScene(scene);
-        this.show();
-
     }
 
 	public void displayTimeAndAvailableData(int t, int[] currentAvailableTableData){

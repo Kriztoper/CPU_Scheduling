@@ -111,6 +111,7 @@ public class Controller {
 	}
 	
 	@FXML public void startSimulation(MouseEvent event){
+		//TODO: remove this unnecessary check
 		if(numProcessField.getValue() == "" || numResourceField.getValue() == "")
 			return;
 		

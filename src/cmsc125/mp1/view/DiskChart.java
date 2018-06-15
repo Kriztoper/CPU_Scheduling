@@ -4,48 +4,46 @@ import java.util.ArrayList;
 
 import javafx.application.Platform;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
-public class LineChartStage extends Stage {
+public class DiskChart{
 
 	public ArrayList<String> procNames;
 	public ArrayList<XYChart.Series<Number, Number>> procSeries;
 
-	private LineChart<Number, Number> lineChart;
+	public LineChart<Number, Number> chart;
 	NumberAxis xAxis, yAxis;
 
-	public LineChartStage(int numProcess) {
+	public DiskChart(int numProcess) {
 		xAxis = new NumberAxis();
 		yAxis = new NumberAxis();
 
-		this.setTitle("Disk Access");
 		xAxis.setLabel("Time");
-		yAxis.setLabel("Cylinder");
+		xAxis.setTickLabelFill(Color.CHOCOLATE);
+		xAxis.setMinorTickCount(4);
+		
+		yAxis.setTickLabelFill(Color.CHOCOLATE);
+//		yAxis.setLabel("Cylinder");
+//		yAxis.autosize();
 
-		lineChart = new LineChart<Number, Number>(xAxis, yAxis);
-		lineChart.getStylesheets().add(getClass().getResource("ganttchart.css").toExternalForm());
+		chart = new LineChart<Number, Number>(xAxis, yAxis);
+		chart.getStylesheets().add(getClass().getResource("ganttchart.css").toExternalForm());
+		chart.setMaxHeight(100.0);
 
 		procSeries = new ArrayList<XYChart.Series<Number, Number>>();
 
 		for (int i = 0; i < numProcess; i++) {
 			procSeries.add(new XYChart.Series<>());
 			procSeries.get(i).setName("P" + Integer.toString(i));
-			lineChart.getData().add(procSeries.get(i));
+			chart.getData().add(procSeries.get(i));
 		}
 
-		lineChart.setLegendVisible(false);
-		Scene scene = new Scene(lineChart);
-		scene.setFill(Color.WHITESMOKE);
-		scene.getStylesheets().add(getClass().getResource("ganttchart.css").toExternalForm());
-		this.setScene(scene);
-		this.show();
+		chart.setLegendVisible(false);
 	}
 
 	public void updateChart(String name, int accessTime, int cylinder) {

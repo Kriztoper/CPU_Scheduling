@@ -7,13 +7,12 @@ import javax.swing.SwingUtilities;
 
 import cmsc125.mp1.algorithms.disk.DiskSimulator;
 import cmsc125.mp1.model.Process;
-import cmsc125.mp1.view.GanttChartStage;
-import javafx.application.Platform;
+import cmsc125.mp1.view.CPUChart;
 
 public class FCFSManager extends AlgoManager {
 
-	public FCFSManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable, GanttChartStage ganttChart, DiskSimulator ds) {
-		super(allocatedTable, maximumTable, availableTable, timeTable, ganttChart, ds);
+	public FCFSManager(String name, JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable, CPUChart ganttChart, DiskSimulator ds) {
+		super(name, allocatedTable, maximumTable, availableTable, timeTable, ganttChart, ds);
 	}
 
 	@Override
@@ -27,12 +26,12 @@ public class FCFSManager extends AlgoManager {
 		if (bankers.isSafeState()) {
 			while (true) {
 				System.out.println("At time " + t);
-				ganttChart.displayTimeAndAvailableData(t, bankers.getCurrentAvailableTableData());
+				cpuChart.displayTimeAndAvailableData(t, bankers.getCurrentAvailableTableData());
 				bankers.updateJobQueue(t, processesQueue);
-				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
+				cpuChart.displayUpdatedJobQueue(bankers.getJobQueue());
 				bankers.requestResources(t, readyQueue);
-				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
-				ganttChart.displayUpdatedReadyQueue(readyQueue);
+				cpuChart.displayUpdatedJobQueue(bankers.getJobQueue());
+				cpuChart.displayUpdatedReadyQueue(readyQueue);
 
 //				bankers.allocateResource(t);
 	//			bankers.getJobQueue().sortByArrivalTime();
@@ -58,7 +57,7 @@ public class FCFSManager extends AlgoManager {
 					// +processNum);
 
 //					ganttChart.displayUpdatedReadyQueue(readyQueue);
-					ganttChart.updateGantt(t, currentProcess.getName());
+					cpuChart.updateGantt(t, currentProcess.getName());
 					ds.invokeChartUpdate("FCFS", t, currentProcess.getName());
 
 					System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]\n");
@@ -72,7 +71,7 @@ public class FCFSManager extends AlgoManager {
 					currentBurstTime++;
 
 //					ganttChart.displayUpdatedReadyQueue(readyQueue);
-					ganttChart.updateGantt(t, currentProcess.getName());
+					cpuChart.updateGantt(t, currentProcess.getName());
 					ds.invokeChartUpdate("FCFS", t, currentProcess.getName());
 
 					System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
@@ -91,33 +90,33 @@ public class FCFSManager extends AlgoManager {
 				}
 
 				try {
-					this.sleep(AlgoSimulator.visualizationSpeed); // delay
+					FCFSManager.sleep(AlgoSimulator.visualizationSpeed); // delay
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 
 				t++;
-				ganttChart.displayTimeAndAvailableData(t, bankers.getCurrentAvailableTableData());
-				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
-				ganttChart.displayUpdatedReadyQueue(readyQueue);
+				cpuChart.displayTimeAndAvailableData(t, bankers.getCurrentAvailableTableData());
+				cpuChart.displayUpdatedJobQueue(bankers.getJobQueue());
+				cpuChart.displayUpdatedReadyQueue(readyQueue);
 			}
 			System.out.println("Done executing FCFS!");
 
 			sortProcessesVectorByProcessNumber();
 			String[][] statsTableData = bankers.computeStats(processesVector);
-			ganttChart.displayStats(statsTableData);
+			cpuChart.displayStats(statsTableData);
 		} else {
 			Runnable statsGUI = new Runnable() {
 
 				@Override
 				public void run() {
 					// Hide CPU vis panel and Disk vis panel
-					Platform.runLater(
-						() -> {
-							ganttChart.hide();
-							ds.hide();
-						}
-					);
+//					Platform.runLater(
+//						() -> {
+//							ganttChart.hide();
+//							ds.hide();
+//						}
+//					);
 					// Show error dialog announcing a DEADLOCK! occured
 					if (!isDeadlock) {
 						isDeadlock = true;

@@ -7,16 +7,15 @@ import javax.swing.SwingUtilities;
 
 import cmsc125.mp1.algorithms.disk.DiskSimulator;
 import cmsc125.mp1.model.Process;
-import cmsc125.mp1.view.GanttChartStage;
-import javafx.application.Platform;
+import cmsc125.mp1.view.CPUChart;
 
 public class RRManager extends AlgoManager {
 
 	private int quantum;
 
-	public RRManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable,
-			String quantumFieldText, GanttChartStage ganttChart, DiskSimulator ds) {
-		super(allocatedTable, maximumTable, availableTable, timeTable, ganttChart, ds);
+	public RRManager(String name, JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable,
+			String quantumFieldText, CPUChart ganttChart, DiskSimulator ds) {
+		super(name, allocatedTable, maximumTable, availableTable, timeTable, ganttChart, ds);
 		String quantumString = quantumFieldText;
 		quantum = ((quantumString.isEmpty()) ? (1) : (Integer.parseInt(quantumString)));
 	}
@@ -33,12 +32,12 @@ public class RRManager extends AlgoManager {
 		if (bankers.isSafeState()) {
 			while (true) {
 				System.out.println("At time " + t);
-				ganttChart.displayTimeAndAvailableData(t, bankers.getCurrentAvailableTableData());
+				cpuChart.displayTimeAndAvailableData(t, bankers.getCurrentAvailableTableData());
 				bankers.updateJobQueue(t, processesQueue);
-				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
+				cpuChart.displayUpdatedJobQueue(bankers.getJobQueue());
 				bankers.requestResources(t, readyQueue);
-				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
-				ganttChart.displayUpdatedReadyQueue(readyQueue);
+				cpuChart.displayUpdatedJobQueue(bankers.getJobQueue());
+				cpuChart.displayUpdatedReadyQueue(readyQueue);
 
 				// If ready queue is empty and there is no current process running
 				if (processesQueue.isEmpty() && bankers.hasAllProcessesInJobQueueAllocated() && readyQueue.isEmpty()
@@ -58,8 +57,8 @@ public class RRManager extends AlgoManager {
 					currentProcess.decBurstTime();
 					currentBurstTime++;
 
-					ganttChart.displayUpdatedReadyQueue(readyQueue);
-					ganttChart.updateGantt(t, currentProcess.getName());
+					cpuChart.displayUpdatedReadyQueue(readyQueue);
+					cpuChart.updateGantt(t, currentProcess.getName());
 					ds.invokeChartUpdate("RR", t, currentProcess.getName());
 
 					System.out.println(currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
@@ -74,8 +73,8 @@ public class RRManager extends AlgoManager {
 					}
 					currentBurstTime++;
 
-					ganttChart.displayUpdatedReadyQueue(readyQueue);
-					ganttChart.updateGantt(t, currentProcess.getName());
+					cpuChart.displayUpdatedReadyQueue(readyQueue);
+					cpuChart.updateGantt(t, currentProcess.getName());
 					ds.invokeChartUpdate("RR", t, currentProcess.getName());
 
 					System.out.println(currentProcess.getName() + "[" + currentProcess.getBurstTime() + "]");
@@ -100,33 +99,33 @@ public class RRManager extends AlgoManager {
 				}
 
 				try {
-					this.sleep(AlgoSimulator.visualizationSpeed); // delay
+					RRManager.sleep(AlgoSimulator.visualizationSpeed); // delay
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 
 				t++;
-				ganttChart.displayTimeAndAvailableData(t, bankers.getCurrentAvailableTableData());
-				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
-				ganttChart.displayUpdatedReadyQueue(readyQueue);
+				cpuChart.displayTimeAndAvailableData(t, bankers.getCurrentAvailableTableData());
+				cpuChart.displayUpdatedJobQueue(bankers.getJobQueue());
+				cpuChart.displayUpdatedReadyQueue(readyQueue);
 			}
 			System.out.println("Done executing RR!");
 
 			sortProcessesVectorByProcessNumber();
 			String[][] statsTableData = bankers.computeStats(processesVector);
-			ganttChart.displayStats(statsTableData);
+			cpuChart.displayStats(statsTableData);
 		} else {
 			Runnable statsGUI = new Runnable() {
 
 				@Override
 				public void run() {
 					// Hide CPU vis panel and Disk vis panel
-					Platform.runLater(
-						() -> {
-							ganttChart.hide();
-							ds.hide();
-						}
-					);
+//					Platform.runLater(
+//						() -> {
+//							ganttChart.hide();
+//							ds.hide();
+//						}
+//					);
 					// Show error dialog announcing a DEADLOCK! occured
 					if (!isDeadlock) {
 						isDeadlock = true;

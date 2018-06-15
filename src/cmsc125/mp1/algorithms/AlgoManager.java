@@ -9,7 +9,8 @@ import cmsc125.mp1.constants.ColorConstants;
 import cmsc125.mp1.model.Process;
 import cmsc125.mp1.model.ProcessesQueue;
 import cmsc125.mp1.model.ResourcesTableModel;
-import cmsc125.mp1.view.GanttChartStage;
+import cmsc125.mp1.view.CPUChart;
+import cmsc125.mp1.view.VisualizationStage;
 
 public abstract class AlgoManager extends Thread {
 
@@ -23,17 +24,20 @@ public abstract class AlgoManager extends Thread {
 	protected ProcessesQueue processesQueue;
 	protected ProcessesQueue readyQueue;
 	protected Bankers bankers;
-	protected GanttChartStage ganttChart;
+	protected CPUChart cpuChart;
 	protected DiskSimulator ds;
+	protected VisualizationStage vs;
 	public static boolean isDeadlock;
 	
-	public AlgoManager(JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable, GanttChartStage ganttChart, DiskSimulator ds) {
+	public AlgoManager(String name, JTable allocatedTable, JTable maximumTable, JTable availableTable, JTable timeTable, CPUChart cpuChart, DiskSimulator ds) {
 		this.allocatedTable = allocatedTable;
 		this.maximumTable = maximumTable;
 		this.availableTable = availableTable;
 		this.timeTable = timeTable;
-		this.ganttChart = ganttChart;
+		this.cpuChart = cpuChart;
 		this.ds = ds;
+		vs = new VisualizationStage(name);
+		vs.vbox.getChildren().addAll(cpuChart.rootPane, cpuChart.chart, ds.diskChart.chart);
 	}
 	
 	public int[] convertToIntArray(String[] resourcesData) {

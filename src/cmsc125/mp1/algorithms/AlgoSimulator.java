@@ -3,12 +3,11 @@ package cmsc125.mp1.algorithms;
 import javax.swing.JTable;
 
 import cmsc125.mp1.algorithms.disk.DiskSimulator;
-import cmsc125.mp1.constants.ScreenConstants;
-import cmsc125.mp1.view.GanttChartStage;
+import cmsc125.mp1.view.CPUChart;
 
 public class AlgoSimulator {
 
-	public GanttChartStage ganttChart;
+	public CPUChart cpuChart;
 	private String CPUalgo;
 	private JTable allocatedTable, maximumTable, availableTable, timeTable;
 	private String quantumFieldText;
@@ -30,62 +29,26 @@ public class AlgoSimulator {
 	}
 
 	public void startSimulation() {
-		ganttChart = new GanttChartStage(numProcess);
-		ganttChart.chart.setTitle("");
+		cpuChart = new CPUChart(numProcess);
+		cpuChart.chart.setTitle("");
 		
 		if (CPUalgo.contains("FCFS")) {
-			ganttChart.setHeight(ScreenConstants.HEIGHT/2 - 10);
-			ganttChart.setWidth(ScreenConstants.WIDTH/3 - 10);
-			ganttChart.setX(0);
-			ganttChart.setY(0);
-			ganttChart.setTitle("CPU Scheduling: FCFS Simulation");
-
-			FCFSManager fcfsManager = new FCFSManager(allocatedTable, maximumTable, availableTable, timeTable, ganttChart, ds);
+			FCFSManager fcfsManager = new FCFSManager("FCFS CPU with "+ds.diskAlgo+" Disk Sched", allocatedTable, maximumTable, availableTable, timeTable, cpuChart, ds);
 			fcfsManager.startSimulation();
 		} else if (CPUalgo.contains("SRTF")) {
-			ganttChart.setHeight(ScreenConstants.HEIGHT/2 - 10);
-			ganttChart.setWidth(ScreenConstants.WIDTH/3);
-			ganttChart.setX(ScreenConstants.WIDTH/3);
-			ganttChart.setY(0);
-			ganttChart.setTitle("CPU Scheduling: SRTF Simulation");
-
-			SRTFManager srtfManager = new SRTFManager(allocatedTable, maximumTable, availableTable, timeTable, ganttChart, ds);
+			SRTFManager srtfManager = new SRTFManager("SRTF CPU with "+ds.diskAlgo+" Disk Sched", allocatedTable, maximumTable, availableTable, timeTable, cpuChart, ds);
 			srtfManager.startSimulation();
 		} else if (CPUalgo.contains("SJF")) {
-			ganttChart.setHeight(ScreenConstants.HEIGHT/2 - 10);
-			ganttChart.setWidth(ScreenConstants.WIDTH/3);
-			ganttChart.setX(ScreenConstants.WIDTH*2/3);
-			ganttChart.setY(0);
-			ganttChart.setTitle("CPU Scheduling: SJF Simulation");
-
-			SJFManager sjfManager = new SJFManager(allocatedTable, maximumTable, availableTable, timeTable, ganttChart, ds);
+			SJFManager sjfManager = new SJFManager("SJF CPU with "+ds.diskAlgo+" Disk Sched", allocatedTable, maximumTable, availableTable, timeTable, cpuChart, ds);
 			sjfManager.startSimulation();
 		} else if (CPUalgo.contains("NP PRIO")) {
-			ganttChart.setHeight(ScreenConstants.HEIGHT/2 - 10);
-			ganttChart.setWidth(ScreenConstants.WIDTH/3);
-			ganttChart.setX(ScreenConstants.WIDTH/3);
-			ganttChart.setY(ScreenConstants.HEIGHT/2 - 10);
-			ganttChart.setTitle("CPU Scheduling: NP PRIO Simulation");
-
-			NP_PRIOManager np_prioManager = new NP_PRIOManager(allocatedTable, maximumTable, availableTable, timeTable, ganttChart, ds);
+			NP_PRIOManager np_prioManager = new NP_PRIOManager("NPPRIO CPU with "+ds.diskAlgo+" Disk Sched", allocatedTable, maximumTable, availableTable, timeTable, cpuChart, ds);
 			np_prioManager.startSimulation();
 		} else if (CPUalgo.contains("PRIO")) {
-			ganttChart.setHeight(ScreenConstants.HEIGHT/2 - 10);
-			ganttChart.setWidth(ScreenConstants.WIDTH/3 - 10);
-			ganttChart.setX(0);
-			ganttChart.setY(ScreenConstants.HEIGHT/2 - 10);
-			ganttChart.setTitle("CPU Scheduling: PRIO Simulation");
-
-			PRIOManager prioManager = new PRIOManager(allocatedTable, maximumTable, availableTable, timeTable, ganttChart, ds);
+			PRIOManager prioManager = new PRIOManager("PRIO CPU with "+ds.diskAlgo+" Disk Sched", allocatedTable, maximumTable, availableTable, timeTable, cpuChart, ds);
 			prioManager.startSimulation();
 		} else if (CPUalgo.contains("RR")) {
-			ganttChart.setHeight(ScreenConstants.HEIGHT/2 - 10);
-			ganttChart.setWidth(ScreenConstants.WIDTH/3);
-			ganttChart.setX(ScreenConstants.WIDTH*2/3);
-			ganttChart.setY(ScreenConstants.HEIGHT/2 - 10);
-			ganttChart.setTitle("CPU Scheduling: RR Simulation");
-
-			RRManager rrManager = new RRManager(allocatedTable, maximumTable, availableTable, timeTable, quantumFieldText, ganttChart, ds);
+			RRManager rrManager = new RRManager("RR CPU with "+ds.diskAlgo+" Disk Sched", allocatedTable, maximumTable, availableTable, timeTable, quantumFieldText, cpuChart, ds);
 			rrManager.startSimulation();
 		}
 	}
