@@ -1,72 +1,106 @@
+.chart-series-line{
+	-fx-stroke: grey;
+}
+
 .P0 {
-    -fx-background-color:rgba(230, 175, 75 ,0.8);
+    -fx-background-color: #e6194b;
+    -fx-stroke: #e6194b;
+    -fx-fill: #e6194b;
 }
 .P1 {
-    -fx-background-color:rgba(100, 149, 237, 0.8);
+    -fx-background-color: #3cb44b;
+    -fx-stroke: #3cb44b;
+    -fx-fill: #3cb44b;
 }
 .P2 {
-    -fx-background-color:rgba(64, 224, 208, 0.8);
+    -fx-background-color: #ffe119;
+    -fx-stroke: #ffe119;
+    -fx-fill: #ffe119;
 }
 .P3 {
-    -fx-background-color:rgba(0, 255, 127 ,0.8);
+    -fx-background-color: #0082c8;
+    -fx-stroke: #0082c8;
+    -fx-fill: #0082c8;
 }
 .P4 {
-    -fx-background-color:rgba(225, 215, 0, 0.8);
+    -fx-background-color: #f58231;
+    -fx-stroke: #f58231;
+    -fx-fill: #f58231;
 }
 .P5 {
-    -fx-background-color:rgba(205, 92, 92, 0.8);
+    -fx-background-color: #911eb4;
+    -fx-stroke: #911eb4;
+    -fx-fill: #911eb4;
 }
 .P6 {
-    -fx-background-color:rgba(210, 180, 140,0.8);
+    -fx-background-color: #46f0f0;
+    -fx-stroke: #46f0f0;
+    -fx-fill: #46f0f0;
 }
 .P7 {
-    -fx-background-color:rgba(255, 165, 0, 0.8);
+    -fx-background-color: #f032e6;
+    -fx-stroke: #f032e6;
+    -fx-fill: #f032e6;
 }
 .P8 {
-    -fx-background-color:rgba(255, 255, 0, 0.8);
+    -fx-background-color: #d2f53c;
+    -fx-stroke: #d2f53c;
+    -fx-fill: #d2f53c;
+    
 }
 .P9 {
-    -fx-background-color:rgba(240, 128, 128 ,0.8);
+    -fx-background-color: #fabebe;
+    -fx-stroke: #fabebe;
+    -fx-fill: #fabebe;
 }
 .P10 {
-    -fx-background-color:rgba(255, 105, 180 ,0.8);
+    -fx-background-color: #008080;
+    -fx-stroke: #008080;
+    -fx-fill: #008080;
 }
 .P11 {
-    -fx-background-color:rgba(224, 80, 56, 0.8);
+    -fx-background-color: #000000;
+    -fx-stroke: #000000;
+    -fx-fill: #000000;
 }
 .P12 {
-    -fx-background-color:rgba(238, 130, 238, 0.8);
+    -fx-background-color: #e6beff;
+    -fx-stroke: #e6beff;
+    -fx-fill: #e6beff;
 }
 .P13 {
-    -fx-background-color:rgba(147, 112, 219,0.8);
+    -fx-background-color: #aa6e28;
+    -fx-stroke: #aa6e28;
+    -fx-fill: #aa6e28;
 }
 .P14 {
-    -fx-background-color:rgba(216, 199, 216, 0.8);
+    -fx-background-color: #fffac8;
+    -fx-stroke: #fffac8;
+    -fx-fill: #fffac8;
+    
 }
 .P15 {
-    -fx-background-color:rgba(233, 150, 122, 0.8);
+    -fx-background-color: #800000;
+    -fx-stroke: #800000;
+    -fx-fill: #800000;
 }
 .P16 {
-    -fx-background-color:rgba(238, 172, 170 ,0.8);
+    -fx-background-color: #aaffc3;
+    -fx-stroke: #aaffc3;
+    -fx-fill: #aaffc3;
 }
 .P17 {
-    -fx-background-color:rgba(153, 205, 50, 0.8);
+    -fx-background-color: #808000;
+    -fx-stroke: #808000;
+    -fx-fill: #808000;
 }
 .P18 {
-    -fx-background-color:rgba(176, 196, 222, 0.8);
+    -fx-background-color: #ffd8b1;
+    -fx-stroke: #ffd8b1;
+    -fx-fill: #ffd8b1;
 }
 .P19 {
-    -fx-background-color:rgba(51, 68, 49, 0.8);
+    -fx-background-color: #000080;
+    -fx-stroke: #000080;
+    -fx-fill: #000080;
 }
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
