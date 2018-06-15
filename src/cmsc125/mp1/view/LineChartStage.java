@@ -34,7 +34,7 @@ public class LineChartStage extends Stage {
 
 		procSeries = new ArrayList<XYChart.Series<Number, Number>>();
 
-		for (int i = 0; i <= numProcess; i++) {
+		for (int i = 0; i < numProcess; i++) {
 			procSeries.add(new XYChart.Series<>());
 			procSeries.get(i).setName("P" + Integer.toString(i));
 			lineChart.getData().add(procSeries.get(i));
