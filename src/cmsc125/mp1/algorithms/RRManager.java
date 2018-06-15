@@ -3,6 +3,7 @@ package cmsc125.mp1.algorithms;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 
 import cmsc125.mp1.algorithms.disk.DiskSimulator;
 import cmsc125.mp1.model.Process;
@@ -20,6 +21,7 @@ public class RRManager extends AlgoManager {
 		quantum = ((quantumString.isEmpty()) ? (1) : (Integer.parseInt(quantumString)));
 	}
 
+	@Override
 	public void run() {
 		bankers = new Bankers(allocatedTable, maximumTable, availableTable, getArrivalTimes(), getPriorityNumbers());
 		Process currentProcess = null;
@@ -114,19 +116,27 @@ public class RRManager extends AlgoManager {
 			String[][] statsTableData = bankers.computeStats(processesVector);
 			ganttChart.displayStats(statsTableData);
 		} else {
-			// Hide CPU vis panel and Disk vis panel
-			Platform.runLater(
-				() -> {
-					ganttChart.hide();
-					ds.hide();
+			Runnable statsGUI = new Runnable() {
+
+				@Override
+				public void run() {
+					// Hide CPU vis panel and Disk vis panel
+					Platform.runLater(
+						() -> {
+							ganttChart.hide();
+							ds.hide();
+						}
+					);
+					// Show error dialog announcing a DEADLOCK! occured
+					if (!isDeadlock) {
+						isDeadlock = true;
+						JOptionPane.showMessageDialog(new JPanel(), "DEADLOCK!", "Error", JOptionPane.ERROR_MESSAGE);
+						isDeadlock = false;
+					}
 				}
-			);
-			// Show error dialog announcing a DEADLOCK! occured
-			if (!isDeadlock) {
-				isDeadlock = true;
-				JOptionPane.showMessageDialog(new JPanel(), "DEADLOCK!", "Error", JOptionPane.ERROR_MESSAGE);
-				isDeadlock = false;
-			}
+			};
+
+			SwingUtilities.invokeLater(statsGUI);
 		}
 	}
 }
