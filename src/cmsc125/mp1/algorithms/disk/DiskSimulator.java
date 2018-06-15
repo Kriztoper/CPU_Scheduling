@@ -5,6 +5,7 @@ import java.util.Queue;
 
 import javax.swing.JTable;
 
+import cmsc125.mp1.constants.ScreenConstants;
 import cmsc125.mp1.model.ResourcesTableModel;
 import cmsc125.mp1.view.LineChartStage;
 
@@ -55,6 +56,8 @@ public class DiskSimulator {
 			lineChartStage.updateChart(procName, accessTime, cylinder);
 			prevUpdate = new ChartUpdate(procName, accessTime, cylinder);
 		} catch (Exception e) {
+			System.out.println("Error in DiskSimulator invokeChartUpdate method");
+			System.out.println(e);
 		}
 	}
 
@@ -95,17 +98,45 @@ public class DiskSimulator {
 
 		lineChartStage = new LineChartStage(numProcess);
 		if (cpuAlgo.contains("FCFS")) {
+			lineChartStage.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			lineChartStage.setWidth(ScreenConstants.WIDTH/3 - 10);
+			lineChartStage.setX(0);
+			lineChartStage.setY(0);
 			lineChartStage.setTitle(diskAlgo + "Disk Visualization for FCFS CPU");
 		} else if (cpuAlgo.contains("SJF")) {
+			lineChartStage.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			lineChartStage.setWidth(ScreenConstants.WIDTH/3);
+			lineChartStage.setX(ScreenConstants.WIDTH*2/3);
+			lineChartStage.setY(0);
 			lineChartStage.setTitle(diskAlgo + "Disk Visualization for SJF CPU");
 		} else if (cpuAlgo.contains("SRTF")) {
+			lineChartStage.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			lineChartStage.setWidth(ScreenConstants.WIDTH/3);
+			lineChartStage.setX(ScreenConstants.WIDTH/3);
+			lineChartStage.setY(0);
 			lineChartStage.setTitle(diskAlgo + "Disk Visualization for SRTF CPU");
 		} else if (cpuAlgo.contains("RR")) {
+			lineChartStage.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			lineChartStage.setWidth(ScreenConstants.WIDTH/3);
+			lineChartStage.setX(ScreenConstants.WIDTH*2/3);
+			lineChartStage.setY(ScreenConstants.HEIGHT/2 - 10);
 			lineChartStage.setTitle(diskAlgo + "Disk Visualization for RR CPU");
+		} else if (cpuAlgo.contains("NP PRIO")) {
+			lineChartStage.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			lineChartStage.setWidth(ScreenConstants.WIDTH/3);
+			lineChartStage.setX(ScreenConstants.WIDTH/3);
+			lineChartStage.setY(ScreenConstants.HEIGHT/2 - 10);
+			lineChartStage.setTitle(diskAlgo + "Disk Visualization for NP PRIO CPU");
 		} else if (cpuAlgo.contains("PRIO")) {
+			lineChartStage.setHeight(ScreenConstants.HEIGHT/2 - 10);
+			lineChartStage.setWidth(ScreenConstants.WIDTH/3 - 10);
+			lineChartStage.setX(0);
+			lineChartStage.setY(ScreenConstants.HEIGHT/2 - 10);
 			lineChartStage.setTitle(diskAlgo + "Disk Visualization for PRIO CPU");
-		} else if (cpuAlgo.contains("NPPRIO")) {
-			lineChartStage.setTitle(diskAlgo + "Disk Visualization for NPPRIO CPU");
 		}
+	}
+
+	public void hide() {
+		lineChartStage.hide();
 	}
 }

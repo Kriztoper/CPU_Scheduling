@@ -1,10 +1,14 @@
 package cmsc125.mp1.algorithms;
 
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 
 import cmsc125.mp1.algorithms.disk.DiskSimulator;
 import cmsc125.mp1.model.Process;
 import cmsc125.mp1.view.GanttChartStage;
+import javafx.application.Platform;
 
 public class NP_PRIOManager extends AlgoManager {
 
@@ -53,7 +57,7 @@ public class NP_PRIOManager extends AlgoManager {
 
 					ganttChart.displayUpdatedReadyQueue(readyQueue);
 					ganttChart.updateGantt(t, currentProcess.getName());
-					ds.invokeChartUpdate("NPPRIO", t, currentProcess.getName());
+					ds.invokeChartUpdate("NP PRIO", t, currentProcess.getName());
 
 					System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
 				} else if (currentProcess != null && currentBurstTime < currentProcess.getBurstTime()) {
@@ -67,7 +71,7 @@ public class NP_PRIOManager extends AlgoManager {
 
 					ganttChart.displayUpdatedReadyQueue(readyQueue);
 					ganttChart.updateGantt(t, currentProcess.getName());
-					ds.invokeChartUpdate("NPPRIO", t, currentProcess.getName());
+					ds.invokeChartUpdate("NP PRIO", t, currentProcess.getName());
 
 					System.out.println(currentProcess.getName() + "[" + currentBurstTime + "]");
 				}
@@ -80,7 +84,7 @@ public class NP_PRIOManager extends AlgoManager {
 					currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
 					currentProcess.setResponseTime(Math.abs(currentProcess.getFirstResponseTime() - currentProcess.getArrivalTime()));
 					bankers.releaseResourcesForProcess(currentProcess);
-					readyQueue.dequeue();
+					removeProcessFromReadyQueue(currentProcess);
 					currentProcess = null;
 					currentBurstTime = 0;
 				}
@@ -102,7 +106,37 @@ public class NP_PRIOManager extends AlgoManager {
 			String[][] statsTableData = bankers.computeStats(processesVector);
 			ganttChart.displayStats(statsTableData);
 		} else {
-			System.exit(0);
+			Runnable statsGUI = new Runnable() {
+
+				@Override
+				public void run() {
+					// Hide CPU vis panel and Disk vis panel
+					Platform.runLater(
+						() -> {
+							ganttChart.hide();
+							ds.hide();
+						}
+					);
+					// Show error dialog announcing a DEADLOCK! occured
+					if (!isDeadlock) {
+						isDeadlock = true;
+						JOptionPane.showMessageDialog(new JPanel(), "DEADLOCK!", "Error", JOptionPane.ERROR_MESSAGE);
+						isDeadlock = false;
+					}
+				}
+			};
+
+			SwingUtilities.invokeLater(statsGUI);
+		}
+	}
+
+	public void removeProcessFromReadyQueue(Process currentProcess) {
+		int size = readyQueue.getSize();
+		for (int i = 0; i < size; i++) {
+			if (readyQueue.get(i) == currentProcess) {
+				readyQueue.remove(i);
+				break;
+			}
 		}
 	}
 

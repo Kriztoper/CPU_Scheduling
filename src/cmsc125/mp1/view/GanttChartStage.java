@@ -131,7 +131,6 @@ public class GanttChartStage extends Stage {
         	rectangle.setY(0);
         	rectangle.setWidth(15.0f);
         	rectangle.setHeight(50.0f);
-//        	rectangle.setFill(ColorConstants.getColorFX(i));
         	rectangle.setFill(Color.WHITESMOKE);
 
         	// Add rectangle to list
@@ -153,7 +152,6 @@ public class GanttChartStage extends Stage {
         	rectangle.setY(0);
         	rectangle.setWidth(15.0f);
         	rectangle.setHeight(50.0f);
-//        	rectangle.setFill(ColorConstants.getColorFX(i));
         	rectangle.setFill(Color.WHITESMOKE);
 
         	// Add rectangle to list
@@ -222,8 +220,8 @@ public class GanttChartStage extends Stage {
 			((Node) jqProcesses.get(i)).setVisible(false);
 
 			if (i < jobQueue.getSize() && !jobQueue.get(i).isAllocated()) {
-				java.awt.Color color = jobQueue.get(i).getColor();
-				((Rectangle) jqProcesses.get(j)).setFill(new javafx.scene.paint.Color(color.getRed()/255.0, color.getGreen()/255.0, color.getBlue()/255.0, 1.0));
+				int procNumber = jobQueue.get(i).getProcessNumber();
+				((Rectangle) jqProcesses.get(j)).setFill(ColorConstants.getColorFX(procNumber));
 				//TODO: Display process number inside rectangle
 				((Node) jqProcesses.get(j)).setVisible(true);
 				j++;
@@ -248,8 +246,8 @@ public class GanttChartStage extends Stage {
 	public void displayUpdatedReadyQueue(ProcessesQueue readyQueue) {
 		for (int i = 0; i < 20; i++) {
 			if (i < readyQueue.getSize()) {
-				java.awt.Color color = readyQueue.get(i).getColor();
-				((Rectangle) rqProcesses.get(i)).setFill(new javafx.scene.paint.Color(color.getRed()/255.0, color.getGreen()/255.0, color.getBlue()/255.0, 1.0));
+				int procNumber = readyQueue.get(i).getProcessNumber();
+				((Rectangle) rqProcesses.get(i)).setFill(ColorConstants.getColorFX(procNumber));
 				//TODO: Display process number inside rectangle
 				((Node) rqProcesses.get(i)).setVisible(true);
 			} else {

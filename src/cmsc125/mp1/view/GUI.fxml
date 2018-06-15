@@ -28,10 +28,50 @@
          <children>
             <Label focusTraversable="false" layoutY="4.0" text="Enter number of Processes:" />
             <Button fx:id="randProcNumBtn" layoutX="318.0" mnemonicParsing="false" onMouseClicked="#randNumProcesses" text="Randomize" />
-            <TextField fx:id="numProcessField" layoutX="158.0" onKeyReleased="#setNumProcesses" promptText="Enter values from 1 to 20 " />
+            <ComboBox fx:id="numProcessField" layoutX="181.0" layoutY="-1.0" onAction="#setNumProcesses" prefHeight="25.0" prefWidth="137.0" promptText="20">
+		      <items>
+		        <FXCollections fx:factory="observableArrayList">
+		          <String fx:value="1" />
+		          <String fx:value="2" />
+		          <String fx:value="3" />
+		          <String fx:value="4" />
+		          <String fx:value="5" />
+                  <String fx:value="6" />
+		          <String fx:value="7" />
+		          <String fx:value="8" />
+		          <String fx:value="9" />
+		          <String fx:value="10" />
+                  <String fx:value="11" />
+		          <String fx:value="12" />
+		          <String fx:value="13" />
+		          <String fx:value="14" />
+		          <String fx:value="15" />
+                  <String fx:value="16" />
+		          <String fx:value="17" />
+		          <String fx:value="18" />
+		          <String fx:value="19" />
+		          <String fx:value="20" />
+		        </FXCollections>
+		      </items>
+		    </ComboBox>
             <Label focusTraversable="false" layoutY="38.0" text="Enter number of Resources:" />
             <Button fx:id="randResNumBtn" layoutX="318.0" layoutY="34.0" mnemonicParsing="false" onMouseClicked="#randNumResources" text="Randomize" />
-            <TextField fx:id="numResourceField" layoutX="158.0" layoutY="34.0" onKeyReleased="#setNumResources" promptText="Enter values from 1 to 10" />
+            <ComboBox fx:id="numResourceField" layoutX="181.0" layoutY="35.0" onAction="#setNumResources" prefHeight="25.0" prefWidth="137.0" promptText="10">
+		      <items>
+		        <FXCollections fx:factory="observableArrayList">
+		          <String fx:value="1" />
+		          <String fx:value="2" />
+		          <String fx:value="3" />
+		          <String fx:value="4" />
+		          <String fx:value="5" />
+                  <String fx:value="6" />
+		          <String fx:value="7" />
+		          <String fx:value="8" />
+		          <String fx:value="9" />
+		          <String fx:value="10" />
+		        </FXCollections>
+		      </items>
+		    </ComboBox>
          </children>
       </Pane>
       <Pane layoutX="11.0" layoutY="107.0" prefHeight="91.0" prefWidth="400.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="85.0">
@@ -61,7 +101,7 @@
       <Pane layoutX="12.0" layoutY="236.0" prefHeight="50.0" prefWidth="400.0">
          <children>
             <Label focusTraversable="false" layoutY="5.0" prefHeight="39.0" prefWidth="114.0" text="Select Disk Sched Algorithm:" wrapText="true" />
-            <ComboBox fx:id="diskCombo" layoutX="199.0" layoutY="12.0" prefHeight="25.0" prefWidth="202.0" promptText="Choose Algorithm">
+            <ComboBox fx:id="diskCombo" layoutX="199.0" layoutY="12.0" prefHeight="25.0" prefWidth="202.0" promptText="FCFS">
 		      <items>
 		        <FXCollections fx:factory="observableArrayList">
 		          <String fx:value="FCFS" />
