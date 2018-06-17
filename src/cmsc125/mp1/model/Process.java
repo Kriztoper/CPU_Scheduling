@@ -18,7 +18,7 @@ public class Process {
 	private int firstResponseTime;
 	private int responseTime;
 	private int totalCylinders;
-	
+
 	public Process(int arrivalTime, int priorityNum, int burstTime, int[] resources,
 			String name, Color color) {
 		setArrivalTime(arrivalTime);
@@ -31,7 +31,7 @@ public class Process {
 		setArrived(false);
 		setFirstResponseTime(-1);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Arrival Time: " + getArrivalTime();
@@ -40,15 +40,15 @@ public class Process {
 	public int getBurstTime() {
 		return burstTime;
 	}
-	
+
 	public void setBurstTime(int burstTime) {
 		this.burstTime = burstTime;
 	}
-	
+
 	public void decBurstTime() {
 		this.burstTime--;
 	}
-	
+
 	public int getArrivalTime() {
 		return arrivalTime;
 	}
@@ -72,9 +72,9 @@ public class Process {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public int getProcessNumber() {
-		return Integer.parseInt(name.charAt(1) + "");
+		return Integer.parseInt(name.substring(1,name.length()));
 	}
 
 	public Color getColor() {
@@ -132,7 +132,7 @@ public class Process {
 	public void setWaitingTime(int waitingTime) {
 		this.waitingTime = waitingTime;
 	}
-	
+
 	public int getFirstResponseTime() {
 		return firstResponseTime;
 	}

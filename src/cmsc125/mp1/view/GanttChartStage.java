@@ -46,8 +46,11 @@ public class GanttChartStage extends Stage {
     // stats field types
     private Text statsTableText;
 
+    // bankers stats field types
+    private Text partialStatsText;
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
-	public GanttChartStage(int numProcess){    	
+	public GanttChartStage(int numProcess){
         xAxis = new NumberAxis();
         yAxis = new CategoryAxis();
         chart = new GanttChart<Number,String>(xAxis,yAxis);
@@ -94,6 +97,14 @@ public class GanttChartStage extends Stage {
         StackPane.setAlignment(time, Pos.TOP_LEFT);
         StackPane.setMargin(time, new Insets(10, 20, 60, 5));
         rootPane.getChildren().add(time);
+
+        // bankers stats text
+    	partialStatsText = new Text(0, 0, "");
+    	partialStatsText.setFill(Color.CHOCOLATE);
+    	partialStatsText.setFont(Font.font(java.awt.Font.SANS_SERIF, 12));
+        StackPane.setAlignment(partialStatsText, Pos.TOP_RIGHT);
+        StackPane.setMargin(partialStatsText, new Insets(30, 20, 60, 0));
+        rootPane.getChildren().add(partialStatsText);
 
         // job queue label
         jobQueue = new Text(0, 0, "Job Queue");
@@ -169,24 +180,22 @@ public class GanttChartStage extends Stage {
     }
 
 	public void displayTimeAndAvailableData(int t, int[] currentAvailableTableData){
-		String availableString = "";
-		for (int i = 0; i < currentAvailableTableData.length; i++) {
-			availableString += currentAvailableTableData[i] + ", ";
-		}
-		availableString = availableString.substring(0, availableString.length() - 2);
-		time.setText("t = " + t + "                                "); // the extra spaces are used in order to display long strings
-		//time.setText("t = " + t + "  Available = " + availableString + "                                "); // the extra spaces are used in order to display long strings
-		/*if (t == 19) {
-//			ObservableList<Node> list = this.getScene().getRoot().getChildrenUnmodifiable();
-//			Node node = list.get(list.size() - 1);
-//			node.setVisible(false);
-			((Node) rqProcesses.get(5)).setVisible(false);
-//			System.out.println(node.getClass().toString());
-//			System.exit(0);
-//			list.remove(list.size() - 1);
-		}*/
+		Platform.runLater(
+			() -> {
+				String availableString = "";
+				for (int i = 0; i < currentAvailableTableData.length; i++) {
+					availableString += currentAvailableTableData[i] + ", ";
+				}
+				availableString = availableString.substring(0, availableString.length() - 2);
+				time.setText("t = " + t + "  Avail = " + availableString + "                                "); // the extra spaces are used in order to display long strings
+			}
+		);
 	}
-	
+
+	public void displayPartialStats(String stats) {
+		Platform.runLater(() -> { partialStatsText.setText(stats); });
+	}
+
 	String totalResources = "";
 	public void setTotalResourcesUsed(JTable allocatedTable, int[] currentAvailableTableData) {
 		ResourcesTableModel allocatedTableModel = (ResourcesTableModel) allocatedTable.getModel();
@@ -199,103 +208,111 @@ public class GanttChartStage extends Stage {
 			totalResources += val + ", ";
 		}
 	}
-	
+
 	public void displayTotalResourcesUsed() {
 		final StringProperty statusProperty = new SimpleStringProperty();
 		statusProperty.set(time.getText() + "\n" + totalResources);
 		time.textProperty().bind(statusProperty);
 		System.out.println(time.getText());
-//		time.setText(time.getText() + "\n" + totalResources);
 	}
-    
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void updateGantt(int startTime, String name){
 		int processNumber = Integer.parseInt(name.substring(1));
 		System.out.println("processNumber = " + processNumber + " name = " + name);
 		Platform.runLater(() -> procSeries.get(0).getData().add(new XYChart.Data(startTime, "P", new ExtraData( 1, name))));// Update on JavaFX Application Thread
 	}
-	
+
 	public void displayUpdatedJobQueue(ProcessesQueue jobQueue) {
-		for (int i = 0, j = 0; i < 20; i++) {
-			((Node) jqProcesses.get(i)).setVisible(false);
+		Platform.runLater(
+			() -> {
+				for (int i = 0, j = 0; i < 20; i++) {
+					((Node) jqProcesses.get(i)).setVisible(false);
 
-			if (i < jobQueue.getSize() && !jobQueue.get(i).isAllocated()) {
-				int procNumber = jobQueue.get(i).getProcessNumber();
-				((Rectangle) jqProcesses.get(j)).setFill(ColorConstants.getColorFX(procNumber));
-				//TODO: Display process number inside rectangle
-				((Node) jqProcesses.get(j)).setVisible(true);
-				j++;
+					if (i < jobQueue.getSize() && !jobQueue.get(i).isAllocated()) {
+						int procNumber = jobQueue.get(i).getProcessNumber();
+						jqProcesses.get(j).setFill(ColorConstants.getColorFX(procNumber));
+						//TODO: Display process number inside rectangle
+						((Node) jqProcesses.get(j)).setVisible(true);
+						j++;
+					}
+				}
+
+				// NOTE: The color of the square for the process is the color it is assigned in the ganttchart
+				// Design:
+				/**
+				 * 		Job Queue
+				 * 		-----------
+				 * 		|    |	  |
+				 * 		| P0 | P1 |
+				 * 		|	 |    |
+				 * 		-----------
+				 *
+				 *
+				 *
+				 * */
 			}
-		}
-
-		//TODO: display all the current processes in the job queue, NOTE: The color of the square for the process is the color it is assigned in the ganttchart
-		// Design:
-		/**
-		 * 		Job Queue
-		 * 		-----------
-		 * 		|    |	  |
-		 * 		| P0 | P1 |
-		 * 		|	 |    |
-		 * 		-----------
-		 *        
-		 * 
-		 * 
-		 * */
+		);
 	}
-	
-	public void displayUpdatedReadyQueue(ProcessesQueue readyQueue) {
-		for (int i = 0; i < 20; i++) {
-			if (i < readyQueue.getSize()) {
-				int procNumber = readyQueue.get(i).getProcessNumber();
-				((Rectangle) rqProcesses.get(i)).setFill(ColorConstants.getColorFX(procNumber));
-				//TODO: Display process number inside rectangle
-				((Node) rqProcesses.get(i)).setVisible(true);
-			} else {
-				((Node) rqProcesses.get(i)).setVisible(false);
-			}
-		}
 
-		//TODO: display all the current processes in the ready queue, NOTE: The color of the square for the process is the color it is assigned in the ganttchart
-		// Design:
-		/**
-		 * 		Ready Queue
-		 * 		-----------
-		 * 		|    |	  |
-		 * 		| P0 | P1 |
-		 * 		|	 |    |
-		 * 		-----------
-		 *        
-		 * 
-		 * 
-		 * */
-		
-		// Positioning in the panel (but this can be subject to change if mayda mas better na layout and mayda ig-aadd na components)
-		/**
-		 * 
-		 *    ----------------------------------
-		 *    |          FCFS Simulation       |
-		 *    | t = 1                          |
-		 *    | Job Queue                      |
-		 *    | -----------                    |
-		 * 	  | |    |	  |                    |
-		 * 	  | | P0 | P1 |                    |
-		 * 	  | |	 |    |                    |
-		 * 	  | -----------                    |
-		 *    | Ready Queue                    |
-		 *    | -----------                    |
-		 * 	  | |    |	  |                    |
-		 * 	  | | P0 | P1 |                    |
-		 * 	  | |	 |    |                    |
-		 * 	  | -----------                    |
-		 *    | Gantt Chart                    |
-		 *    | -----------                    |
-		 * 	  | |    |	  |                    |
-		 * 	  | |    |    |                    |
-		 * 	  | |	 |    |                    |
-		 * 	  | -----------                    |
-		 *    | 0    5    10                   |
-		 *    ----------------------------------
-		 * */
+	public void displayUpdatedReadyQueue(ProcessesQueue readyQueue) {
+		Platform.runLater(
+			() -> {
+				for (int i = 0; i < 20; i++) {
+					if (i < readyQueue.getSize()) {
+						int procNumber = readyQueue.get(i).getProcessNumber();
+						rqProcesses.get(i).setFill(ColorConstants.getColorFX(procNumber));
+						//TODO: Display process number inside rectangle
+						((Node) rqProcesses.get(i)).setVisible(true);
+					} else {
+						rqProcesses.get(i).setFill(Color.WHITESMOKE);
+						((Node) rqProcesses.get(i)).setVisible(false);
+					}
+				}
+
+				// NOTE: The color of the square for the process is the color it is assigned in the ganttchart
+				// Design:
+				/**
+				 * 		Ready Queue
+				 * 		-----------
+				 * 		|    |	  |
+				 * 		| P0 | P1 |
+				 * 		|	 |    |
+				 * 		-----------
+				 *
+				 *
+				 *
+				 * */
+
+				// Positioning in the panel (but this can be subject to change if mayda mas better na layout and mayda ig-aadd na components)
+				/**
+				 *
+				 *    ----------------------------------
+				 *    |          FCFS Simulation       |
+				 *    | t = 1                          |
+				 *    | Job Queue                      |
+				 *    | -----------                    |
+				 * 	  | |    |	  |                    |
+				 * 	  | | P0 | P1 |                    |
+				 * 	  | |	 |    |                    |
+				 * 	  | -----------                    |
+				 *    | Ready Queue                    |
+				 *    | -----------                    |
+				 * 	  | |    |	  |                    |
+				 * 	  | | P0 | P1 |                    |
+				 * 	  | |	 |    |                    |
+				 * 	  | -----------                    |
+				 *    | Gantt Chart                    |
+				 *    | -----------                    |
+				 * 	  | |    |	  |                    |
+				 * 	  | |    |    |                    |
+				 * 	  | |	 |    |                    |
+				 * 	  | -----------                    |
+				 *    | 0    5    10                   |
+				 *    ----------------------------------
+				 * */
+			}
+		);
 	}
 
 	private void initStats(StackPane rootPane) {
@@ -308,86 +325,91 @@ public class GanttChartStage extends Stage {
 	}
 
 	public void displayStats(String[][] statsTableData) {
-		jobQueue.setText("");
-		readyQueue.setText("");
-		statsTableText.setFill(Color.CHOCOLATE);
+		Platform.runLater(
+			() -> {
+				jobQueue.setText("");
+				readyQueue.setText("");
+				partialStatsText.setText("");
+				statsTableText.setFill(Color.CHOCOLATE);
 
-		String stats = "";
-		int height = statsTableData.length;
-		int width = statsTableData[0].length;
-		String[] statsColumnNames = {"CT","TAT","WT","RT"};
-		if (height - 2 <= 10) {								// if num process <= 10 display in one line
-			// display P{#} as column names
-			for (int i = 0; i < height - 1; i++) {
-				if (i == 0) {
-					stats += "\t";
-				} else {
-					if (i < height - 2) {
-						stats += "P" + (i-1) + "\t";
-					} else {
-						stats += "P" + (i-1) + "\n";
+				String stats = "";
+				int height = statsTableData.length;
+				int width = statsTableData[0].length;
+				String[] statsColumnNames = {"CT","TAT","WT","RT"};
+				if (height - 2 <= 10) {								// if num process <= 10 display in one line
+					// display P{#} as column names
+					for (int i = 0; i < height - 1; i++) {
+						if (i == 0) {
+							stats += "\t";
+						} else {
+							if (i < height - 2) {
+								stats += "P" + (i-1) + "\t";
+							} else {
+								stats += "P" + (i-1) + "\n";
+							}
+						}
+					}
+					// display values of processes in CT, TAT, WT, RT
+					for (int j = 0; j < width; j++) {
+						stats += statsColumnNames[j] + "\t";
+						for (int i = 0; i < height - 1; i++) {
+							if (i == height - 2) {
+								stats += statsTableData[i][j] + " = " + statsTableData[i+1][j] + "\n";
+							} else {
+								stats += statsTableData[i][j] + "\t";
+							}
+						}
+					}
+				} else {											// if num process > 10 display in two lines
+					// display P{#} as column names for 1st line. Range:[0-10]
+					for (int i = 0; i < height/2 + 1; i++) {
+						if (i == 0) {
+							stats += "\t";
+						} else {
+							if (i < height/2) {
+								stats += "P" + (i-1) + "\t";
+							} else {
+								stats += "P" + (i-1) + "\n";
+							}
+						}
+					}
+					// display values of processes in CT, TAT, WT, RT for 1st line. Range:[0-10]
+					for (int j = 0; j < width; j++) {
+						stats += statsColumnNames[j] + "\t";
+						for (int i = 0; i < height/2; i++) {
+							if (i < height/2 - 1) {
+								stats += statsTableData[i][j] + "\t";
+							} else {
+								stats += statsTableData[i][j] + "\n";
+							}
+						}
+					}
+					// display P{#} as column names for 2nd line. Range:[11-19]
+					for (int i = height/2; i < height - 1; i++) {
+						if (i == height/2) {
+							stats += "\t";
+						} else {
+							if (i < height - 2) {
+								stats += "P" + (i-1) + "\t";
+							} else {
+								stats += "P" + (i-1) + "\n";
+							}
+						}
+					}
+					// display values of processes in CT, TAT, WT, RT for 1st line. Range:[11-19]
+					for (int j = 0; j < width; j++) {
+						stats += statsColumnNames[j] + "\t";
+						for (int i = height/2; i < height - 1; i++) {
+							if (i == height - 2) {
+								stats += statsTableData[i][j] + "=" + statsTableData[i+1][j] + "\n";
+							} else {
+								stats += statsTableData[i][j] + "\t";
+							}
+						}
 					}
 				}
+				statsTableText.setText(stats);
 			}
-			// display values of processes in CT, TAT, WT, RT
-			for (int j = 0; j < width; j++) {
-				stats += statsColumnNames[j] + "\t";
-				for (int i = 0; i < height - 1; i++) {
-					if (i == height - 2) {
-						stats += statsTableData[i][j] + " = " + statsTableData[i+1][j] + "\n";
-					} else {
-						stats += statsTableData[i][j] + "\t";
-					}
-				}
-			}
-		} else {											// if num process > 10 display in two lines
-			// display P{#} as column names for 1st line. Range:[0-10]
-			for (int i = 0; i < height/2 + 1; i++) {
-				if (i == 0) {
-					stats += "\t";
-				} else {
-					if (i < height/2) {
-						stats += "P" + (i-1) + "\t";
-					} else {
-						stats += "P" + (i-1) + "\n";
-					}
-				}
-			}
-			// display values of processes in CT, TAT, WT, RT for 1st line. Range:[0-10]
-			for (int j = 0; j < width; j++) {
-				stats += statsColumnNames[j] + "\t";
-				for (int i = 0; i < height/2; i++) {
-					if (i < height/2 - 1) {
-						stats += statsTableData[i][j] + "\t";
-					} else {
-						stats += statsTableData[i][j] + "\n";
-					}
-				}
-			}
-			// display P{#} as column names for 2nd line. Range:[11-19]
-			for (int i = height/2; i < height - 1; i++) {
-				if (i == height/2) {
-					stats += "\t";
-				} else {
-					if (i < height - 2) {
-						stats += "P" + (i-1) + "\t";
-					} else {
-						stats += "P" + (i-1) + "\n";
-					}
-				}
-			}
-			// display values of processes in CT, TAT, WT, RT for 1st line. Range:[11-19]
-			for (int j = 0; j < width; j++) {
-				stats += statsColumnNames[j] + "\t";
-				for (int i = height/2; i < height - 1; i++) {
-					if (i == height - 2) {
-						stats += statsTableData[i][j] + "=" + statsTableData[i+1][j] + "\n";
-					} else {
-						stats += statsTableData[i][j] + "\t";
-					}
-				}
-			}
-		}
-		statsTableText.setText(stats);
+		);
 	}
 }

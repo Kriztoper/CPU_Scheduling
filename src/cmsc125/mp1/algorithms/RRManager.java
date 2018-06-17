@@ -23,7 +23,7 @@ public class RRManager extends AlgoManager {
 
 	@Override
 	public void run() {
-		bankers = new Bankers(allocatedTable, maximumTable, availableTable, getArrivalTimes(), getPriorityNumbers());
+		bankers = new Bankers(allocatedTable, maximumTable, availableTable);
 		Process currentProcess = null;
 		int currentBurstTime = 0;
 		int t = 0;
@@ -106,6 +106,7 @@ public class RRManager extends AlgoManager {
 				}
 
 				t++;
+				ganttChart.displayPartialStats(bankers.computePartialStats(processesVector));
 				ganttChart.displayTimeAndAvailableData(t, bankers.getCurrentAvailableTableData());
 				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
 				ganttChart.displayUpdatedReadyQueue(readyQueue);

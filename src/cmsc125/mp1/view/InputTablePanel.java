@@ -31,7 +31,7 @@ import cmsc125.mp1.model.ResourcesTableModel;
 
 @SuppressWarnings("serial")
 public class InputTablePanel extends JPanel {
-	
+
 	private JTable allocatedTable;
 	private JTable maximumTable;
 	private JTable availableTable;
@@ -62,7 +62,7 @@ public class InputTablePanel extends JPanel {
 		for (int i = 1; i <= oneToTen.length; i++) {
 			oneToTen[i - 1] = String.format("%s", i);
 		}
-		
+
 		// Resources table
 		String[] columnResources = { "R0", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9" };
 
@@ -82,12 +82,12 @@ public class InputTablePanel extends JPanel {
 		allocatedTable.setRowSelectionAllowed(true);
 		allocatedTable.setColumnSelectionAllowed(true);
 		allocatedTable.setCellSelectionEnabled(true);
-		TableColumnModel allocTCM = allocatedTable.getColumnModel();	
+		TableColumnModel allocTCM = allocatedTable.getColumnModel();
 		for (int i = 0; i < 10; i++) {
 			TableColumn allocTC = allocTCM.getColumn(i);
 			allocTC.setCellEditor(new SpinnerEditor(0, 9));
 		}
-		
+
 		// maximum table
 		String[][] maximumObjects = new String[20][10];
 		for (int i = 0; i < 20; i++) {
@@ -104,7 +104,7 @@ public class InputTablePanel extends JPanel {
 		maximumTable.setRowSelectionAllowed(true);
 		maximumTable.setColumnSelectionAllowed(true);
 		maximumTable.setCellSelectionEnabled(true);
-		TableColumnModel maxTCM = maximumTable.getColumnModel();	
+		TableColumnModel maxTCM = maximumTable.getColumnModel();
 		for (int i = 0; i < 10; i++) {
 			TableColumn maxTC = maxTCM.getColumn(i);
 			if (i == 0) {
@@ -112,8 +112,8 @@ public class InputTablePanel extends JPanel {
 			} else {
 				maxTC.setCellEditor(new SpinnerEditor(0, 9));
 			}		}
-		
-		
+
+
 		// available table
 		String[][] availableObjects = new String[1][10];
 		for (int i = 0; i < 1; i++) {
@@ -140,7 +140,7 @@ public class InputTablePanel extends JPanel {
 		timeTable.setRowSelectionAllowed(true);
 		timeTable.setColumnSelectionAllowed(true);
 		timeTable.setCellSelectionEnabled(true);
-		
+
 		// disk table
 		String[][] diskObjects = new String[20][10];
 		for (int i = 0; i < 20; i++) {
@@ -162,12 +162,12 @@ public class InputTablePanel extends JPanel {
 		JLabel availableTableLabel = new JLabel("Available Table");
 		JLabel diskTableLabel = new JLabel("Disk Cylinder Positions");
 		JTable colorsTable = new JTable(20, 1);
-		
+
 		// resources table
 		allocatedTableLabel.setSize(150, 10);
 		allocatedTableLabel.setLocation(50, 5);
 		add(allocatedTableLabel);
-		
+
 		String[] processHeader = { "P#" };
 		String[][] colors = new String[20][1];
 		for (int i = 0; i < colors.length; i++) {
@@ -181,12 +181,12 @@ public class InputTablePanel extends JPanel {
 		});
 		ColorRowRenderer colorRowRenderer = new ColorRowRenderer();
 		colorsTable.getColumn(colorsTable.getColumnName(0)).setCellRenderer(colorRowRenderer);
-		
+
 		JScrollPane colorsTablePane = new JScrollPane(colorsTable);
 		colorsTablePane.setSize(50, 342);
 		colorsTablePane.setLocation(0, 20);
 		add(colorsTablePane);
-		
+
 		JScrollPane allocatedTablePane = new JScrollPane(allocatedTable);
 		allocatedTablePane.setSize(300, 342);
 		allocatedTablePane.setLocation(50, 20);
@@ -200,7 +200,7 @@ public class InputTablePanel extends JPanel {
 		maximumTablePane.setSize(300, 342);
 		maximumTablePane.setLocation(350, 20);
 		add(maximumTablePane);
-		
+
 		//cylinders table
 		diskTableLabel.setSize(150, 15);
 		diskTableLabel.setLocation(650, 5);
@@ -209,7 +209,7 @@ public class InputTablePanel extends JPanel {
 		diskTablePane.setSize(300, 342);
 		diskTablePane.setLocation(650, 20);
 		add(diskTablePane);
-		
+
 		//available allocated table
 		availableTableLabel.setSize(150, 15);
 		availableTableLabel.setLocation(50, 365);
@@ -267,7 +267,7 @@ public class InputTablePanel extends JPanel {
 			}
 		}
 	}
-	
+
 	public void randDiskTable() {
 		TableModel diskTableModel = diskTable.getModel();
 		int rowCount = diskTableModel.getRowCount();
@@ -284,7 +284,7 @@ public class InputTablePanel extends JPanel {
 			for ( ; j < diskTableModel.getColumnCount(); j++) {
 				diskTableModel.setValueAt("-", i, j);
 			}
-				
+
 		}
 	}
 
@@ -301,7 +301,8 @@ public class InputTablePanel extends JPanel {
 
 	public void setResourcesTableColumnSize(int numCols) {
 		Runnable setResources = new Runnable() {
-		     public void run() {
+		     @Override
+			public void run() {
 				// allocated table
 				ResourcesTableModel currentAllocatedModel = ((ResourcesTableModel) allocatedTable.getModel());
 				String[][] currentAllocatedTableData = currentAllocatedModel.getData();
@@ -423,6 +424,7 @@ public class InputTablePanel extends JPanel {
 
 	public void setResourcesTableRowSize(int numRows) {
 		Runnable setResources = new Runnable() {
+			@Override
 			public void run() {
 				// allocated table
 				ResourcesTableModel currentAllocatedModel = ((ResourcesTableModel) allocatedTable.getModel());
@@ -554,7 +556,7 @@ public class InputTablePanel extends JPanel {
 	public JTable getAvailableTable() {
 		return availableTable;
 	}
-	
+
 	public JTable getDiskTable() {
 		return diskTable;
 	}
@@ -566,39 +568,41 @@ public class InputTablePanel extends JPanel {
 	class ColorColumnRenderer extends DefaultTableCellRenderer
 	{
 	   Color bkgndColor, fgndColor;
-	     
+
 	   public ColorColumnRenderer(Color bkgnd, Color foregnd) {
 	      super();
 	      bkgndColor = bkgnd;
 	      fgndColor = foregnd;
 	   }
-	     
-	   public Component getTableCellRendererComponent
+
+	   @Override
+	public Component getTableCellRendererComponent
 	        (JTable table, Object value, boolean isSelected,
 	         boolean hasFocus, int row, int column)
 	   {
 	      Component cell = super.getTableCellRendererComponent
 	         (table, value, isSelected, hasFocus, row, column);
-	  
+
 	      cell.setBackground( bkgndColor );
 	      cell.setForeground( fgndColor );
-	      
+
 	      return cell;
 	   }
 	}
-	
+
 	class ColorRowRenderer extends JLabel implements TableCellRenderer
 	{
 		public ColorRowRenderer() {
 			setOpaque(true);
 		}
-		
+
+		@Override
 		public Component getTableCellRendererComponent
 		(JTable table, Object value, boolean isSelected,
 				boolean hasFocus, int row, int column)
 		{
 			Object columnValue = table.getValueAt(row, table.getColumnModel().getColumnIndex("P#"));
-			
+
 			if (isSelected) {
 				setBackground(table.getSelectionBackground());
 				setForeground(table.getSelectionForeground());
@@ -606,22 +610,23 @@ public class InputTablePanel extends JPanel {
 				setBackground(table.getBackground());
 				setForeground(table.getForeground());
 			}
-			
+
 			for (int i = 0; i < 20; i++) {
 				if (columnValue.equals("P" + i)) {
 					setBackground(ColorConstants.getColor(i));
 					setText("P" + i);
-					
-					if (i == 19) {
+
+
+					if (i != 3 && i != 8 && i != 12 && i != 13 && i != 16) {
 						setForeground(Color.WHITE);
 					}
 				}
 			}
-			
+
 			return this;
 		}
 	}
-	
+
 	public static class SpinnerEditor extends DefaultCellEditor
     {
         JSpinner spinner;
@@ -637,44 +642,51 @@ public class InputTablePanel extends JPanel {
             editor = ((JSpinner.DefaultEditor)spinner.getEditor());
             textField = editor.getTextField();
             textField.addFocusListener( new FocusListener() {
-                public void focusGained( FocusEvent fe ) {
+                @Override
+				public void focusGained(FocusEvent fe) {
                     SwingUtilities.invokeLater( new Runnable() {
-                        public void run() {
-                            if ( valueSet ) {
+                        @Override
+						public void run() {
+                            if (valueSet) {
                                 textField.setCaretPosition(1);
                             }
                         }
                     });
                 }
-                public void focusLost( FocusEvent fe ) {
+                @Override
+				public void focusLost(FocusEvent fe) {
                 }
             });
-            textField.addActionListener( new ActionListener() {
-                public void actionPerformed( ActionEvent ae ) {
+            textField.addActionListener(new ActionListener() {
+                @Override
+				public void actionPerformed(ActionEvent ae) {
                     stopCellEditing();
                 }
             });
         }
 
         // Prepares the spinner component and returns it.
-        public Component getTableCellEditorComponent(
+        @Override
+		public Component getTableCellEditorComponent(
             JTable table, Object value, boolean isSelected, int row, int column
         ) {
-            if ( !valueSet ) {
+            if (!valueSet) {
                 spinner.setValue(Integer.parseInt((String) value));
             }
-            SwingUtilities.invokeLater( new Runnable() {
-                public void run() {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+				public void run() {
                     textField.requestFocus();
                 }
             });
             return spinner;
         }
 
-        public boolean isCellEditable( EventObject eo ) {
-            if ( eo instanceof KeyEvent ) {
-                KeyEvent ke = (KeyEvent)eo;
-                System.err.println("key event: "+ke.getKeyChar());
+        @Override
+		public boolean isCellEditable(EventObject eo) {
+            if (eo instanceof KeyEvent) {
+                KeyEvent ke = (KeyEvent) eo;
+                System.err.println("key event: " + ke.getKeyChar());
                 textField.setText(String.valueOf(ke.getKeyChar()));
                 valueSet = true;
             } else {
@@ -684,15 +696,17 @@ public class InputTablePanel extends JPanel {
         }
 
         // Returns the spinners current value.
-        public Object getCellEditorValue() {
+        @Override
+		public Object getCellEditorValue() {
             return spinner.getValue();
         }
 
-        public boolean stopCellEditing() {
+        @Override
+		public boolean stopCellEditing() {
             try {
                 editor.commitEdit();
                 spinner.commitEdit();
-            } catch ( java.text.ParseException e ) {
+            } catch (java.text.ParseException e) {
             	e.printStackTrace();
             }
             return super.stopCellEditing();
