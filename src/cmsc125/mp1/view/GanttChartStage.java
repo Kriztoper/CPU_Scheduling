@@ -42,6 +42,8 @@ public class GanttChartStage extends Stage {
     private Text readyQueue;
     ArrayList<Rectangle> jqProcesses;
     ArrayList<Rectangle> rqProcesses;
+    ArrayList<Text> jqProcTexts;
+    ArrayList<Text> rqProcTexts;
 
     // stats field types
     private Text statsTableText;
@@ -132,6 +134,7 @@ public class GanttChartStage extends Stage {
 
         // Job Queue Rectangles
         jqProcesses = new ArrayList<Rectangle>();
+        jqProcTexts = new ArrayList<Text>();
 
         for (int i = 0; i < 20; i++) {
         	//Drawing a Rectangle
@@ -149,10 +152,20 @@ public class GanttChartStage extends Stage {
         	StackPane.setAlignment(rectangle, Pos.TOP_LEFT);
         	StackPane.setMargin(rectangle, new Insets(60, 10, 10, 10 + i * 15));
         	rootPane.getChildren().add(rectangle);
+
+        	// Proc texts
+        	Text text = new Text("");
+        	text.setFill(Color.WHITE);
+            text.setFont(Font.font(java.awt.Font.SANS_SERIF, 9));
+        	jqProcTexts.add(text);
+        	StackPane.setAlignment(text, Pos.TOP_LEFT);
+        	StackPane.setMargin(text, new Insets(80, 10, 10, 12 + i * 15));
+        	rootPane.getChildren().add(text);
         }
 
         // Ready Queue Rectangles
         rqProcesses = new ArrayList<Rectangle>();
+        rqProcTexts = new ArrayList<Text>();
 
         for (int i = 0; i < 20; i++) {
         	//Drawing a Rectangle
@@ -170,6 +183,15 @@ public class GanttChartStage extends Stage {
         	StackPane.setAlignment(rectangle, Pos.CENTER_LEFT);
         	StackPane.setMargin(rectangle, new Insets(10, 10, 10, 10 + i * 15));
         	rootPane.getChildren().add(rectangle);
+
+        	// Proc texts
+        	Text text = new Text("");
+        	text.setFill(Color.WHITE);
+            text.setFont(Font.font(java.awt.Font.SANS_SERIF, 9));
+        	rqProcTexts.add(text);
+        	StackPane.setAlignment(text, Pos.CENTER_LEFT);
+        	StackPane.setMargin(text, new Insets(10, 10, 10, 12 + i * 15));
+        	rootPane.getChildren().add(text);
         }
 
     	Scene scene  = new Scene(rootPane);
@@ -228,12 +250,15 @@ public class GanttChartStage extends Stage {
 			() -> {
 				for (int i = 0, j = 0; i < 20; i++) {
 					((Node) jqProcesses.get(i)).setVisible(false);
+					((Node) jqProcTexts.get(i)).setVisible(false);
 
 					if (i < jobQueue.getSize() && !jobQueue.get(i).isAllocated()) {
 						int procNumber = jobQueue.get(i).getProcessNumber();
 						jqProcesses.get(j).setFill(ColorConstants.getColorFX(procNumber));
 						//TODO: Display process number inside rectangle
 						((Node) jqProcesses.get(j)).setVisible(true);
+						jqProcTexts.get(j).setText("" + procNumber);
+						((Node) jqProcTexts.get(j)).setVisible(true);
 						j++;
 					}
 				}
@@ -264,9 +289,12 @@ public class GanttChartStage extends Stage {
 						rqProcesses.get(i).setFill(ColorConstants.getColorFX(procNumber));
 						//TODO: Display process number inside rectangle
 						((Node) rqProcesses.get(i)).setVisible(true);
+						rqProcTexts.get(i).setText(procNumber + "");
+						((Node) rqProcTexts.get(i)).setVisible(true);
 					} else {
 						rqProcesses.get(i).setFill(Color.WHITESMOKE);
 						((Node) rqProcesses.get(i)).setVisible(false);
+						((Node) rqProcTexts.get(i)).setVisible(false);
 					}
 				}
 
