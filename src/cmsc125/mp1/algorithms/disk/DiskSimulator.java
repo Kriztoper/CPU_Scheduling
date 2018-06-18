@@ -18,6 +18,7 @@ public class DiskSimulator {
 	private DiskScheduling ds;
 	private LineChartStage lineChartStage;
 	private int numProcess;
+	private int delay = 0;
 
 	private ArrayList<Queue<Integer>> resultDiskQueue;
 
@@ -35,7 +36,20 @@ public class DiskSimulator {
 
 		try {
 			int cylinder = resultDiskQueue.get(processNumber).poll();
-			lineChartStage.updateChart(procName, accessTime, cylinder);
+
+			if (diskAlgo.equals("CSCAN") && cylinder == 0) {
+				lineChartStage.updateChart(procName, accessTime + delay, cylinder);
+				cylinder = resultDiskQueue.get(processNumber).poll();
+				lineChartStage.updateChart(procName, accessTime + delay, cylinder);
+				delay += 1;
+				cylinder = resultDiskQueue.get(processNumber).poll();
+			} else if (diskAlgo.equals("SCAN") && cylinder == 0) {
+				lineChartStage.updateChart(procName, accessTime + delay, cylinder);
+				delay += 1;
+				cylinder = resultDiskQueue.get(processNumber).poll();
+			}
+
+			lineChartStage.updateChart(procName, accessTime + delay, cylinder);
 		} catch (Exception e) {
 			System.out.println("Error in DiskSimulator invokeChartUpdate method");
 			e.printStackTrace();
@@ -62,7 +76,7 @@ public class DiskSimulator {
 
 		for (int i = 0; i < numProcess; i++) {
 			for (int j = 0; j < 10; j++) {
-				if (diskData[i][j] != "-") {
+				if (!diskData[i][j].equals("-")) {
 					try {
 						ds.addPieces(Integer.parseInt(diskData[i][j]));
 					} catch (NumberFormatException nfe) {

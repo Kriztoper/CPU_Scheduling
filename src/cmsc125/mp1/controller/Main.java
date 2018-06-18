@@ -8,16 +8,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
- 
+
 public class Main extends Application {
-	
+
     public static void main(String[] args) {
         launch(args);
     }
-    
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-    	Parent root = FXMLLoader.load(getClass().getResource("/cmsc125/mp1/view/GUI.fxml"));
+    	Parent root = FXMLLoader.load(getClass().getResource("/cmsc125/mp1/view/GUI2.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setResizable(false);
         primaryStage.setTitle("CMSC125-MP1: Scheduling and Bankers Algorithm");
@@ -31,5 +31,5 @@ public class Main extends Application {
             }
          });
     }
-	
+
 }

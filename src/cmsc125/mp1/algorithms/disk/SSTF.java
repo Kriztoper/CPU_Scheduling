@@ -4,27 +4,27 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class SSTF extends DiskScheduling{
-	
+
 	public SSTF(int currentPiece, int maxPiece) {
 		super(currentPiece, maxPiece);
 	}
 
 	@Override
 	public Queue<Integer> process() {
-		LinkedList<Integer> pList = pieces;
-		
-		int previousPiece = currentPiece;
+		LinkedList<Integer> pList = (LinkedList<Integer>) pieces.clone();
+
+		int previousPiece = pList.peek();
 		int shortestNext = -1;
 		int index_SN = -1;
 		int checkPiece;
 		int checkCPdistance;
-		
+
 		while(pList.size()!=0){
 			int shortestDistance = Integer.MAX_VALUE;
 			for (int i=0; i<pList.size(); i++){
 				checkPiece = pList.get(i);
 				checkCPdistance = Math.abs(previousPiece - checkPiece);
-				
+
 				if (checkCPdistance < shortestDistance){
 					shortestNext = checkPiece;
 					shortestDistance = checkCPdistance;
@@ -35,8 +35,7 @@ public class SSTF extends DiskScheduling{
 			pList.remove(index_SN);
 			previousPiece = shortestNext;
 		}
-		
-		return result;		
-	}
 
+		return result;
+	}
 }
