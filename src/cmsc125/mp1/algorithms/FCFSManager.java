@@ -18,7 +18,7 @@ public class FCFSManager extends AlgoManager {
 
 	@Override
 	public void run() {
-		bankers = new Bankers(allocatedTable, maximumTable, availableTable, getArrivalTimes(), getPriorityNumbers());
+		bankers = new Bankers(allocatedTable, maximumTable, availableTable);
 		Process currentProcess = null;
 		int currentBurstTime = 0;
 		int t = 0;
@@ -97,6 +97,7 @@ public class FCFSManager extends AlgoManager {
 				}
 
 				t++;
+				ganttChart.displayPartialStats(bankers.computePartialStats(processesVector));
 				ganttChart.displayTimeAndAvailableData(t, bankers.getCurrentAvailableTableData());
 				ganttChart.displayUpdatedJobQueue(bankers.getJobQueue());
 				ganttChart.displayUpdatedReadyQueue(readyQueue);
@@ -118,7 +119,7 @@ public class FCFSManager extends AlgoManager {
 							ds.hide();
 						}
 					);
-					// Show error dialog announcing a DEADLOCK! occured
+					// Show error dialog announcing a DEADLOCK! occurred
 					if (!isDeadlock) {
 						isDeadlock = true;
 						JOptionPane.showMessageDialog(new JPanel(), "DEADLOCK!", "Error", JOptionPane.ERROR_MESSAGE);

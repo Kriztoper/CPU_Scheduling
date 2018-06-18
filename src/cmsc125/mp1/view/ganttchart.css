@@ -1,106 +1,104 @@
 .chart-series-line{
-	-fx-stroke: grey;
+	-fx-stroke: lightgrey;
 }
 
 .P0 {
-    -fx-background-color: #e6194b;
-    -fx-stroke: #e6194b;
-    -fx-fill: #e6194b;
+    -fx-background-color: #e74c3c;
+    -fx-stroke: #e74c3c;
+    -fx-fill: #e74c3c;
 }
 .P1 {
-    -fx-background-color: #3cb44b;
-    -fx-stroke: #3cb44b;
-    -fx-fill: #3cb44b;
+    -fx-background-color: #9b59b6;
+    -fx-stroke: #9b59b6;
+    -fx-fill: #9b59b6;
 }
 .P2 {
-    -fx-background-color: #ffe119;
-    -fx-stroke: #ffe119;
-    -fx-fill: #ffe119;
+    -fx-background-color: #7f8c8d;
+    -fx-stroke: #7f8c8d;
+    -fx-fill: #7f8c8d;
 }
 .P3 {
-    -fx-background-color: #0082c8;
-    -fx-stroke: #0082c8;
-    -fx-fill: #0082c8;
+    -fx-background-color: #a5c63b;
+    -fx-stroke: #a5c63b;
+    -fx-fill: #a5c63b;
 }
 .P4 {
-    -fx-background-color: #f58231;
-    -fx-stroke: #f58231;
-    -fx-fill: #f58231;
+    -fx-background-color: #e67e22;
+    -fx-stroke: #e67e22;
+    -fx-fill: #e67e22;
 }
 .P5 {
-    -fx-background-color: #911eb4;
-    -fx-stroke: #911eb4;
-    -fx-fill: #911eb4;
+    -fx-background-color: #3a6f81;
+    -fx-stroke: #3a6f81;
+    -fx-fill: #3a6f81;
 }
 .P6 {
-    -fx-background-color: #46f0f0;
-    -fx-stroke: #46f0f0;
-    -fx-fill: #46f0f0;
+    -fx-background-color: #345f41;
+    -fx-stroke: #345f41;
+    -fx-fill: #345f41;
 }
 .P7 {
-    -fx-background-color: #f032e6;
-    -fx-stroke: #f032e6;
-    -fx-fill: #f032e6;
+    -fx-background-color: #f47cc3;
+    -fx-stroke: #f47cc3;
+    -fx-fill: #f47cc3;
 }
 .P8 {
-    -fx-background-color: #d2f53c;
-    -fx-stroke: #d2f53c;
-    -fx-fill: #d2f53c;
-    
+    -fx-background-color: #ffcd02;
+    -fx-stroke: #ffcd02;
+    -fx-fill: #ffcd02;
 }
 .P9 {
-    -fx-background-color: #fabebe;
-    -fx-stroke: #fabebe;
-    -fx-fill: #fabebe;
+    -fx-background-color: #3498db;
+    -fx-stroke: #3498db;
+    -fx-fill: #3498db;
 }
 .P10 {
-    -fx-background-color: #008080;
-    -fx-stroke: #008080;
-    -fx-fill: #008080;
+    -fx-background-color: #745ec5;
+    -fx-stroke: #745ec5;
+    -fx-fill: #745ec5;
 }
 .P11 {
-    -fx-background-color: #000000;
-    -fx-stroke: #000000;
-    -fx-fill: #000000;
+    -fx-background-color: #79302a;
+    -fx-stroke: #79302a;
+    -fx-fill: #79302a;
 }
 .P12 {
-    -fx-background-color: #e6beff;
-    -fx-stroke: #e6beff;
-    -fx-fill: #e6beff;
+    -fx-background-color: #d5c295;
+    -fx-stroke: #d5c295;
+    -fx-fill: #d5c295;
 }
 .P13 {
-    -fx-background-color: #aa6e28;
-    -fx-stroke: #aa6e28;
-    -fx-fill: #aa6e28;
+    -fx-background-color: #2ecc71;
+    -fx-stroke: #2ecc71;
+    -fx-fill: #2ecc71;
 }
 .P14 {
-    -fx-background-color: #fffac8;
-    -fx-stroke: #fffac8;
-    -fx-fill: #fffac8;
-    
+    -fx-background-color: #5e345e;
+    -fx-stroke: #5e345e;
+    -fx-fill: #5e345e;
 }
 .P15 {
-    -fx-background-color: #800000;
-    -fx-stroke: #800000;
-    -fx-fill: #800000;
+    -fx-background-color: #16a085;
+    -fx-stroke: #16a085;
+    -fx-fill: #16a085;
 }
 .P16 {
-    -fx-background-color: #aaffc3;
-    -fx-stroke: #aaffc3;
-    -fx-fill: #aaffc3;
+    -fx-background-color: #99abd5;
+    -fx-stroke: #99abd5;
+    -fx-fill: #99abd5;
 }
 .P17 {
-    -fx-background-color: #808000;
-    -fx-stroke: #808000;
-    -fx-fill: #808000;
+    -fx-background-color: #d95459;
+    -fx-stroke: #d95459;
+    -fx-fill: #d95459;
 }
 .P18 {
-    -fx-background-color: #ffd8b1;
-    -fx-stroke: #ffd8b1;
-    -fx-fill: #ffd8b1;
+    -fx-background-color: #34495e;
+    -fx-stroke: #34495e;
+    -fx-fill: #34495e;
 }
 .P19 {
-    -fx-background-color: #000080;
-    -fx-stroke: #000080;
-    -fx-fill: #000080;
+    -fx-background-color: #394c81;
+    -fx-stroke: #394c81;
+    -fx-fill: #394c81;
 }

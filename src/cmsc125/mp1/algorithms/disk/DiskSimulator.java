@@ -11,31 +11,19 @@ import cmsc125.mp1.view.LineChartStage;
 
 public class DiskSimulator {
 
-	private class ChartUpdate {
-		public Integer accessTime, cylinder;
-		public String procName;
-
-		public ChartUpdate(String procName, Integer accessTime, Integer cylinder) {
-			this.procName = procName;
-			this.accessTime = accessTime;
-			this.cylinder = cylinder;
-		}
-	}
 	public static int visualizationSpeed;
 	private String cpuAlgo;
 	private String diskAlgo;
 	private JTable diskTable;
 	private DiskScheduling ds;
 	private LineChartStage lineChartStage;
-	private int numProcess, numResource;
-	private ChartUpdate prevUpdate = new ChartUpdate("", 0, 0);
+	private int numProcess;
 
 	private ArrayList<Queue<Integer>> resultDiskQueue;
 
-	public DiskSimulator(int numProcess, int numResource, String cpuAlgos, String diskAlgo, JTable diskTable,
+	public DiskSimulator(int numProcess, String cpuAlgos, String diskAlgo, JTable diskTable,
 			int visualizationSpeed) {
 		this.numProcess = numProcess;
-		this.numResource = numResource;
 		this.cpuAlgo = cpuAlgos;
 		this.diskAlgo = diskAlgo;
 		this.diskTable = diskTable;
@@ -43,21 +31,14 @@ public class DiskSimulator {
 	}
 
 	public void invokeChartUpdate(String procDisk, int accessTime, String procName) {
-		int processNumber = Integer.parseInt(procName.substring(1));
-
-		if (!prevUpdate.procName.equals(procName) && prevUpdate.accessTime != 0) {
-			if (!resultDiskQueue.isEmpty() && !prevUpdate.procName.equals(""))
-				lineChartStage.renewSeries(prevUpdate.procName);
-			lineChartStage.updateChart(procName, prevUpdate.accessTime, prevUpdate.cylinder);
-		}
+		int processNumber = Integer.parseInt(procName.substring(1, procName.length()));
 
 		try {
 			int cylinder = resultDiskQueue.get(processNumber).poll();
 			lineChartStage.updateChart(procName, accessTime, cylinder);
-			prevUpdate = new ChartUpdate(procName, accessTime, cylinder);
 		} catch (Exception e) {
 			System.out.println("Error in DiskSimulator invokeChartUpdate method");
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 
@@ -80,10 +61,16 @@ public class DiskSimulator {
 		System.out.println(diskAlgo);
 
 		for (int i = 0; i < numProcess; i++) {
-			for (int j = 0; j < numResource; j++) {
-				try {
-					ds.addPieces(Integer.parseInt(diskData[i][j]));
-				} catch (NumberFormatException nfe) {
+			for (int j = 0; j < 10; j++) {
+				if (diskData[i][j] != "-") {
+					try {
+						ds.addPieces(Integer.parseInt(diskData[i][j]));
+					} catch (NumberFormatException nfe) {
+						System.out.println("Error in prepareData method of DiskSimulator");
+						nfe.printStackTrace();
+					}
+				} else {
+					break;
 				}
 			}
 			ds.process();
