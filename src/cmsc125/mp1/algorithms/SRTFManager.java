@@ -102,7 +102,7 @@ public class SRTFManager extends AlgoManager {
 							ds.hide();
 						}
 					);
-					// Show error dialog announcing a DEADLOCK! occured
+					// Show error dialog announcing a DEADLOCK! occurred
 					if (!isDeadlock) {
 						isDeadlock = true;
 						JOptionPane.showMessageDialog(new JPanel(), "DEADLOCK!", "Error", JOptionPane.ERROR_MESSAGE);

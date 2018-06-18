@@ -16,19 +16,19 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
-public class Controller {	
-	
+public class Controller {
+
 	@FXML private TextField quantumField, visualizationSpeed;
 	@FXML private Button randProcNumBtn, randResNumBtn, randSelectAlgoBtn, randResBtn, showResBtn, startSimulationBtn, randProcessInfoBtn, allSelectAlgoBtn, randSelectDiskInfoBtn, randDiskBtn;
 	@FXML private CheckBox fcfsCB, sjfCB, srtfCB, rrCB, npprioCB, prioCB;
 	@FXML private ComboBox<String> diskCombo, numProcessField, numResourceField;
-	
+
 	private InputTablePanel itp;
 	private ArrayList<String> selectedCPUAlgos;
 	private JFrame frame1;
 	private ArrayList<CheckBox> CPUcheckBoxList;
 	private boolean allTick = true;
-	private Random random; 
+	private Random random;
 
 	public Controller(){
 		itp = new InputTablePanel();
@@ -40,7 +40,7 @@ public class Controller {
 		frame1.add(itp);
 		random = new Random();
 	}
-	
+
 	@FXML public void randNumProcesses(MouseEvent event) {
 		int randomIndex = random.nextInt(20)+1;
 		numProcessField.setValue(Integer.toString(randomIndex));
@@ -63,7 +63,7 @@ public class Controller {
 		CPUcheckBoxList.add(prioCB);
 		CPUcheckBoxList.add(npprioCB);
 		CPUcheckBoxList.add(srtfCB);
-		
+
 		selectedCPUAlgos = new ArrayList<String>();
 		for (CheckBox cb: CPUcheckBoxList){
 			int randomIndex = random.nextInt(100) + 1;
@@ -73,7 +73,7 @@ public class Controller {
 				selectedCPUAlgos.add(cb.getText());
 		}
 	}
-	
+
 	@FXML public void selectAllCPUSchedAlgos(MouseEvent event) {
 		CPUcheckBoxList = new ArrayList<CheckBox>();
 		CPUcheckBoxList.add(fcfsCB);
@@ -88,32 +88,32 @@ public class Controller {
 			selectedCPUAlgos.add(cb.getText());
 		}
 		allTick = !allTick;
-		
+
 	}
-	
+
 	@FXML public void randDiskSchedAlgos(MouseEvent event) {
-		diskCombo.getSelectionModel().select(random.nextInt(6));	
+		diskCombo.getSelectionModel().select(random.nextInt(6));
 	}
-	
+
 	@FXML public void randResourcesTable(MouseEvent event) {
 		itp.randMaximumTable();
 		itp.randAllocatedTable();
 		itp.randAvailableTable();
 		itp.randDiskTable();
 	}
-	
+
 	@FXML public void randDiskTable(MouseEvent event) {
 		itp.randDiskTable();
 	}
-	
+
 	@FXML public void randProcessInfo(MouseEvent event){
 		itp.randATPT();
 	}
-	
+
 	@FXML public void startSimulation(MouseEvent event){
 		if(numProcessField.getValue() == "" || numResourceField.getValue() == "")
 			return;
-		
+
 		CPUcheckBoxList = new ArrayList<CheckBox>();
 		CPUcheckBoxList.add(fcfsCB);
 		CPUcheckBoxList.add(sjfCB);
@@ -126,7 +126,7 @@ public class Controller {
 			if (cb.isSelected())
 				selectedCPUAlgos.add(cb.getText());
 		}
-		
+
 		for (String selectedCPUalgo: selectedCPUAlgos) {
 			String selectedDiskAlgo = diskCombo.getValue();
 			if (selectedDiskAlgo == null) {
@@ -134,38 +134,38 @@ public class Controller {
 			}
 			DiskSimulator diskSimulator = null;
 			try {
-				diskSimulator = new DiskSimulator(itp.numProcess, itp.numResource, selectedCPUalgo, selectedDiskAlgo, itp.getDiskTable(), Integer.parseInt(visualizationSpeed.getText()));
+				diskSimulator = new DiskSimulator(itp.numProcess, selectedCPUalgo, selectedDiskAlgo, itp.getDiskTable(), Integer.parseInt(visualizationSpeed.getText()));
 				diskSimulator.setupSimulation();
 			} catch (NullPointerException npe) {
 				System.err.println(npe);
 			}
-			
+
 			AlgoSimulator algoSimulator = new AlgoSimulator(itp.numProcess, selectedCPUalgo, itp.getAllocatedTable(), itp.getMaximumTable(), itp.getAvailableTable(), itp.getTimeTable(), quantumField.getText(), Integer.parseInt(visualizationSpeed.getText()), diskSimulator);
 			algoSimulator.startSimulation();
 		}
 	}
-	
+
 	@FXML public void showResourcesTable(MouseEvent event){
 		if(frame1.isVisible())
 			frame1.setVisible(false);
 		else
 			frame1.setVisible(true);
 	}
-	
+
 	@FXML public void updateVisualizationSpeed(KeyEvent event){
 		if (event.getCode().equals(KeyCode.ENTER))
         {
 			AlgoSimulator.visualizationSpeed = Integer.parseInt(visualizationSpeed.getText());
         }
 	}
-	
+
 	@FXML public void setQuantumValue(KeyEvent event){
 		if (event.getCode().equals(KeyCode.ENTER))
         {
 			AlgoSimulator.visualizationSpeed = Integer.parseInt(visualizationSpeed.getText());
         }
 	}
-	
+
 	@FXML public void setNumProcesses(){
 		int val = Integer.parseInt(numProcessField.getValue());
 		if (val > 20)
@@ -176,7 +176,7 @@ public class Controller {
 			itp.numProcess = val;
 		itp.setResourcesTableRowSize(itp.numProcess);
 	}
-	
+
 	@FXML public void setNumResources(){
 		int val = Integer.parseInt(numResourceField.getValue());
 		if (val > 10)
